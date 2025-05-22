@@ -83,7 +83,7 @@
                     {
                         <div class="block-not-available"> Hết hàng</div>
                     }
-                    <a href="http://localhost:5206/admin/product/update?productId=@product.ProductId"><button type="button" class="tf-button style-1" value="Chỉnh sửa"> Chỉnh sửa</button></a>
+                    <a href="/admin/product/update?productId=@product.ProductId"><button type="button" class="tf-button style-1" value="Chỉnh sửa"> Chỉnh sửa</button></a>
                 </div>
                 
 
@@ -439,7 +439,7 @@
                         $('#error-id').removeClass('hide')
                     }
                     else {
-                        window.location.href = 'http://localhost:5206/admin/product/detail?productId=' + productId
+                        window.location.href = '/admin/product/detail?productId=' + productId
                     }
                 }
             })

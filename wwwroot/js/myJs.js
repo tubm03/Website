@@ -107,7 +107,7 @@ function getCartBoxItems() {
                         style: "margin: 0px"
                     })
                     let aTitle = $('<a>', {
-                        href: 'http://localhost:5206/product/detail/' + element.productId
+                        href: '/product/detail/' + element.productId
                     }).text(element.name)
                     let option = "";
                     if (element.size.name != null) {
@@ -161,7 +161,7 @@ function deleteCartItem(productOptionId) {
         $('#cart_content').html(x);
     }
     $.ajax({
-        url: "http://localhost:5206/cart/delete",
+        url: "/cart/delete",
         type: "DELETE",
         data: { productOptionId: productOptionId },
         success: function (response) {
@@ -190,7 +190,7 @@ function quickEditCartItem(oldProductOptionId, productId) {
 }
 function editCartItem(oldProductOptionId, newProductOptionId, quantity) {
     $.ajax({
-        url: "http://localhost:5206/cart/Edit",
+        url: "/cart/Edit",
         method: "PUT",
         data: { oldProductOptionId: oldProductOptionId, newProductOptionId: newProductOptionId, quantity: quantity },
         success: function (response) {
@@ -216,7 +216,7 @@ function updateCartItem(oldId, cartItem) {
     // Find the row by ProductOptionId
     let row = $('#' + oldId);
     // Update the product name and link
-    row.find('.product-name a').attr('href', 'http://localhost:5206/product/detail/' + cartItem.productId)
+    row.find('.product-name a').attr('href', '/product/detail/' + cartItem.productId)
         .html(cartItem.name + '</br>' + option);
 
     // Update the product image
@@ -282,7 +282,7 @@ function quickView(productId) {
     $('#quick_size').empty();
     $.ajax({
         type: "POST",
-        url: "http://localhost:5206/Product/quickPreview",
+        url: "/Product/quickPreview",
         data: { productId: productId },
         success: function (response) {
             $('#quick_name').html(response.name);
@@ -610,7 +610,7 @@ function fetchProducts(pageSize, pageNumber, categoryId, productCateId, key) {
     }
 
     $.ajax({
-        url: 'http://localhost:5206/admin/product/fetchproduct', // Replace with your API endpoint
+        url: '/admin/product/fetchproduct', // Replace with your API endpoint
         type: 'POST',
         data: {
             pageSize: pageSize,

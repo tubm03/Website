@@ -523,7 +523,7 @@
                         data: { product: productCreateRequest },
                         success: function (response) {
                             if (!isNaN(response.result)) {
-                                window.location.href = 'http://localhost:5206/admin/product/detail?productId=' + response.result;
+                                window.location.href = '/admin/product/detail?productId=' + response.result;
                             } else {
                                 // Handle error - display a message or log the error
                                 console.error("Error: " + response.result);
