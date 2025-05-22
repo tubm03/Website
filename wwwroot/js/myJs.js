@@ -285,7 +285,13 @@ function quickView(productId) {
         url: "/Product/quickPreview",
         data: { productId: productId },
         success: function (response) {
-            $('#quick_name').html(response.name);
+            console.log(response);
+            let link_name = $('<a>', {
+                href: '/product/detail/' + response.productId,
+                text: response.name
+            })
+            $('#quick_name').empty();
+            $('#quick_name').append(link_name);
             let price = response.productOption[0].price
             if (response.promotion != null) {
                 $('#quick_price_discount').html(price.toLocaleString('en-US') + ' VND');

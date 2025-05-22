@@ -1211,20 +1211,6 @@
         image.src = src;
     }
 
-        function categorySelected() {
-            var categoryId = $("#category").val();
-            console.log(categoryId)
-            $('#product-category option').each(function () {
-                $(this).addClass('hide')
-            })
-            var cateId = @Html.Raw(product.ProductCategory.ProductCateId)
-            $('#product-category .category-' + categoryId).each(function () {
-                $(this).removeClass('hide')
-                if(parseInt($(this).val()) == cateId){
-                    $(this).attr('selected', true)
-                }
-            })
-        }
         function addProductCategoryOption() {
             var pc = $('#productCategoryFilter').val().trim();
             if (isExistsBrand(pc)) {

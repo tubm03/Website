@@ -192,7 +192,7 @@ namespace PetStoreProject.Repositories.Product
         public List<Models.Product> SuggestProduct(int customerId, List<int> categoryIds)
         {
             List<Item> items = new List<Item>();
-            string connectionString = "Server=(local);database=SWP_PROJECT;Trusted_Connection=True;TrustServerCertificate=True";
+            string connectionString = "Server=tcp:sql-server-03.database.windows.net,1433;Initial Catalog=EXE101;Persist Security Info=False;User ID=TuBM;Password=Tu12112003@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             var categoryIdList = "(" + string.Join(", ", categoryIds) + ")";
 
             // Define the SQL query
@@ -832,20 +832,6 @@ namespace PetStoreProject.Repositories.Product
                 brandId = brand.BrandId;
             }
 
-            var productCateId = productUpdateRequest.ProductCategory.ProductCateId;
-            if (productCateId == 0)
-            {
-                productCateId = _context.ProductCategories.Select(pc => pc.ProductCateId).Max() + 1;
-                var productCate = new Models.ProductCategory
-                {
-                    ProductCateId = productCateId,
-                    Name = productUpdateRequest.ProductCategory.Name,
-                    CategoryId = productUpdateRequest.Category.CategoryId
-                };
-                _context.ProductCategories.Add(productCate);
-                _context.SaveChanges();
-            }
-
             var product = await _context.FindAsync<Models.Product>(productUpdateRequest.ProductId);
 
             var isStill = false;
@@ -971,7 +957,6 @@ namespace PetStoreProject.Repositories.Product
                 product.Name = productUpdateRequest.Name;
                 product.BrandId = brandId;
                 product.Description = productUpdateRequest.Description;
-                product.ProductCateId = productCateId;
                 _context.Products.Update(product);
             }
 
@@ -1009,18 +994,10 @@ namespace PetStoreProject.Repositories.Product
 
             var list = (from l in listSoldAndPrice
                         join p in _context.Products on l.Id equals p.ProductId
-                        join b in _context.Brands on p.BrandId equals b.BrandId
-                        join pc in _context.ProductCategories on p.ProductCateId equals pc.ProductCateId
-                        join c in _context.Categories on pc.CategoryId equals c.CategoryId
                         select new ProductViewForAdmin
                         {
                             Id = l.Id,
                             Name = p.Name,
-                            Brand = b.Name,
-                            Category = new CategoryViewModel
-                            {
-                                Name = c.Name,
-                            },
                             SoldQuantity = l.SoldQuantity,
                             TotalSale = l.TotalSale,
                         }).ToList();

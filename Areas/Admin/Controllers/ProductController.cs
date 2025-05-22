@@ -121,13 +121,13 @@ namespace PetStoreProject.Areas.Admin.Controllers
             if (product != null && product.ProductOptions != null)
             {
                 var uniqueAttributes = new HashSet<int>();
-                var attributes = new List<Models.Attribute>();
+                var attributes = new List<Models.Size>();
 
                 foreach (var option in product.ProductOptions)
                 {
-                    if (option.Attribute != null && uniqueAttributes.Add(option.Attribute.AttributeId))
+                    if (option.Size != null && uniqueAttributes.Add(option.Size.SizeId))
                     {
-                        attributes.Add(option.Attribute);
+                        attributes.Add(option.Size);
                     }
                 }
                 ViewData["attributes"] = attributes;

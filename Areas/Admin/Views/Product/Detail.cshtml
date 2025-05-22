@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Chi tiết Sản Phẩm";
     var product = ViewData["product"] as ProductDetailForAdmin;
-    var attributes = ViewData["attributes"] as List<PetStoreProject.Models.Attribute>;
+    var attributes = ViewData["attributes"] as List<PetStoreProject.Models.Size>;
     HashSet<string> images = new HashSet<string>();
     string productOptions = null;
     if (product != null)
@@ -149,7 +149,7 @@
                                         </div>
 
                                         <!--Attribute-->
-                                        <div class="size_color_wraper mb-3" id="list-attribute">
+                                        <div class="size_color_wraper mb-3" id="list-size">
                                             @if(attributes != null)
                                             {
                                                 <div class="color clearfix mb-30">
@@ -159,7 +159,7 @@
                                                     {
                                                         if (attributes[index].Name != null)
                                                         {
-                                                            <li class="box-value-item" id="attribute_@attributes[index].AttributeId" style="cursor:pointer;" onclick="attribute_selected(@index, @attributes[index].AttributeId)">@attributes[index].Name.Trim()</li>
+                                                            <li class="box-value-item" id="attribute_@attributes[index].SizeId" style="cursor:pointer;" onclick="size_selected(@index, @attributes[index].SizeId)">@attributes[index].Name.Trim()</li>
                                                         }
                                                     }
                                                     </ul>
@@ -209,7 +209,6 @@
                                                         <div class="shop-item gap20">
                                                             <div class="flex-grow flex justify-between gap20">
                                                                 <div class="body-text" style="width: 4%; font-weight: 600;">Ảnh</div>
-                                                                <div class="body-text" style="width: 20%; font-weight: 600;">Thuộc tính</div>
                                                                 <div class="body-text" style="width: 20%; font-weight: 600;">Kích thước</div>
                                                                 <div class="body-text" style="width: 15%; font-weight: 600;">Giá</div>
                                                                 <div style="width: 15%; font-weight: 600;" class="body-text">Số lượt bán</div>
@@ -276,18 +275,9 @@
         var productOptions = @Html.Raw(productOptions);
 
         sizeId = productOptions[0].Size.SizeId
-        attributeId = productOptions[0].Attribute.AttributeId
 
-        if (attributeId != 1) {
-            if(sizeId != 1){
-                generateSizes(productOptions, attributeId)
-            }
-            attribute_selected(0, attributeId)
-        }
-        else if(sizeId != 1){
-            generateSizes(productOptions, attributeId)
-            size_selected(0, sizeId)
-        }
+        size_selected(0, sizeId)
+        
 
         function generateAttributes(productOptions, sizeId) {
             if (attributeId != 1) {
@@ -400,7 +390,7 @@
             var productOptions_json = @Html.Raw(productOptions);
             console.log(productOptions_json)
             for (var id = 0; id <= productOptions_json.length; id++) {
-                if (productOptions_json[id]['Attribute']['AttributeId'] == attributeId && productOptions_json[id].Size.SizeId == sizeId) {
+                if (productOptions_json[id].Size.SizeId == sizeId) {
                     price = productOptions_json[id].Price
                     img_url = productOptions_json[id].Image.ImageUrl
                     if (productOptions_json[id].IsDelete) {
