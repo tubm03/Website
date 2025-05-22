@@ -1,0 +1,81 @@
+﻿@using PetStoreProject.Areas.Admin.ViewModels;
+@model List<OrderDetailViewModel>;
+
+@{
+    Layout = null;
+}
+
+<div class="card">
+    <div class="card-header">Đơn Đặt Hàng</div>
+    <div class="card-body position-relative overflow-auto p-0">
+        @if (Model != null && Model.Count > 0)
+        {
+            <div class="table-order-history">
+                <table class="table align-middle">
+                    <thead>
+                    @* <th class="ps-4">Mã dịch vụ</th> *@
+                    <th>Người nhận</th>
+                        <th>Thanh toán</th>
+                    <th>Ngày đặt</th>
+                        
+                    <th>Sản phẩm</th>
+                    <th>Trạng thái</th>
+                    <th>Tổng tiền</th>
+                    <th>Thao tác</th>
+                    </thead>
+                    <tbody>
+                        @foreach (var orderHistory in Model)
+                        {
+                            <tr id="order-item-@orderHistory.OrderId" >
+                                @* <td class="ps-4">#@orderHistory.OrderId</td> *@
+                                <td>@orderHistory.ConsigneeName</td>
+                                <td>@orderHistory.PaymentMethod</td>
+                                <td class="orderdate-cell">@orderHistory.OrderDate</td>
+                                @* <td>@orderHistory.ShipAddress</td> *@
+                                <td>@orderHistory.totalOrderItems</td>
+                                <td class="status-cell"><span id="status_@orderHistory.OrderId">@orderHistory.Status</span></td>
+                                <td>@orderHistory.TotalAmount.ToString("#,###") VND</td>
+                                <td><a class="btn btn-primary" onclick="OrderHistoryDetail('@orderHistory.OrderId')">Chi Tiết</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="order-empty text-center align-self-center">
+                <img src="~/img/order-service-empty.png" alt="Order service empty" />
+                <h3>Lịch Sử Đơn Hàng Trống</h3>
+            </div>
+        }
+    </div>
+</div>
+
+<div id="orderDetail" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content" id="modal_content_detail">
+            <!-- Modal Header -->
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function OrderHistoryDetail(orderId) {
+        console.log("OrderDetailID: " + orderId)
+        $.ajax({
+            type: 'POST',
+            url: '/Account/OrderHistoryDetail',
+            data: { orderId: orderId },
+            success: function (response) {
+                $('#modal_content_detail').html(response);
+                $('#orderDetail').modal("show");
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+</script>

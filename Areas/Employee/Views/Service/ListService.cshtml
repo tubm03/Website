@@ -1,0 +1,197 @@
+﻿@using PetStoreProject.ViewModels
+
+@{
+    var serviceTypes = ViewData["ListServiceType"] as List<string>;
+    var listServices = ViewData["ListService"] as List<ServiceTableViewModel>;
+    var numberOfPage = ViewData["numberOfPage"];
+}
+
+@section HeadOptional {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/areas/css/list-service-style.css" />
+}
+<!-- main-content-wrap -->
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Danh sách dịch vụ</h3>
+        </div>
+        <!-- Table -->
+        <div class="wg-box">
+            <div class="flex items-center justify-between gap10 flex-wrap">
+                <div class="wg-filter flex-grow">
+                    <form class="form-search" onsubmit="searchServiceName(event)">
+                        <input id="service-name-search" type="text" placeholder="Tìm tên dịch vụ" tabindex="2" required>
+                        <div class="button-submit">
+                            <button type="submit"><i class="icon-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="wg-table table-countries employee wrap-checkbox">
+                <ul class="table-title flex gap20 mb-14">
+                    <li>
+                        <a class="body-title" onclick="selectServiceName()">Dịch Vụ<i class="bi bi-chevron-expand"></i></i></a>
+                    </li>
+                    <li>
+                        <a class="body-title" onclick="selectServiceId()">ID<i class="bi bi-chevron-expand"></i></a>
+                    </li>
+                    <li>
+                        <a class="body-title" onclick="selectPrice()">Giá <i class="bi bi-chevron-expand"></i></a>
+                    </li>
+                    <li>
+                        <a class="body-title" onclick="selectUsedQuantity()">Lượt sử dụng<i class="bi bi-chevron-expand"></i></a>
+                    </li>
+                    <li style="position: relative">
+                        <a class="body-title">Loại dịch vụ <i class="bi bi-funnel"></i></a>
+                        <ul class="common_ddown" id="service-type-search">
+                            <li><a data-service-type="" onclick="searchServiceType(this)">- Tất cả dịch vụ</a></li>
+                            @foreach (var type in serviceTypes)
+                            {
+                                <li><a data-service-type="@type" onclick="searchServiceType(this)">- @type</a></li>
+                            }
+                        </ul>
+                    </li>
+                    <li style="position: relative">
+                        <a class="body-title">Trạng thái <i class="bi bi-funnel"></i></a>
+                        <ul class="common_ddown" id="service-status-search" style="width: 195px">
+                            <li><a data-status="" onclick="searchServiceStatus(this)">- Tất cả trạng thái</a></li>
+                            <li><a data-status="false" onclick="searchServiceStatus(this)">- Còn kinh doanh</a></li>
+                            <li><a data-status="true" onclick="searchServiceStatus(this)">- Ngừng kinh doanh</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="body-title">Thao tác</div>
+                    </li>
+                </ul>
+                @if (listServices != null && listServices.Count > 0)
+                {
+                    <ul id="table-services" class="flex flex-column">
+                        @foreach (var service in listServices)
+                        {
+                            <li id="" class="countries-item">
+                                <div class="body-text">
+                                    <img src="@service.ImageUrl" alt="Image" />
+                                    <div>
+                                        @service.Name
+                                    </div>
+                                </div>
+                                <div class="body-text">#@service.ServiceId</div>
+                                <div class="body-text">@service.Price.ToString("#,###") VND</div>
+                                <div class="body-text">@service.UsedQuantity</div>
+                                <div class="body-text">@service.Type</div>
+                                <div>
+                                    @if (service.IsDelete == true)
+                                    {
+                                        <div class="block-not-available">Ngừng kinh doanh</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="block-available">Còn kinh doanh</div>
+                                    }
+                                </div>
+                                <div>
+                                    <div class="list-icon-function">
+                                        <a class="item eye " href="/Employee/Service/ServiceDetail/@service.ServiceId"><i class="icon-eye"></i></a>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="empty-order-history">
+                        <i class="fas fa-box-open"></i>
+                        <h6>Dịch vụ thú cưng trống.</h6>
+                    </div>
+                }
+            </div>
+            <div class="divider"></div>
+            <div class="flex items-center justify-content-end flex-wrap gap10">
+                @* <div class="text-tiny">Showing 10 to 16 in 16 records</div> *@
+                <nav aria-label="Page navigation example">
+                    <ul id="paging-navigation" class="pagination">
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <!-- /Table -->
+    </div>
+    <!-- /main-content-wrap -->
+</div>
+@section ScriptOptional {
+    <script>
+        $("document").ready(function () {
+            $("#service-type-search li:first-child a").addClass("choose");
+            $("#service-status-search li:first-child a").addClass("choose");
+
+            generatePagingNavigation(1, @numberOfPage);
+        });
+
+        function fetchNewListService() {
+            $.ajax({
+                type: 'POST',
+                url: '/Employee/Service/ListService',
+                data: {
+                    serviceFilterVM: serviceFilter,
+                    pageIndex: pageIndex,
+                    pageSize: pageSize
+                },
+
+                success: function (response) {
+                    if (response.listService != null && response.listService.length > 0) {
+                        let content = '';
+                        response.listService.forEach(function (service) {
+                            content += `<li id="" class="countries-item">
+                                            <div class="body-text">
+                                                <img src="${service.imageUrl}" alt="Image" />
+                                                <div>
+                                                    ${service.name}
+                                                </div>
+                                            </div>
+                                            <div class="body-text">#${service.serviceId}</div>
+                                            <div class="body-text">${service.price.toLocaleString('en-US')} VND</div>
+                                            <div class="body-text">${service.usedQuantity}</div>
+                                            <div class="body-text">${service.type}</div>
+                                            <div>`;
+                            if (service.isDelete) {
+                                content += '<div class="block-not-available" > Ngừng kinh doanh</div>';
+                            }
+                            else {
+                                content += '<div class="block-available">Còn kinh doanh</div>';
+                            }
+
+                            content += `</div >
+                                            <div>
+                                                <div class="list-icon-function">
+                                                     <a class="item eye " href="/Employee/Service/ServiceDetail/${service.serviceId}"><i class="icon-eye"></i></a>
+                                                </div>
+                                            </div>
+                                        </li> `;
+                        });
+
+                        $("#table-services").empty();
+                        $("#table-services").html(content);
+                        generatePagingNavigation(pageIndex, response.numberOfPage);
+                    } else {
+                        $('#table-services').empty();
+                        let content = `<div class="empty-order-history">
+                                                    <i class="fas fa-box-open"></i>
+                                                    <h6>Dịch vụ thú cưng trống.</h6>
+                                                </div>`;
+                        $('#table-services').html(content);
+                        $("#paging-navigation").empty();
+                    }
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+    </script>
+    <script src="~/areas/js/list-service.js"></script>
+}

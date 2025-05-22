@@ -1,0 +1,150 @@
+﻿.table-title > li > ul.common_ddown li {
+    width: 100% !important;
+}
+
+    .table-title > li > ul.common_ddown li a {
+        color: #1b1b1c;
+        display: block;
+        font-size: 14px;
+        font-weight: 400;
+        padding: 5px 10px;
+        text-transform: capitalize;
+        text-align: left;
+        line-height: 25px;
+    }
+
+        .table-title > li > ul.common_ddown li a:hover {
+            color: var(--Main);
+            cursor: pointer;
+        }
+
+.table-title li:hover ul.common_ddown {
+    opacity: 1;
+    visibility: visible;
+    -webkiit-transform: scaleY(1);
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+}
+
+.common_ddown {
+    max-height: 265px;
+    overflow-y: scroll;
+    background: #fff;
+    left: 0;
+    opacity: 0;
+    padding: 10px;
+    position: absolute;
+    top: 160%;
+    -webkiit-transform: scaleY(0);
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0);
+    -webkit-transform-origin: 0 0 0;
+    transform-origin: 0 0 0;
+    width: 170px;
+    visibility: hidden;
+    z-index: 9999;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    -webkit-box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.1);
+    -ms-box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.1);
+}
+
+.empty-order-history {
+    margin-top: 9%;
+    text-align: center;
+}
+
+    .empty-order-history h6 {
+        font-family: "Inter", sans-serif;
+        line-height: 25px;
+    }
+
+.fa-box-open {
+    font-size: 140px;
+    margin-bottom: 20px;
+}
+
+.pagination li a {
+    color: #303030;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.countries-item img {
+    margin-right: 15px;
+    height: 50px;
+    width: 50px;
+}
+
+.wg-table.table-countries {
+    min-height: 400px;
+}
+
+    .wg-table.table-countries > * {
+        min-width: auto;
+        line-height: 20px;
+    }
+
+    .wg-table.table-countries .countries-item {
+        justify-content: space-between;
+    }
+
+        .wg-table.table-countries .countries-item > div {
+            display: flex;
+            height: 40px;
+            align-items: center;
+        }
+
+    .wg-table.table-countries.admin ul.table-title li:nth-child(1) {
+        cursor: pointer;
+        width: 260px;
+    }
+
+    .wg-table.table-countries.admin .countries-item > div:nth-child(1) {
+        width: 260px;
+        font-weight: 600;
+    }
+
+    .wg-table.table-countries.admin ul.table-title li:nth-child(2) {
+        width: 150px;
+    }
+
+    .wg-table.table-countries.admin .countries-item > div:nth-child(2) {
+        width: 150px;
+    }
+
+    .wg-table.table-countries.admin ul.table-title li:nth-child(3) {
+        cursor: pointer;
+        width: 130px
+    }
+
+    .wg-table.table-countries.admin .countries-item > div:nth-child(3) {
+        width: 130px;
+    }
+
+    .wg-table.table-countries.admin ul.table-title li:nth-child(4) {
+        cursor: pointer;
+        width: 125px;
+    }
+
+    .wg-table.table-countries.admin .countries-item > div:nth-child(4) {
+        width: 125px;
+    }
+
+    .wg-table.table-countries.admin ul.table-title li:nth-child(5) {
+        width: 130px;
+    }
+
+    .wg-table.table-countries.admin .countries-item > div:nth-child(5) {
+        width: 130px;
+    }
+
+    .wg-table.table-countries.admin ul.table-title li:nth-child(6) {
+        width: 110px;
+    }
+
+    .wg-table.table-countries.admin .countries-item > div:nth-child(6) {
+        width: 110px;
+    }

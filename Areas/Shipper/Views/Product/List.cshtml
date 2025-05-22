@@ -1,0 +1,359 @@
+﻿@using PetStoreProject.Areas.Admin.ViewModels
+@{
+    ViewData["title"] = "Danh sách sản phẩm";
+}
+@section HeadOptional {
+    <link rel="stylesheet" href="https://fontawesome.com/icons/trash-can?f=classic&s=solid">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+    <style>
+        .choose {
+            font-weight: bold !important;
+        }
+
+        .productCateItem {
+            width: 150px;
+        }
+
+        .sort-arrows {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sort-arrow {
+            font-size: 10px;
+            line-height: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        span input {
+            outline: 0;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+            width: 80%;
+            padding: 14px 22px;
+            font-size: 14px;
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            line-height: 20px;
+            background-color: transparent;
+            border: 1px solid var(--Input);
+            border-radius: 12px;
+            color: var(--Heading);
+            overflow: hidden;
+        }
+
+        .empty-order-history {
+            margin-top: 4%;
+            margin-bottom: 4%;
+            text-align: center;
+        }
+
+            .empty-order-history h6 {
+                font-family: "Inter", sans-serif;
+                line-height: 25px;
+            }
+
+        .list-icon-function{
+            display: none;
+        }
+    </style>
+}
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Danh sách sản phẩm</h3>
+        </div>
+        <!-- product-list -->
+        <div class="wg-box">
+            <div class="col-xl-12 col-lg-12 d-none d-lg-block">
+                <nav>
+                    <ul class="header-menu-list text-center" style="display: flex; justify-content: space-between; align-items:center; height: 50px">
+                        <li class="active">
+                            <div class="show flex" style="align-items: center">
+                                <div class="text-tiny" style="padding-left: 12px">Hiển thị </div>
+                                <div class="select" id="pageSize" style="margin: 5px; padding: 0">
+                                </div>
+                                <div class="text-tiny"> sản phẩm</div>
+                            </div>
+                        </li>
+                        <li style="flex: 1">
+                            <span class="form-search" id="form-search">
+                            </span>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div id="no-option">Không sản phẩm nào có các lựa chọn phù hợp</div>
+
+            <div class="wg-table table-product-list" id="table-product">
+                <ul class="header-menu-list table-title flex gap20 mb-14" style="height: 50px; align-items:center">
+                    <li>
+                        <div class="body-title">Sản phẩm</div>
+                    </li>
+                    <li>
+                        <div class="body-title">ID</div>
+                    </li>
+                    <li style="padding: 10px">
+                        <a class="drop-icon body-title" href="#">Giá</a>
+                        <ul class="common_ddown" id="sort-price" style="width:190px">
+                        </ul>
+                    </li>
+                    <li style="padding: 10px">
+                        <a class="drop-icon body-title" href="#">Đã bán</a>
+                        <ul class="common_ddown" id="sort-sold-quantity" style="width:250px">
+                        </ul>
+                    </li>
+                    <li style="padding: 10px">
+                        <a class="drop-icon" href="#">Danh Mục</i></a>
+                        <!-- Home Version Dropdown Start -->
+                        <ul class="common_ddown" id="category-list" style="width: 190px">
+                        </ul>
+                        <!-- Home Version Dropdown End -->
+                    </li>
+                    <li style="padding: 10px">
+                        <a class="drop-icon" href="#">Danh Mục Sản Phẩm</a>
+                        <!-- Home Version Dropdown Start -->
+                        <ul class="common_ddown" id="product-category-list" style="max-height:235px; overflow: auto; width:290px">
+                        </ul>
+                    </li>
+                    <li style="padding: 10px">
+                        <a class="drop-icon" href="#" style="width:100%">Trong kho</a>
+                        <ul class="common_ddown" id="is-in-stock" style="width: 130px">
+                        </ul>
+                    </li>
+                    <li style="padding: 10px">
+                        <a class="drop-icon" href="#" style="width:100%">Tình trạng</a>
+                        <ul class="common_ddown" id="is-delete" style="width: 130px">
+                        </ul>
+                    </li>
+                    <li style="display: none">
+                        <div class="body-title"></div>
+                    </li>
+                </ul>
+                <div style="max-height:745px; overflow-y:auto">
+                    <ul class="flex flex-column" id="product-list">
+                    </ul>
+                </div>
+                <div class="empty-order-history hidden">
+                    <i class="fas fa-box-open"></i>
+                    <h6>Trống</h6>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="flex items-center justify-between flex-wrap gap10">
+                <div>
+                    <button onclick="clearFilter()" style="padding: 10px; border-radius: 5px">Xóa bộ lọc</button>
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination" id="pageNumber">
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <!-- /product-list -->
+    </div>
+    <!-- /main-content-wrap -->
+</div>
+@section ScriptOptional {
+    <script>
+        ChoosePageSize(10, 1)
+
+        function ChoosePage(pageNumber, pageSize, categoryId, productCateId, key) {
+            fetchProducts(pageSize, pageNumber, categoryId, productCateId, key);
+            setTimeout(changeLink, 1000);
+        }
+
+        function ChooseCategory(categoryId, pageSize, pageNumber, productCateId, key) {
+            fetchProducts(pageSize, pageNumber, categoryId, productCateId, key);
+            setTimeout(changeLink, 1000);
+        }
+
+        function ChoosePageSize(pageSize, pageNumber, categoryId, productCateId, key) {
+            let x = $('#size').val();
+            fetchProducts(x, pageNumber, categoryId, productCateId, key);
+            setTimeout(changeLink, 1000);
+        }
+        function chooseProductCategory(productCateId, pageSize, pageNumber, categoryId, key) {
+            fetchProducts(pageSize, pageNumber, categoryId, productCateId, key);
+            setTimeout(changeLink, 1000);
+        }
+        function chooseKey(pageSize, pageNumber, categoryId, productCateId) {
+            let key = $('#search-input').val();
+            fetchProducts(pageSize, pageNumber, categoryId, productCateId, key);
+            setTimeout(changeLink, 1000);
+        }
+        function ChooseSortPrice(sortPrice) {
+            var $productList = $('#product-list');
+            var $products = $productList.find('li');
+
+            if (sortPrice) {
+                $products.sort(function (a, b) {
+                    return parseFloat($(a).find('.price').text()) - parseFloat($(b).find('.price').text());
+                });
+            } else {
+                $products.sort(function (a, b) {
+                    return parseFloat($(b).find('.price').text()) - parseFloat($(a).find('.price').text());
+                });
+            }
+
+            $productList.html('');  // Clear the product list
+            $products.each(function () {
+                $productList.append($(this));  // Append each product back to the list
+            });
+        }
+
+        function ChooseSortSoldQuantity(sortSoldQuantity) {
+            var $productList = $('#product-list');
+            var $products = $productList.find('li');
+
+            if (sortSoldQuantity) {
+                $products.sort(function (a, b) {
+                    return parseFloat($(a).find('.soldQuantity').text()) - parseFloat($(b).find('.soldQuantity').text());
+                });
+            } else {
+                $products.sort(function (a, b) {
+                    return parseFloat($(b).find('.prsoldQuantityice').text()) - parseFloat($(a).find('.soldQuantity').text());
+                });
+            }
+
+            $productList.html('');  // Clear the product list
+            $products.each(function () {
+                $productList.append($(this));  // Append each product back to the list
+            });
+        }
+
+        var isSoldOut = null;
+        var isDelete = null;
+
+        function ChooseIsInStock(tag, is_Sold_Out) {
+            isSoldOut = is_Sold_Out;
+            filter(tag)
+        }
+
+        function ChooseIsDelete(tag, is_Delete) {
+            isDelete = is_Delete;
+            filter(tag)
+        }
+
+        function filter(tag) {
+            var isNull = true;
+            $(tag).parent().parent().find('a').each(function () {
+                $(this).removeClass('choose');
+            });
+            $(tag).addClass('choose')
+
+            var productList = $('#product-list');
+            var products = productList.find('li');
+
+            products.each(function () {
+                $(this).addClass('hide')
+            })
+
+            var delete_class = isDelete ? 'block-not-available' : 'block-available';
+            var soldOut_class = isSoldOut ? 'block-not-available' : 'block-available';
+
+            console.log(isSoldOut, isDelete)
+
+            if (isDelete != null && isSoldOut != null) {
+                products.each(function () {
+                    if ($(this).find('.isDelete').hasClass(delete_class) && $(this).find('.isSoldOut').hasClass(soldOut_class)) {
+                        $(this).removeClass('hide')
+                        isNull = false;
+                    }
+                })
+            }
+            else if (isDelete != null) {
+                products.each(function () {
+                    if ($(this).find('.isDelete').hasClass(delete_class)) {
+                        $(this).removeClass('hide')
+                        isNull = false;
+                    }
+                })
+            }
+
+            else if (isSoldOut != null) {
+                products.each(function () {
+                    if ($(this).find('.isSoldOut').hasClass(soldOut_class)) {
+                        $(this).removeClass('hide')
+                        isNull = false;
+                    }
+                })
+            }
+            else {
+                products.each(function () {
+                    $(this).removeClass('hide')
+                    isNull = false;
+                })
+            }
+
+            if (!isNull) {
+                $('.empty-order-history').addClass('hidden');
+            } else {
+                $('.empty-order-history').removeClass('hidden');
+            }
+        }
+
+        function clearFilter() {
+            isDelete = null;
+            isSoldOut = null;
+            var productList = $('#product-list');
+            var products = productList.find('li');
+
+            products.each(function () {
+                $(this).removeClass('hide')
+            })
+        }
+
+        function quickViewForAdmin(productId) {
+            quickView(productId)
+            const quickAddToCartBtn = document.getElementById('quick_add_to_cart');
+            quickAddToCartBtn.classList.remove('out-of-stock');
+            quickAddToCartBtn.innerText = 'Chỉnh sửa';
+            console.log(123)
+        }
+
+        function deleteProduct(tag, productId, productName) {
+            if (confirm(`Bạn có chắc chắn muốn ngừng bán '${productName}' không???`)) {
+                $.ajax({
+                    url: `/Admin/Product/Delete`,
+                    data: { productId: productId },
+                    method: 'POST',
+                    success: function (res) {
+                        tag.remove()
+                        var product = $('.product-' + productId);
+                        product.find('.isDelete').text('Ngừng bán')
+                        product.find('.isDelete').addClass('block-not-available')
+                        product.find('.isDelete').removeClass('block-available')
+                    }
+                })
+            }
+
+        }
+
+        function changeLink() {
+            console.log("changeLink");
+
+            var listProduct = $('#product-list li');
+            console.log(listProduct.length);
+
+            listProduct.each(function () {
+                var productId = $(this).find('.product-id').text().split('#')[1];
+                console.log(productId);
+
+                var productName = $(this).find('.product-name').text();
+                var productLink = `<a href="/employee/product/detail?productId=${productId}" class="body-title-2 product-name">${productName}</a>`;
+
+                $(this).find('.name').html(productLink);
+            });
+        }
+        setTimeout(changeLink, 1000);
+    </script>
+}

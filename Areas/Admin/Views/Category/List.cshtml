@@ -1,0 +1,287 @@
+﻿@using PetStoreProject.Areas.Admin.ViewModels
+@{
+    ViewData["title"] = "Danh sách thể loại";
+    var categories = ViewData["categories"] as List<CategoryViewForAdmin>;
+    var brands = ViewData["brands"] as List<BrandViewForAdmin>;
+}
+
+@section HeadOptional {
+    <style>
+        div input {
+            outline: 0;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+            width: 100%;
+            padding: 14px 22px;
+            font-size: 14px;
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            line-height: 20px;
+            background-color: transparent;
+            border: 1px solid var(--Input);
+            border-radius: 12px;
+            color: var(--Heading);
+            overflow: hidden;
+        }
+
+    </style>
+    <style>
+        .scrollable-brand-list {
+            max-height: 400px; /* Giới hạn chiều cao của danh sách */
+            overflow-y: auto; /* Thêm thanh cuộn dọc nếu nội dung vượt quá chiều cao tối đa */
+            overflow-x: hidden; /* Ẩn thanh cuộn ngang */
+        }
+    </style>
+}
+<!--List Category-->
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Tất cả các danh mục</h3>
+        </div>
+        <!-- all-category -->
+        <div class="wg-box">
+            <div class="flex items-center justify-between gap10 flex-wrap">
+                <a class="btn btn-primary tf-button style-1 w208" href="new-category.html" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="create()"><i class=" icon-plus"></i>Thêm mới</a>
+            </div>
+            <div class="wg-table table-all-category">
+                <ul class="table-title flex gap20 mb-14">
+                    <li>
+                        <div class="body-title">Tên danh mục</div>
+                    </li>
+                    <li>
+                        <div class="body-title">Số lượng sản phẩm</div>
+                    </li>
+                    <li>
+                        <div class="body-title">Số lượng đã bán</div>
+                    </li>
+                    <li>
+                        <div class="body-title">Trạng thái</div>
+                    </li>
+                    <li>
+                        <div class="body-title">Tùy chỉnh</div>
+                    </li>
+                </ul>
+                <ul class="flex flex-column" id="list-category">
+                    @foreach (var category in categories)
+                    {
+                        <li class="product-item gap14">
+                            <div class="flex items-center justify-between gap20 flex-grow">
+                                <div class="name" style="width: 430px">
+                                    @category.Name
+                                </div>
+
+                                <div class="body-text">@category.Quantity</div>
+                                <div class="body-text">@category.QuantityOfSold</div>
+                                <div class="body-text block-available isDelete">Còn bán</div>
+                                <div class="list-icon-function">
+                                    <div class="item edit" onclick="updateCategory(this, @category.Id)">
+                                        <i class="icon-edit-3"></i>
+                                    </div>
+                                    <div class="item trash" onclick="deleteCategory(this, @category.Id)">
+                                        <i class="icon-trash-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <!-- /all-category -->
+
+    </div>
+    <!-- /main-content-wrap -->
+</div>
+
+
+
+<!--List Brand-->
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Tất cả các nhãn hàng</h3>
+        </div>
+        <!-- all-category -->
+        <div class="wg-box">
+            <div class="flex items-center justify-between gap10 flex-wrap">
+                <a class="btn btn-primary tf-button style-1 w208" href="new-category.html" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="create()"><i class=" icon-plus"></i>Thêm mới</a>
+            </div>
+            <div class="wg-table table-all-category">
+                <ul class="table-title flex gap20 mb-14">
+                    <li>
+                        <div class="body-title">Tên Nhãn Hàng</div>
+                    </li>
+                    <li>
+                        <div class="body-title">Số lượng sản phẩm</div>
+                    </li>
+                    <li>
+                        <div class="body-title">Số lượng đã bán</div>
+                    </li>
+                    <li>
+                        <div class="body-title">Trạng thái</div>
+                    </li>
+                    <li>
+                        <div class="body-title">Tùy chỉnh</div>
+                    </li>
+                </ul>
+                <!-- Update the class here -->
+                <ul class="flex flex-column scrollable-brand-list" id="list-category">
+                    @foreach (var brand in brands)
+                    {
+                        <li class="product-item gap14">
+                            <div class="flex items-center justify-between gap20 flex-grow">
+                                <div class="name" style="width: 430px">
+                                    @brand.Name
+                                </div>
+                                <div class="body-text">@brand.Quantity</div>
+                                <div class="body-text">@brand.QuantityOfSold</div>
+                                <div class="body-text block-available isDelete" style="height: 100px; width: 100px;">Còn bán</div>
+
+                                <div class="list-icon-function">
+                                    <div class="item edit" onclick="updateCategory(this, @brand.Id)">
+                                        <i class="icon-edit-3"></i>
+                                    </div>
+                                    <div class="item trash" onclick="deleteCategory(this, @brand.Id)">
+                                        <i class="icon-trash-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <!-- /all-category -->
+
+    </div>
+    <!-- /main-content-wrap -->
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="createCategory()">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section ScriptOptional {
+    <script>
+        var regex = /^[0-9\W]+$/;
+        var error = ""
+        function isValidString(name) {
+            var isValid = true
+            if (name == '') {
+                isValid = false
+                error = 'Tên danh mục không được để trống';
+            }
+            else if (name.length > 200) {
+                isValid = false
+                error = 'Không được nhập quá 200 ký tự';
+            }
+            else if (regex.test(name)) {
+                isValid = false
+                error = 'Không được nhập toàn kí tự số và kí tự đặc biệt';
+            }
+            else {
+                error = ""
+            }
+            $('#error-name').text(error)
+            return isValid;
+        }
+
+        function isExistsCategory(name) {
+            var isExists = false;
+            var categories = $('#list-category .name')
+            categories.each(function () {
+                console.log($(this).text().toLowerCase().trim())
+                if ($(this).text().toLowerCase().trim() == name.toLowerCase().trim()) {
+                    isExists = true;
+                    return false
+                }
+            })
+
+            return isExists;
+        }
+
+        function create() {
+            // Clear existing content in the modal body
+            const modalBody = $('.modal-body').first().empty();
+
+            // Define the form HTML
+            const formHtml = `
+                        <div class="form-add-product">
+                            <div class="wg-box">
+                                <fieldset class="name">
+                                    <label class="body-title mb-10">Tên sản phẩm<span class="tf-color-1">*</span></label>
+                                    <input type="text" class="mb-10" placeholder="Nhập tên danh mục" id="name">
+                                    <span id="error-name" class="text-danger"></span>
+                                </fieldset>
+                            </div>
+                        </div>`;
+
+            // Append the form HTML to the modal body
+            modalBody.append(formHtml);
+        }
+
+        function createCategory() {
+            var CategoryName = $('#name').val().trim()
+            if (isValidString(CategoryName)) {
+                if (isExistsCategory(CategoryName)) {
+                    alert('Tên danh mục đã tồn tại')
+                }
+                else {
+                    $.ajax({
+                        url: "/admin/category/Create",
+                        method: "POST",
+                        data: { CategoryName: CategoryName },
+                        success: function (res) {
+                            $('#staticBackdrop').modal('hide')
+
+                            var li = `<li class="product-item gap14">
+                                            <div class="flex items-center justify-between gap20 flex-grow">
+                                                <div class="name" style="width: 430px">
+                                                    ${CategoryName}
+                                                </div>
+
+                                                <div class="body-text">0</div>
+                                                <div class="body-text">0</div>
+                                                <div class="body-text block-available isDelete">Còn bán</div>
+                                                <div class="list-icon-function">
+                                                    <div class="item edit" onclick="updateCategory(this, ${res.cateId})">
+                                                        <i class="icon-edit-3"></i>
+                                                    </div>
+                                                    <div class="item trash" onclick="deleteCategory(this, ${res.cateId})">
+                                                        <i class="icon-trash-2"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>`
+
+                            $('#list-category').append(li)
+                            alert('Thêm danh mục thành công')
+                        }
+                    }
+                    )
+
+                }
+
+            }
+        }
+        function updateCategory(cateTag, cateId) {
+
+        }
+    </script>
+}

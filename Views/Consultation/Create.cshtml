@@ -1,0 +1,96 @@
+﻿@using PetStoreProject.ViewModels
+@model PetStoreProject.ViewModels.ConsultationCreateRequestViewModel;
+@{
+    ViewData["Title"] = "Tư Vấn";
+    var result = ViewData["Result"];
+}
+
+<!-- Regester Page Start Here -->
+<input type="hidden" value="@result" id="result">
+<div class="register-area adp_top adp_bottom">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-3 col-md-4 col-12">
+                <div class="area-details">
+                    <ul>
+                        <li class="single-quick-contact">
+                            <h5>Số điện thoại liên lạc</h5>
+                            <p>
+                                <a href="tel:+0987456321">039 848 6547</a>
+                            </p>
+                        </li>
+                        <li class="single-quick-contact">
+                            <h5>Email liên lạc</h5>
+                            <p>
+                                <a href="mailto:animartpetshop@gmail.com">ECOCAUshop@gmail.com</a>
+                            </p>
+                        </li>
+                        <li class="single-quick-contact">
+                            <h5>Địa chỉ liên lạc</h5>
+                            <p>Khu Giáo dục và Đào tạo, Khu Công Nghệ Cao Hòa Lạc, Km29 Đại lộ Thăng Long, Thạch Hoà, Thạch Thất, Hà Nội</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        <div class="col-lg-9 col-md-8 col-12">
+            <div class="contact_wrapper clearfix">
+                <div class="small-title">
+                    <h3>Hộp thoại tư vấn</h3>
+                </div>
+                <form class="contact-form" asp-controller="Consultation" asp-action="create"  method="post">
+                    <div class="address-wrapper row">
+                        <div class="col-md-12 mb-4">
+                            <div class="address-fname">
+                                <input class="form-control" type="text" placeholder="Họ và tên" asp-for="CustomerName">
+                                <span asp-validation-for="CustomerName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="address-email">
+                                <input class="form-control" type="email" placeholder="Email" asp-for="Email">
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="address-web">
+                                <input class="form-control" type="text" placeholder="Số điện thoại" asp-for="Phone">
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-4">
+                            <div class="address-subject">
+                                <input class="form-control" type="text" placeholder="Tiêu đề" asp-for="Title">
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-4">
+                            <div class="address-textarea">
+                                <textarea class="form-control" placeholder="Nội dung yêu cầu" asp-for="Content"></textarea>
+                                <span asp-validation-for="Content" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer-content mail-content clearfix">
+                        <div class="send-email float-md-right">
+                            <button type="submit" class="login-btn mt-0">Gửi</button>
+                        </div>
+                    </div>
+                    <p class="form-message"></p>
+                </form>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+@section ScriptOptional{
+    <script>
+        var result = $('#result').val().trim()
+        console.log(result)
+        if(result != ''){
+            alert('Tạo yêu cầu thành công')
+        }
+    </script>
+}
+    

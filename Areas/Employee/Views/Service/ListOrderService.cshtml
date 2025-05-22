@@ -1,0 +1,1450 @@
+﻿@using PetStoreProject.ViewModels
+
+@{
+    var listServices = ViewData["Services"] as List<ServiceViewModel>;
+
+    var listPending = ViewData["listOrderedPending"] as List<BookServiceViewModel>;
+    var numberPagePending = ViewData["numberPageOfListPending"];
+
+    var listConfirmed = ViewData["listOrderedConfirmed"] as List<BookServiceViewModel>;
+    var numberPageConfirmed = ViewData["numberPageOfListConfirmed"];
+
+    var listPaid = ViewData["listOrderedPaid"] as List<BookServiceViewModel>;
+    var numberPagePaid = ViewData["numberPageOfListPaid"];
+}
+
+@section HeadOptional {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/areas/css/list-order-service-style.css" />
+}
+
+<!-- main-content-wrap -->
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Danh sách đơn chờ xác nhận</h3>
+        </div>
+        <!-- Pending -->
+        <div class="wg-box">
+            <div class="flex items-center justify-between gap10 flex-wrap">
+                <div class="wg-filter flex-grow">
+                    <form class="form-search" onsubmit="searchCustomerInfoPending(event)">
+                        <input id="customer-info-search-pending" type="text" placeholder="Tên khách hàng hoặc số điện thoại" tabindex="2" required>
+                        <div class="button-submit">
+                            <button type="submit"><i class="icon-search"></i></button>
+                        </div>
+                    </form>
+                    <div class="select select-orderdate">
+                        <div class="input-group date filter-datepicker">
+                            <input type="text" id="order-date-search-pending" onchange="searchOrderDatePending()" placeholder="Nhập ngày">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="tf-button style-1 w208" onclick="createNewOrderService('Pending')"><i class="icon-plus"></i>Tạo Đơn Mới</a>
+            </div>
+            <div class="wg-table table-countries wrap-checkbox">
+                <ul class="table-title flex gap20 mb-14">
+                    <li>
+                        <a class="body-title" onclick="selectServiceIdPending()">ID<i class="bi bi-chevron-expand"></i></i></a>
+                    </li>
+                    <li>
+                        <a class="body-title" onclick="selectCustomerNamePending()">Khách hàng<i class="bi bi-chevron-expand"></i></a>
+                    </li>
+                    <li>
+                        <div class="body-title">Số điện thoại</div>
+                    </li>
+                    <li>
+                        <a class="body-title" onclick="selectOrderDatePending()">Ngày hẹn<i class="bi bi-chevron-expand"></i></a>
+                    </li>
+                    <li>
+                        <a class="body-title" onclick="selectOrderTimePending()">Giờ hẹn<i class="bi bi-chevron-expand"></i></a>
+                    </li>
+                    <li style="position: relative">
+                        <a class="body-title">Dịch vụ <i class="bi bi-funnel"></i></a>
+                        <ul class="common_ddown" id="service-id-search-pending">
+                            <li><a data-serviceId="" onclick="searchServicePending(this)">- Tất cả dịch vụ</a></li>
+                            @foreach (var service in listServices)
+                            {
+                                <li><a data-serviceId="@service.ServiceId" onclick="searchServicePending(this)">- @service.Name</a></li>
+                            }
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="body-title">Trạng thái</div>
+                    </li>
+                    <li>
+                        <div class="body-title">Thao tác</div>
+                    </li>
+                </ul>
+                @if (listPending != null && listPending.Count > 0)
+                {
+                    <ul id="table-order-services-pending" class="flex flex-column">
+                        @foreach (var orderedService in listPending)
+                        {
+                            <li id="order-item-@orderedService.OrderServiceId" class="countries-item">
+                                <div class="body-text">#@orderedService.OrderServiceId</div>
+                                <div class="body-text name-cell">@orderedService.Name</div>
+                                <div class="body-text phone-cell">@orderedService.Phone</div>
+                                <div class="body-text orderdate-cell">@orderedService.OrderDate</div>
+                                <div class="body-text ordertime-cell">@orderedService.OrderTime.ToString("HH:mm")</div>
+                                <div class="body-text servicename-cell">@orderedService.ServiceName</div>
+                                <div>
+                                    <div class="block-pending">@orderedService.Status</div>
+                                </div>
+                                <div>
+                                    <div class="list-icon-function">
+                                        <a class="item edit order-service-detail-btn" data-orderserviceid="@orderedService.OrderServiceId"><i class="icon-edit-3"></i></a>
+                                        <a class="item trash order-service-cancel-btn" data-orderserviceid="@orderedService.OrderServiceId"><i class="icon-trash-2"></i></a>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="empty-order-history">
+                        <i class="fas fa-box-open"></i>
+                        <h6>Đơn chờ xác nhận trống.</h6>
+                    </div>
+                }
+            </div>
+            <div class="divider"></div>
+            <div class="flex items-center justify-content-end flex-wrap gap10">
+                @* <div class="text-tiny">Showing 10 to 16 in 16 records</div> *@
+                <nav aria-label="Page navigation example">
+                    <ul id="paging-pending" class="pagination">
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <!-- /Pending -->
+    </div>
+    <!-- /main-content-wrap -->
+</div>
+<!-- /main-content-wrap -->
+<!-- main-content-wrap -->
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Danh sách đơn đã xác nhận</h3>
+        </div>
+        <!-- Confirmed -->
+        <div class="wg-box">
+            <div class="flex items-center justify-between gap10 flex-wrap">
+                <div class="wg-filter flex-grow">
+                    <form class="form-search" onsubmit="searchCustomerInfoConfirmed(event)">
+                        <input id="customer-info-search-confirmed" type="text" placeholder="Tên khách hàng hoặc số điện thoại" tabindex="2" required>
+                        <div class="button-submit">
+                            <button type="submit"><i class="icon-search"></i></button>
+                        </div>
+                    </form>
+                    <div class="select select-orderdate">
+                        <div class="input-group date filter-datepicker">
+                            <input type="text" id="order-date-search-confirmed" onchange="searchOrderDateConfirmed()" placeholder="Nhập ngày">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="tf-button style-1 w208" onclick="createNewOrderService('Confirmed')"><i class="icon-plus"></i>Tạo Đơn Mới</a>
+            </div>
+            <div class="wg-table table-countries wrap-checkbox">
+                <ul class="table-title flex gap20 mb-14">
+                    <li>
+                        <a class="body-title" onclick="selectServiceIdConfirmed()">ID<i class="bi bi-chevron-expand"></i></i></a>
+                    </li>
+                    <li>
+                        <a class="body-title" onclick="selectCustomerNameConfirmed()">Khách hàng<i class="bi bi-chevron-expand"></i></i></a>
+                    </li>
+                    <li>
+                        <div class="body-title">Số điện thoại</div>
+                    </li>
+                    <li>
+                        <a class="body-title" onclick="selectOrderDateConfirmed()">Ngày hẹn<i class="bi bi-chevron-expand"></i></i></a>
+                    </li>
+                    <li>
+                        <a class="body-title" onclick="selectOrderTimeConfirmed()">Giờ hẹn<i class="bi bi-chevron-expand"></i></i></a>
+                    </li>
+                    <li style="position: relative">
+                        <a class="body-title">Dịch vụ <i class="bi bi-funnel"></i></a>
+                        <ul class="common_ddown" id="service-id-search-confirmed">
+                            <li><a data-serviceId="" onclick="searchServiceConfirmed(this)">- Tất cả dịch vụ</a></li>
+                            @foreach (var service in listServices)
+                            {
+                                <li><a data-serviceId="@service.ServiceId" onclick="searchServiceConfirmed(this)">- @service.Name</a></li>
+                            }
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="body-title">Trạng thái</div>
+                    </li>
+                    <li>
+                        <div class="body-title">Thao tác</div>
+                    </li>
+                </ul>
+                @if (listConfirmed != null && listConfirmed.Count > 0)
+                {
+                    <ul id="table-order-services-confirmed" class="flex flex-column">
+                        @foreach (var orderedService in listConfirmed)
+                        {
+                            <li id="order-item-@orderedService.OrderServiceId" class="countries-item">
+                                <div class="body-text">#@orderedService.OrderServiceId</div>
+                                <div class="body-text name-cell">@orderedService.Name</div>
+                                <div class="body-text phone-cell">@orderedService.Phone</div>
+                                <div class="body-text orderdate-cell">@orderedService.OrderDate</div>
+                                <div class="body-text ordertime-cell">@orderedService.OrderTime.ToString("HH:mm")</div>
+                                <div class="body-text servicename-cell">@orderedService.ServiceName</div>
+                                <div>
+                                    <div class="block-published">@orderedService.Status</div>
+                                </div>
+                                <div>
+                                    <div class="list-icon-function">
+                                        <a class="item edit order-service-detail-btn" data-orderserviceid="@orderedService.OrderServiceId"><i class="icon-edit-3"></i></a>
+                                        <a class="item trash order-service-cancel-btn" data-orderserviceid="@orderedService.OrderServiceId"><i class="icon-trash-2"></i></a>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="empty-order-history">
+                        <i class="fas fa-box-open"></i>
+                        <h6>Đơn đã xác nhận trống.</h6>
+                    </div>
+                }
+            </div>
+            <div class="divider"></div>
+            <div class="flex items-center justify-content-end flex-wrap gap10">
+                @* <div class="text-tiny">Showing 10 to 16 in 16 records</div> *@
+                <nav aria-label="Page navigation example">
+                    <ul id="paging-confirmed" class="pagination">
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <!-- /Confirmed -->
+    </div>
+    <!-- /main-content-wrap -->
+</div>
+<!-- /main-content-wrap -->
+<!-- main-content-wrap -->
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Danh sách đơn đã thanh toán</h3>
+        </div>
+        <!-- Paid -->
+        <div class="wg-box">
+            <div class="flex items-center justify-between gap10 flex-wrap">
+                <div class="wg-filter flex-grow">
+                    <form class="form-search" onsubmit="searchCustomerInfoPaid(event)">
+                        <input id="customer-info-search-paid" type="text" placeholder="Tên khách hàng hoặc số điện thoại" tabindex="2" required>
+                        <div class="button-submit">
+                            <button type="submit"><i class="icon-search"></i></button>
+                        </div>
+                    </form>
+                    <div class="select select-orderdate">
+                        <div class="input-group date filter-datepicker">
+                            <input type="text" id="order-date-search-paid" onchange="searchOrderDatePaid()" placeholder="Nhập ngày" />
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* <a class="tf-button style-1 w208" onclick="createNewOrderService('Paid')"><i class="icon-plus"></i>Tạo Đơn Mới</a> *@
+            </div>
+            <div class="wg-table table-countries wrap-checkbox">
+                <ul class="table-title flex gap20 mb-14">
+                    <li>
+                        <a class="body-title" onclick="selectServiceIdPaid()">ID<i class="bi bi-chevron-expand"></i></i></a>
+                    </li>
+                    <li>
+                        <a class="body-title" onclick="selectCustomerNamePaid()">Khách hàng<i class="bi bi-chevron-expand"></i></i></a>
+                    </li>
+                    <li>
+                        <div class="body-title">Số điện thoại</div>
+                    </li>
+                    <li>
+                        <a class="body-title" onclick="selectOrderDatePaid()">Ngày hẹn<i class="bi bi-chevron-expand"></i></i></a>
+                    </li>
+                    <li>
+                        <a class="body-title" onclick="selectOrderTimePaid()">Giờ hẹn<i class="bi bi-chevron-expand"></i></i></a>
+                    </li>
+                    <li style="position: relative">
+                        <a class="body-title">Dịch vụ <i class="bi bi-funnel"></i></a>
+                        <ul class="common_ddown" id="service-id-search-paid">
+                            <li><a data-serviceId="" onclick="searchServicePaid(this)">- Tất cả dịch vụ</a></li>
+                            @foreach (var service in listServices)
+                            {
+                                <li><a data-serviceId="@service.ServiceId" onclick="searchServicePaid(this)">- @service.Name</a></li>
+                            }
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="body-title">Trạng thái</div>
+                    </li>
+                    <li>
+                        <div class="body-title">Thao tác</div>
+                    </li>
+                </ul>
+                @if (listPaid != null && listPaid.Count > 0)
+                {
+                    <ul id="table-order-services-paid" class="flex flex-column">
+                        @foreach (var orderedService in listPaid)
+                        {
+                            <li id="order-item-@orderedService.OrderServiceId" class="countries-item">
+                                <div class="body-text">#@orderedService.OrderServiceId</div>
+                                <div class="body-text name-cell">@orderedService.Name</div>
+                                <div class="body-text phone-cell">@orderedService.Phone</div>
+                                <div class="body-text orderdate-cell">@orderedService.OrderDate</div>
+                                <div class="body-text ordertime-cell">@orderedService.OrderTime.ToString("HH:mm")</div>
+                                <div class="body-text servicename-cell">@orderedService.ServiceName</div>
+                                <div>
+                                    <div class="block-available">@orderedService.Status</div>
+                                </div>
+                                <div>
+                                    <div class="list-icon-function">
+                                        <a class="item eye order-service-detail-btn" data-orderserviceid="@orderedService.OrderServiceId"><i class="icon-eye"></i></a>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="empty-order-history">
+                        <i class="fas fa-box-open"></i>
+                        <h6>Đơn đã thanh toán trống.</h6>
+                    </div>
+                }
+            </div>
+            <div class="divider"></div>
+            <div class="flex items-center justify-content-end flex-wrap gap10">
+                @* <div class="text-tiny">Showing 10 to 16 in 16 records</div> *@
+                <nav aria-label="Page navigation example">
+                    <ul id="paging-paid" class="pagination">
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <!-- /Paid -->
+    </div>
+    <!-- /main-content-wrap -->
+</div>
+<!-- /main-content-wrap -->
+<!-- Booking service modal start-->
+<div class="booking-service-area">
+    <div class="container">
+        <!--The Modal-->
+        <div class="modal fade" id="booking-modal">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header d-block text-center position-relative">
+                        <h5 class="modal-title d-inline-block">Chi Tiết Lịch Hẹn</h5>
+                        <button type="button" class="btn-close position-absolute end-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!-- Modal Header -->
+                    <!-- Modal body -->
+                    <div class="modal-body" id="booking-modal-content">
+                    </div>
+                    <!-- Modal body -->
+                </div>
+            </div>
+        </div>
+        <!--The Modal-->
+    </div>
+</div>
+<!-- Booking service modal end-->
+<!-- Confirm Cancel Order Service modal start-->
+<div class="modal fade" id="confirmCancelModal">
+    <div class="modal-dialog">
+        <div class="modal-content" style=" border-radius: 7px;">
+            <div class="modal-header pb-0 border-bottom-0" style="padding:16px; font-size: 14px;">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding: 16px 30px;">
+                <h5 style="margin-bottom: 14px;">Bạn có chắc chắn muốn hủy đơn này?</h5>
+                <p class="mb-0">Thao tác này là vĩnh viễn và không thể hoàn tác.</p>
+            </div>
+            <div class="modal-footer border-top-0" style="padding: 12px 20px;">
+                <button type="button" class="btn btn-light" style="font-size: 16px" data-bs-dismiss="modal">Không</button>
+                <button type="button" class="btn btn-danger" style="font-size: 16px; border-radius: 5px;" id="confirmCancelBtn">Có, hủy đơn</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Confirm Cancel Order Service modal end-->
+@section ScriptOptional {
+    <script>
+        /*Generate Paging Nagivation of  Different Order Sevice Areas for First Time*/
+        $(document).ready(function () {
+            $("#service-id-search-pending li:first-child a").addClass("choose");
+            $("#service-id-search-confirmed li:first-child a").addClass("choose");
+            $("#service-id-search-paid li:first-child a").addClass("choose");
+
+            $(".order-service-detail-btn").click(function () {
+                let orderServiceId = $(this).data("orderserviceid");
+                orderedServiceDetail(orderServiceId);
+            });
+
+            $(".order-service-cancel-btn").click(function () {
+                let orderServiceId = $(this).data("orderserviceid");
+                let tableId = $(this).closest('ul').attr('id');
+                cancelOrderService(orderServiceId, tableId);
+            });
+
+            filterDatepicker();
+
+            generatePagingNavigation("#paging-pending", 'Pending', 1, @numberPagePending)
+            generatePagingNavigation("#paging-confirmed", 'Confirmed', 1, @numberPageConfirmed)
+            generatePagingNavigation("#paging-paid", 'Paid', 1, @numberPagePaid)
+        });
+
+
+        function orderedServiceDetail(orderServiceId) {
+            console.log(orderServiceId);
+            $.ajax({
+                type: 'GET',
+                url: '/Employee/Service/OrderServiceDetail',
+                data: { orderServiceId: orderServiceId },
+
+                success: function (response) {
+                    $("#booking-modal").find(".modal-title").text('Chi Tiết Lịch Hẹn');
+                    $("#booking-modal-content").html(response);
+                    $("#booking-modal").modal("show");
+
+                    // Gắn lại sự kiện submit cho nút submit lịch hẹn đã cập nhật
+                    $("#booking-form").on("submit", function (event) {
+                        event.preventDefault();
+                        updateOrderedService();
+                    });
+
+                    //Gắn lại lại sự kiện click cho nút xác nhận
+                    $("#booking-form").on("click", ".confirmed-btn", function () {
+                        var orderServiceId = $(this).data("orderserviceid");
+                        updateStatusService(orderServiceId, "Đã xác nhận");
+                    });
+
+                    //Gắn lại lại sự kiện click cho nút đã thanh toán
+                    $("#booking-form").on("click", ".paid-btn", function () {
+                        var orderServiceId = $(this).data("orderserviceid");
+                        updateStatusService(orderServiceId, "Đã thanh toán");
+                    });
+
+                    //Gắn lại sự kiện chọn ngày tháng cho thẻ input chọn ngày hẹn
+                    orderDatepicker();
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function changeOrderDate() {
+            let date = $("#OrderDate").val();
+            let orderServiceId = $("#OrderServiceId").val();
+            $.ajax({
+                type: 'GET',
+                url: '/Employee/Service/GetWorkingTimeByDate',
+                data: { date: date, orderServiceId: orderServiceId },
+                success: function (response) {
+                    let content = '';
+                    response.forEach(function (orderTime) {
+                        let time = orderTime.substring(0, 5);
+                        content += `<option value="${orderTime}">${time}</option>`;
+                    });
+                    $("#OrderTime").html(content);
+                },
+
+                error: function (xhr, status, error) {
+                    console.error('The request failed!', status, error);
+                    alert('Error: ' + xhr.responseText);
+                }
+            });
+        }
+
+        function changeService() {
+            var serviceSelected = $("#ServiceName").find(":selected");
+            var serviceId = serviceSelected.attr("data-serviceid");
+
+            $.ajax({
+                type: 'GET',
+                url: '/Employee/Service/GetServiceOptionByChangeService',
+                data: { serviceId: serviceId },
+
+                success: function (response) {
+                    let listPetType = '';
+                    response.petTypes.forEach(function (petType) {
+                        let isSelected = (response.petType === petType);
+                        listPetType += '<option value="' + petType + '"';
+                        listPetType += isSelected ? ' selected>' : '>';
+                        listPetType += petType + '</option>';
+                    });
+
+                    let listWeight = '';
+                    response.weights.forEach(function (weight) {
+                        let isSelected = (response.weight === weight);
+                        listWeight += '<option value="' + weight + '"';
+                        listWeight += isSelected ? ' selected>' : '>';
+                        listWeight += weight + '</option>';
+                    });
+
+                    $("#PetType").html(listPetType);
+                    $("#Weight").html(listWeight);
+                    $("#Price").val(response.price.toLocaleString('en-US') + ' VND');
+                    $("#ServiceId").val(response.serviceId);
+                    $("#ServiceOptionId").val(response.serviceOptionId);
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function changePetType() {
+            var serviceSelected = $("#ServiceName").find(":selected");
+            var serviceId = serviceSelected.attr("data-serviceid");
+            var petTypeSelected = $("#PetType").find(":selected");
+            var petType = petTypeSelected.val();
+
+            $.ajax({
+                type: 'GET',
+                url: '/Employee/Service/GetServiceOptionByChangePetType',
+                data: { serviceId: serviceId, petType: petType },
+
+                success: function (response) {
+                    let listWeight = '';
+                    response.weights.forEach(function (weight) {
+                        let isSelected = (response.weight === weight);
+                        listWeight += '<option value="' + weight + '"';
+                        listWeight += isSelected ? ' selected>' : '>';
+                        listWeight += weight + '</option>';
+                    });
+
+                    $("#Weight").html(listWeight);
+                    $("#Price").val(response.price.toLocaleString('en-US') + ' VND');
+                    $("#ServiceOptionId").val(response.serviceOptionId);
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function changeServiceForUpdate() {
+            var orderServiceId = $("#OrderServiceId").val();
+            var serviceSelected = $("#ServiceName").find(":selected");
+            var serviceId = serviceSelected.attr("data-serviceid");
+
+            $.ajax({
+                type: 'GET',
+                url: '/Account/GetServiceOptionByChangeService',
+                data: { serviceId: serviceId, orderServiceId: orderServiceId },
+
+                success: function (response) {
+                    let listPetType = '';
+                    response.petTypes.forEach(function (petType) {
+                        let isSelected = (response.petType === petType);
+                        listPetType += '<option value="' + petType + '"';
+                        listPetType += isSelected ? ' selected>' : '>';
+                        listPetType += petType + '</option>';
+                    });
+
+                    let listWeight = '';
+                    response.weights.forEach(function (weight) {
+                        let isSelected = (response.weight === weight);
+                        listWeight += '<option value="' + weight + '"';
+                        listWeight += isSelected ? ' selected>' : '>';
+                        listWeight += weight + '</option>';
+                    });
+
+                    $("#PetType").html(listPetType);
+                    $("#Weight").html(listWeight);
+                    $("#Price").val(response.price.toLocaleString('en-US') + ' VND');
+                    $("#ServiceId").val(response.serviceId);
+                    $("#ServiceOptionId").val(response.serviceOptionId);
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function changePetTypeForUpdate() {
+            var orderServiceId = $("#OrderServiceId").val();
+            var serviceSelected = $("#ServiceName").find(":selected");
+            var serviceId = serviceSelected.attr("data-serviceid");
+            var petTypeSelected = $("#PetType").find(":selected");
+            var petType = petTypeSelected.val();
+
+            $.ajax({
+                type: 'GET',
+                url: '/Account/GetServiceOptionByChangePetType',
+                data: { serviceId: serviceId, petType: petType, orderServiceId: orderServiceId },
+
+                success: function (response) {
+                    let listWeight = '';
+                    response.weights.forEach(function (weight) {
+                        let isSelected = (response.weight === weight);
+                        listWeight += '<option value="' + weight + '"';
+                        listWeight += isSelected ? ' selected>' : '>';
+                        listWeight += weight + '</option>';
+                    });
+
+                    $("#Weight").html(listWeight);
+                    $("#Price").val(response.price.toLocaleString('en-US') + ' VND');
+                    $("#ServiceOptionId").val(response.serviceOptionId);
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function changeWeight() {
+            var serviceSelected = $("#ServiceName").find(":selected");
+            var serviceId = serviceSelected.attr("data-serviceid");
+            var petTypeSelected = $("#PetType").find(":selected");
+            var petType = petTypeSelected.val();
+            var weightSelected = $("#Weight").find(":selected");
+            var weight = weightSelected.val();
+
+            $.ajax({
+                type: 'GET',
+                url: '/Employee/Service/GetServiceOptionByChangeWeight',
+                data: { serviceId: serviceId, petType: petType, weight: weight },
+
+                success: function (response) {
+                    $("#Price").val(response.price.toLocaleString('en-US') + ' VND');
+                    $("#ServiceOptionId").val(response.serviceOptionId);
+                }
+            });
+        }
+
+        function updateOrderedService() {
+            let orderForm = $("#booking-form").serialize();
+            $.ajax({
+                type: 'POST',
+                url: '/Employee/Service/OrderServiceDetail',
+                data: orderForm,
+
+                success: function (response) {
+                    $("#booking-modal-content").empty();
+                    $("#booking-modal-content").html(response);
+
+                    // Thay đổi giá trị trên bảng order service nếu update thành công
+                    if ($(response).find(".update-sucsess").length > 0) {
+                        let status = $(response).find("#Status").val();
+                        if (status === "Chưa xác nhận") {
+                            updateOrderServiceOnTable(response, '#table-order-services-pending');
+                        } else if (status === "Đã xác nhận") {
+                            updateOrderServiceOnTable(response, '#table-order-services-confirmed');
+                        }
+                    }
+
+                    //Gắn lại sự kiện submit cho nút submit lịch hẹn đã cập nhật
+                    $("#booking-form").on("submit", function (event) {
+                        event.preventDefault();
+                        updateOrderedService();
+                    });
+
+                    //Gắn lại lại sự kiện click cho nút xác nhận
+                    $("#booking-form").on("click", ".confirmed-btn", function () {
+                        var orderServiceId = $(this).data("orderserviceid");
+                        updateStatusService(orderServiceId, "Đã xác nhận");
+                    });
+
+                    //Gắn lại lại sự kiện click cho nút đã thanh toán
+                    $("#booking-form").on("click", ".paid-btn", function () {
+                        var orderServiceId = $(this).data("orderserviceid");
+                        updateStatusService(orderServiceId, "Đã thanh toán");
+                    });
+
+                    //Gắn lại sự kiện chọn ngày tháng cho thẻ input chọn ngày hẹn
+                    orderDatepicker();
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function updateOrderServiceOnTable(response, tableId) {
+            let orderSeviceId = $(response).find("#OrderServiceId").val();
+            let name = $(response).find("#Name").val();
+            let phone = $(response).find("#Phone").val();
+            let orderDate = $(response).find("#OrderDate").val();
+            let orderTime = $(response).find("#OrderTime").val();
+            let serviceName = $(response).find("#ServiceName").val();
+
+            let row = $(tableId).find("#order-item-" + orderSeviceId);
+            row.find(".name-cell").text(name);
+            row.find(".phone-cell").text(phone);
+            row.find(".orderdate-cell").text(orderDate);
+            row.find(".ordertime-cell").text(orderTime);
+            row.find(".servicename-cell").text(serviceName);
+        }
+
+        function updateStatusService(orderServiceId, status) {
+            console.log(orderServiceId);
+            $.ajax({
+                type: 'GET',
+                url: '/Employee/Service/UpdateStatusOrderService',
+                data: { orderServiceId: orderServiceId, status: status },
+
+                success: function (response) {
+                    $("#booking-modal").modal("hide");
+
+                    if (status === "Đã xác nhận") {
+                        $("#table-order-services-pending").find("#order-item-" + response.orderServiceId).remove();
+                        let currentPage = parseInt($("#paging-pending").find(".active a").text(), 10);
+                        let itemsOnTable = $("#table-order-services-pending").find("li").length;
+                        if (itemsOnTable === 0 && currentPage != 1) {
+                            selectPagePending(currentPage - 1);
+                        } else {
+                            selectPagePending(currentPage);
+                        }
+                    } else if (status === "Đã thanh toán") {
+                        $("#table-order-services-confirmed").find("#order-item-" + response.orderServiceId).remove();
+                        let currentPage = parseInt($("#paging-confirmed").find(".active a").text(), 10);
+                        let itemsOnTable = $("#table-order-services-confirmed").find("li").length;
+                        if (itemsOnTable === 0 && currentPage != 1) {
+                            selectPageConfirmed(currentPage - 1);
+                        } else {
+                            selectPageConfirmed(currentPage);
+                        }
+                    }
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function cancelOrderService(orderServiceId, tableId) {
+            $('#confirmCancelModal').modal("show");
+
+            $('#confirmCancelBtn').click(function () {
+                console.log(tableId);
+                $.ajax({
+                    type: 'GET',
+                    url: '/Employee/Service/CancelOrderService',
+                    data: { orderServiceId: orderServiceId },
+
+                    success: function () {
+                        $("#" + tableId).find("#order-item-" + orderServiceId).remove();
+                        let itemsOnTable = $("#" + tableId).find("li").length;
+                        if (tableId === 'table-order-services-pending') {
+                            let currentPage = parseInt($("#paging-pending").find(".active a").text(), 10);
+                            if (itemsOnTable === 0 && currentPage != 1) {
+                                selectPagePending(currentPage - 1);
+                            } else {
+                                selectPagePending(currentPage);
+                            }
+                        }
+                        else if (tableId === 'table-order-services-confirmed') {
+                            let currentPage = parseInt($("#paging-confirmed").find(".active a").text(), 10);
+                            if (itemsOnTable === 0 && currentPage != 1) {
+                                selectPageConfirmed(currentPage - 1);
+                            } else {
+                                selectPageConfirmed(currentPage);
+                            }
+                        }
+
+                        $('#confirmCancelModal').modal("hide");
+                    },
+
+                    error(xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+        }
+
+        function createNewOrderService(status) {
+            $.ajax({
+                type: 'GET',
+                url: '/Employee/Service/AddNewOrderService',
+                data: { statusCreation: status },
+
+                success: function (response) {
+                    $("#booking-modal").find(".modal-title").text('Tạo Lịch Hẹn');
+                    $("#booking-modal-content").html(response);
+                    $("#booking-modal").modal("show");
+
+                    //Gắn lại sự kiện submit cho nút submit lịch hẹn đã cập nhật
+                    $("#booking-form").on("submit", function (event) {
+                        event.preventDefault();
+                        confirmOrderService(status);
+                    });
+
+                    //Gắn lại sự kiện chọn ngày tháng cho thẻ input chọn ngày hẹn
+                    orderDatepicker();
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function confirmOrderService(status) {
+            let orderForm = $("#booking-form").serialize();
+            orderForm += "&statusCreation=" + encodeURIComponent(status);
+            $.ajax({
+                type: 'POST',
+                url: '/Employee/Service/AddNewOrderService',
+                data: orderForm,
+
+                success: function (response) {
+                    $("#booking-modal-content").empty();
+                    $("#booking-modal-content").html(response);
+
+                    //Gắn lại sự kiện submit cho nút submit lịch hẹn đã cập nhật
+                    $("#booking-form").on("submit", function (event) {
+                        event.preventDefault();
+                        confirmOrderService(status);
+                    });
+
+                    //Gắn lại sự kiện chọn ngày tháng cho thẻ input chọn ngày hẹn
+                    orderDatepicker();
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        /*-----Area of Order Service Is Pending Start-----*/
+        let pageSizePending = 5;        //Fixed the size of the pending page to be 10 items, just changing this value will change the page size.
+        let pageIndexPending = 1;
+
+        let orderServicePending = {
+            status: 'Chưa xác nhận',
+            nameOrPhone: null,
+            orderDate: null,
+            serviceId: null,
+            sortServiceId: null,
+            sortCustomerName: null,
+            sortOrderDate: null,
+            sortOrderTime: null
+        };
+
+        function resetOptionSortPending() {
+            orderServicePending.sortServiceId = null;
+            orderServicePending.sortCustomerName = null;
+            orderServicePending.sortOrderDate = null;
+            orderServicePending.sortOrderTime = null;
+        }
+
+        function refreshOrderServicePending() {
+            orderServicePending.status = 'Chưa xác nhận';
+            orderServicePending.nameOrPhone = $("#customer-info-search-pending").val();
+            orderServicePending.orderDate = $("#order-date-search-pending").val();
+            orderServicePending.serviceId = $("#service-id-search-pending").find(".choose").attr("data-serviceId");
+            resetOptionSortPending();
+            orderServicePending.sortServiceId = 'Ascending';
+
+            pageIndexPending = 1;
+        }
+
+        function searchCustomerInfoPending(event) {
+            event.preventDefault();
+            refreshOrderServicePending();
+            fetchNewOrderServicesPending();
+        }
+
+        function searchOrderDatePending() {
+            refreshOrderServicePending();
+            fetchNewOrderServicesPending();
+        }
+
+        function searchServicePending(element) {
+            $("#service-id-search-pending").find("li a").removeClass("choose");
+            $(element).addClass("choose");
+            refreshOrderServicePending();
+            fetchNewOrderServicesPending();
+        }
+
+        function selectServiceIdPending() {
+            let currentStateSort = orderServicePending.sortServiceId;
+            resetOptionSortPending();
+            if (currentStateSort === null || currentStateSort === 'Descending') {
+                orderServicePending.sortServiceId = 'Ascending';
+            } else {
+                orderServicePending.sortServiceId = 'Descending';
+            }
+            fetchNewOrderServicesPending();
+        }
+
+        function selectCustomerNamePending() {
+            let currentStateSort = orderServicePending.sortCustomerName;
+            resetOptionSortPending();
+            if (currentStateSort === null || currentStateSort === 'Descending') {
+                orderServicePending.sortCustomerName = 'Ascending';
+            } else {
+                orderServicePending.sortCustomerName = 'Descending';
+            }
+            fetchNewOrderServicesPending();
+        }
+
+        function selectOrderDatePending() {
+            let currentStateSort = orderServicePending.sortOrderDate;
+            resetOptionSortPending();
+            if (currentStateSort === null || currentStateSort === 'Descending') {
+                orderServicePending.sortOrderDate = 'Ascending';
+            } else {
+                orderServicePending.sortOrderDate = 'Descending';
+            }
+            fetchNewOrderServicesPending();
+        }
+
+        function selectOrderTimePending() {
+            let currentStateSort = orderServicePending.sortOrderTime;
+            resetOptionSortPending();
+            if (currentStateSort === null || currentStateSort === 'Descending') {
+                orderServicePending.sortOrderTime = 'Ascending';
+            } else {
+                orderServicePending.sortOrderTime = 'Descending';
+            }
+            fetchNewOrderServicesPending();
+        }
+
+        function selectPagePending(currentPage) {
+            $("#paging-pending").find("li").removeClass("active");
+            $("#paging-pending").find("#page-Pending-" + currentPage).addClass("active");
+
+            pageIndexPending = currentPage;
+            fetchNewOrderServicesPending();
+        }
+
+        function fetchNewOrderServicesPending() {
+            // console.log('----------------------------------------')
+            // console.log('nameOrPhone: ', orderServicePending.nameOrPhone)
+            // console.log('orderDate : ', orderServicePending.orderDate)
+            // console.log('serviceId : ', orderServicePending.serviceId)
+            // console.log('sortServiceId:', orderServicePending.sortServiceId);
+            // console.log('sortCustomerName:', orderServicePending.sortCustomerName);
+            // console.log('sortOrderDate:', orderServicePending.sortOrderDate);
+            // console.log('sortOrderTime:', orderServicePending.sortOrderTime);
+            // console.log('pageIndexConfirmed:', pageIndexConfirmed);
+            $.ajax({
+                type: 'POST',
+                url: '/Employee/Service/OrderedSeviceByConditions',
+                data: {
+                    orderServiceVM: orderServicePending,
+                    pageIndex: pageIndexPending,
+                    pageSize: pageSizePending
+                },
+
+                success: function (response) {
+                    if (response.orderedServices != null && response.orderedServices.length > 0) {
+                        let content = '';
+                        response.orderedServices.forEach(function (order) {
+                            content += `<li id="order-item-${order.orderServiceId}" class="countries-item">
+                                                                            <div class="body-text">#${order.orderServiceId}</div>
+                                                                            <div class="body-text name-cell">${order.name}</div>
+                                                                            <div class="body-text phone-cell">${order.phone}</div>
+                                                                            <div class="body-text orderdate-cell">${order.orderDate}</div>
+                                                                            <div class="body-text ordertime-cell">${order.orderTime.toString().substring(0, 5)}</div>
+                                                                            <div class="body-text servicename-cell">${order.serviceName}</div>
+                                                                            <div>
+                                                                                <div class="block-pending">${order.status}</div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="list-icon-function">
+                                                                                    <a class="item edit order-service-detail-btn" data-orderserviceid="${order.orderServiceId}"><i class="icon-edit-3"></i></a>
+                                                                                    <a class="item trash order-service-cancel-btn" data-orderserviceid="${order.orderServiceId}"><i class="icon-trash-2"></i></a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>`;
+                        });
+
+                        $('#table-order-services-pending').empty();
+                        $('#table-order-services-pending').html(content);
+                        $(".order-service-detail-btn").click(function () {
+                            let orderServiceId = $(this).data("orderserviceid");
+                            orderedServiceDetail(orderServiceId);
+                        });
+                        $(".order-service-cancel-btn").click(function () {
+                            let orderServiceId = $(this).data("orderserviceid");
+                            let tableId = $(this).closest('ul').attr('id');
+                            cancelOrderService(orderServiceId, tableId);
+                        });
+                        generatePagingNavigation("#paging-pending", "Pending", pageIndexPending, response.numberPage);
+                    }
+                    else {
+                        $('#table-order-services-pending').empty();
+                        let content = `<div class="empty-order-history">
+                                                                                <i class="fas fa-box-open"></i>
+                                                                                <h6>Đơn chờ xác nhận trống.</h6>
+                                                                            </div>`;
+                        $('#table-order-services-pending').html(content);
+                        $("#paging-pending").empty();
+                    }
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+
+            });
+        }
+
+
+        /*-----Area of Order Service Is Pending Start-----*/
+
+
+        /*-----Area of Order Service Is Confirmed Start-----*/
+        let pageSizeConfirmed = 5;        //Fixed the size of the confirmed page to be 10 items, just changing this value will change the page size.
+        let pageIndexConfirmed = 1;
+
+        let orderServiceConfirmed = {
+            status: 'Đã xác nhận',
+            nameOrPhone: null,
+            orderDate: null,
+            serviceId: null,
+            sortServiceId: null,
+            sortCustomerName: null,
+            sortOrderDate: null,
+            sortOrderTime: null
+        };
+
+        function resetOptionSortConfirmed() {
+            orderServiceConfirmed.sortServiceId = null;
+            orderServiceConfirmed.sortCustomerName = null;
+            orderServiceConfirmed.sortOrderDate = null;
+            orderServiceConfirmed.sortOrderTime = null;
+        }
+
+        function refreshOrderServiceConfirmed() {
+            orderServiceConfirmed.status = 'Đã xác nhận';
+            orderServiceConfirmed.nameOrPhone = $("#customer-info-search-confirmed").val();
+            orderServiceConfirmed.orderDate = $("#order-date-search-confirmed").val();
+            orderServiceConfirmed.serviceId = $("#service-id-search-confirmed").find(".choose").attr("data-serviceId");
+
+            resetOptionSortConfirmed();
+            orderServiceConfirmed.sortServiceId = 'Ascending';
+
+            pageIndexConfirmed = 1;
+        }
+
+        function searchCustomerInfoConfirmed(event) {
+            event.preventDefault();
+            refreshOrderServiceConfirmed();
+            fetchNewOrderServicesConfirmed();
+        }
+
+        function searchOrderDateConfirmed() {
+            refreshOrderServiceConfirmed();
+            fetchNewOrderServicesConfirmed();
+        }
+
+        function searchServiceConfirmed(element) {
+            $("#service-id-search-confirmed").find("li a").removeClass("choose");
+            $(element).addClass("choose");
+            refreshOrderServiceConfirmed();
+            fetchNewOrderServicesConfirmed();
+        }
+
+        function selectServiceIdConfirmed() {
+            let currentStateSort = orderServiceConfirmed.sortServiceId;
+            resetOptionSortConfirmed();
+            if (currentStateSort === null || currentStateSort === 'Descending') {
+                orderServiceConfirmed.sortServiceId = 'Ascending';
+            } else {
+                orderServiceConfirmed.sortServiceId = 'Descending';
+            }
+            fetchNewOrderServicesConfirmed();
+        }
+
+        function selectCustomerNameConfirmed() {
+            let currentStateSort = orderServiceConfirmed.sortCustomerName;
+            resetOptionSortConfirmed();
+            if (currentStateSort === null || currentStateSort === 'Descending') {
+                orderServiceConfirmed.sortCustomerName = 'Ascending';
+            } else {
+                orderServiceConfirmed.sortCustomerName = 'Descending';
+            }
+            fetchNewOrderServicesConfirmed();
+        }
+
+        function selectOrderDateConfirmed() {
+            let currentStateSort = orderServiceConfirmed.sortOrderDate;
+            resetOptionSortConfirmed();
+            if (currentStateSort === null || currentStateSort === 'Descending') {
+                orderServiceConfirmed.sortOrderDate = 'Ascending';
+            } else {
+                orderServiceConfirmed.sortOrderDate = 'Descending';
+            }
+            fetchNewOrderServicesConfirmed();
+        }
+
+        function selectOrderTimeConfirmed() {
+            let currentStateSort = orderServiceConfirmed.sortOrderTime;
+            resetOptionSortConfirmed();
+            if (currentStateSort === null || currentStateSort === 'Descending') {
+                orderServiceConfirmed.sortOrderTime = 'Ascending';
+            } else {
+                orderServiceConfirmed.sortOrderTime = 'Descending';
+            }
+            fetchNewOrderServicesConfirmed();
+        }
+
+        function selectPageConfirmed(currentPage) {
+            $("#paging-confirmed").find("li").removeClass("active");
+            $("#paging-confirmed").find("#page-Confirmed-" + currentPage).addClass("active");
+
+            pageIndexConfirmed = currentPage;
+            fetchNewOrderServicesConfirmed();
+        }
+
+        function fetchNewOrderServicesConfirmed() {
+            console.log('----------------------------------------')
+            console.log('nameOrPhone: ', orderServiceConfirmed.nameOrPhone)
+            console.log('orderDate : ', orderServiceConfirmed.orderDate)
+            console.log('serviceId : ', orderServiceConfirmed.serviceId)
+            console.log('sortServiceId:', orderServiceConfirmed.sortServiceId);
+            console.log('sortCustomerName:', orderServiceConfirmed.sortCustomerName);
+            console.log('sortOrderDate:', orderServiceConfirmed.sortOrderDate);
+            console.log('sortOrderTime:', orderServiceConfirmed.sortOrderTime);
+            console.log('pageIndexConfirmed:', pageIndexConfirmed);
+
+            $.ajax({
+                type: 'POST',
+                url: '/Employee/Service/OrderedSeviceByConditions',
+                data: {
+                    orderServiceVM: orderServiceConfirmed,
+                    pageIndex: pageIndexConfirmed,
+                    pageSize: pageSizeConfirmed
+                },
+
+                success: function (response) {
+                    if (response.orderedServices != null && response.orderedServices.length > 0) {
+                        let content = '';
+                        response.orderedServices.forEach(function (order) {
+                            content += `<li id="order-item-${order.orderServiceId}" class="countries-item">
+                                                                            <div class="body-text">#${order.orderServiceId}</div>
+                                                                            <div class="body-text name-cell">${order.name}</div>
+                                                                            <div class="body-text phone-cell">${order.phone}</div>
+                                                                            <div class="body-text orderdate-cell">${order.orderDate}</div>
+                                                                            <div class="body-text ordertime-cell">${order.orderTime.toString().substring(0, 5)}</div>
+                                                                            <div class="body-text servicename-cell">${order.serviceName}</div>
+                                                                            <div>
+                                                                                        <div class="block-published">${order.status}</div>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div class="list-icon-function">
+                                                                                    <a class="item edit order-service-detail-btn" data-orderserviceid="${order.orderServiceId}"><i class="icon-edit-3"></i></a>
+                                                                                    <a class="item trash order-service-cancel-btn" data-orderserviceid="${order.orderServiceId}"><i class="icon-trash-2"></i></a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>`;
+                        });
+
+                        $('#table-order-services-confirmed').empty();
+                        $('#table-order-services-confirmed').html(content);
+                        $(".order-service-detail-btn").click(function () {
+                            let orderServiceId = $(this).data("orderserviceid");
+                            orderedServiceDetail(orderServiceId);
+                        });
+                        $(".order-service-cancel-btn").click(function () {
+                            let orderServiceId = $(this).data("orderserviceid");
+                            let tableId = $(this).closest('ul').attr('id');
+                            cancelOrderService(orderServiceId, tableId);
+                        });
+                        generatePagingNavigation("#paging-confirmed", "Confirmed", pageIndexConfirmed, response.numberPage);
+                    }
+                    else {
+                        $('#table-order-services-confirmed').empty();
+                        let content = `<div class="empty-order-history">
+                                                                                <i class="fas fa-box-open"></i>
+                                                                                <h6>Đơn đã xác nhận trống.</h6>
+                                                                            </div>`;
+                        $('#table-order-services-confirmed').html(content);
+                        $("#paging-confirmed").empty();
+                    }
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+
+            });
+        }
+        /*-----Area of Order Service Is Confirmed End-----*/
+
+
+        /*-----Area of Order Service Is Paid Start-----*/
+        let pageSizePaid = 5;        //Fixed the size of the confirmed page to be 10 items, just changing this value will change the page size.
+        let pageIndexPaid = 1;
+
+        let orderServicePaid = {
+            status: 'Đã thanh toán',
+            nameOrPhone: null,
+            orderDate: null,
+            serviceId: null,
+            sortServiceId: null,
+            sortCustomerName: null,
+            sortOrderDate: null,
+            sortOrderTime: null
+        };
+
+        function resetOptionSortPaid() {
+            orderServicePaid.sortServiceId = null;
+            orderServicePaid.sortCustomerName = null;
+            orderServicePaid.sortOrderDate = null;
+            orderServicePaid.sortOrderTime = null;
+        }
+
+        function refreshOrderServicePaid() {
+            orderServicePaid.status = 'Đã thanh toán';
+            orderServicePaid.nameOrPhone = $("#customer-info-search-paid").val();
+            orderServicePaid.orderDate = $("#order-date-search-paid").val();
+            orderServicePaid.serviceId = $("#service-id-search-paid").find(".choose").attr("data-serviceId");
+
+            resetOptionSortPaid();
+            orderServicePaid.sortServiceId = 'Ascending';
+
+            pageIndexPaid = 1;
+        }
+
+        function searchCustomerInfoPaid(event) {
+            event.preventDefault();
+            refreshOrderServicePaid();
+            fetchNewOrderServicesPaid();
+        }
+
+        function searchOrderDatePaid() {
+            refreshOrderServicePaid();
+            fetchNewOrderServicesPaid();
+        }
+
+        function searchServicePaid(element) {
+            $("#service-id-search-paid").find("li a").removeClass("choose");
+            $(element).addClass("choose");
+            refreshOrderServicePaid();
+            fetchNewOrderServicesPaid();
+        }
+
+        function selectServiceIdPaid() {
+            let currentStateSort = orderServicePaid.sortServiceId;
+            resetOptionSortPaid();
+            if (currentStateSort === null || currentStateSort === 'Descending') {
+                orderServicePaid.sortServiceId = 'Ascending';
+            } else {
+                orderServicePaid.sortServiceId = 'Descending';
+            }
+            fetchNewOrderServicesPaid();
+        }
+
+        function selectCustomerNamePaid() {
+            let currentStateSort = orderServicePaid.sortCustomerName;
+            resetOptionSortPaid();
+            if (currentStateSort === null || currentStateSort === 'Descending') {
+                orderServicePaid.sortCustomerName = 'Ascending';
+            } else {
+                orderServicePaid.sortCustomerName = 'Descending';
+            }
+            fetchNewOrderServicesPaid();
+        }
+
+        function selectOrderDatePaid() {
+            let currentStateSort = orderServicePaid.sortOrderDate;
+            resetOptionSortPaid();
+            if (currentStateSort === null || currentStateSort === 'Descending') {
+                orderServicePaid.sortOrderDate = 'Ascending';
+            } else {
+                orderServicePaid.sortOrderDate = 'Descending';
+            }
+            fetchNewOrderServicesPaid();
+        }
+
+        function selectOrderTimePaid() {
+            let currentStateSort = orderServicePaid.sortOrderTime;
+            resetOptionSortPaid();
+            if (currentStateSort === null || currentStateSort === 'Descending') {
+                orderServicePaid.sortOrderTime = 'Ascending';
+            } else {
+                orderServicePaid.sortOrderTime = 'Descending';
+            }
+            fetchNewOrderServicesPaid();
+        }
+
+        function selectPagePaid(currentPage) {
+            $("#paging-paid").find("li").removeClass("active");
+            $("#paging-paid").find("#page-Paid-" + currentPage).addClass("active");
+
+            pageIndexPaid = currentPage;
+            fetchNewOrderServicesPaid();
+        }
+
+        function fetchNewOrderServicesPaid() {
+            console.log('----------------------------------------')
+            console.log('nameOrPhone: ', orderServicePaid.nameOrPhone)
+            console.log('orderDate : ', orderServicePaid.orderDate)
+            console.log('serviceId : ', orderServicePaid.serviceId)
+            console.log('sortServiceId:', orderServicePaid.sortServiceId);
+            console.log('sortCustomerName:', orderServicePaid.sortCustomerName);
+            console.log('sortOrderDate:', orderServicePaid.sortOrderDate);
+            console.log('sortOrderTime:', orderServicePaid.sortOrderTime);
+            console.log('pageIndexPaid:', pageIndexPaid);
+
+            $.ajax({
+                type: 'POST',
+                url: '/Employee/Service/OrderedSeviceByConditions',
+                data: {
+                    orderServiceVM: orderServicePaid,
+                    pageIndex: pageIndexPaid,
+                    pageSize: pageSizePaid
+                },
+
+                success: function (response) {
+                    if (response.orderedServices != null && response.orderedServices.length > 0) {
+                        let content = '';
+                        response.orderedServices.forEach(function (order) {
+                            content += `<li id="order-item-${order.orderServiceId}" class="countries-item">
+                                                                    <div class="body-text">#${order.orderServiceId}</div>
+                                                                    <div class="body-text name-cell">${order.name}</div>
+                                                                    <div class="body-text phone-cell">${order.phone}</div>
+                                                                    <div class="body-text orderdate-cell">${order.orderDate}</div>
+                                                                    <div class="body-text ordertime-cell">${order.orderTime.toString().substring(0, 5)}</div>
+                                                                    <div class="body-text servicename-cell">${order.serviceName}</div>
+                                                                    <div>
+                                                                                <div class="block-available">${order.status}</div>
+                                                                    </div>
+                                                                    <div>
+                                                                        <div class="list-icon-function">
+                                                                                    <a class="item eye order-service-detail-btn" data-orderserviceid="${order.orderServiceId}"><i class="icon-eye"></i></a>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>`;
+                        });
+
+                        $('#table-order-services-paid').empty();
+                        $('#table-order-services-paid').html(content);
+                        $(".order-service-detail-btn").click(function () {
+                            let orderServiceId = $(this).data("orderserviceid");
+                            orderedServiceDetail(orderServiceId);
+                        });
+                        generatePagingNavigation("#paging-paid", "Paid", pageIndexPaid, response.numberPage);
+                    }
+                    else {
+                        $('#table-order-services-paid').empty();
+                        let content = `<div class="empty-order-history">
+                                                                                        <i class="fas fa-box-open"></i>
+                                                                                        <h6>Đơn đã thanh toán trống.</h6>
+                                                                                    </div>`;
+                        $('#table-order-services-paid').html(content);
+                        $("#paging-paid").empty();
+                    }
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+
+            });
+        }
+        /*-----Area of Order Service Is Paid End-----*/
+
+
+        function generatePagingNavigation(elementId, orderType, currentPage, numberPage) {
+            if (numberPage > 0) {
+                let content = '';
+                if (currentPage > 1) {
+                    content += `<li id="page-${orderType}-${currentPage - 1}" class="page-item"><a class="page-link" onclick="selectPage${orderType}(${currentPage - 1})" href="javascript:void(0);">Trang trước</a></li>`;
+                } else {
+                    content += `<li class="page-item"> <a class="page-link" href="javascript:void(0);" style="pointer-events:none; cursor:default; color:#b7b7b7;">Trang trước</a></li> `;
+                }
+                var startPage = Math.max(1, currentPage - 2);
+                var endPage = Math.min(numberPage, currentPage + 2);
+                if (startPage > 1) {
+                    content += ` <li id="page-${orderType}-1" class="page-item"><a class="page-link" onclick="selectPage${orderType}(1)" href="javascript:void(0);">1</a></li>`;
+                    if (startPage > 2) {
+                        content += ` <li class="page-item"><a class="page-link" href="javascript:void(0);">...</a></li>`;
+                    }
+                }
+                for (let i = startPage; i <= endPage; i++) {
+                    if (currentPage === i) {
+                        content += ` <li id="page-${orderType}-${i}" class="page-item active"><a class="page-link" href="javascript:void(0);" onclick="selectPage${orderType}(${i})">${i}</a></li>`;
+                    }
+                    else {
+                        content += ` <li id="page-${orderType}-${i}" class="page-item"><a class="page-link" href="javascript:void(0);" onclick="selectPage${orderType}(${i})">${i}</a></li>`;
+                    }
+                }
+                if (numberPage >= endPage + 1) {
+                    if (numberPage >= endPage + 2) {
+                        content += ` <li class="page-item"><a class="page-link" href="javascript:void(0);">...</a></li>`;
+                    }
+                    content += ` <li id="page-${orderType}-${numberPage}" class="page-item"><a class="page-link" onclick="selectPage${orderType}(${numberPage})" href="javascript:void(0);">${numberPage}</a></li>`;
+                }
+                if (currentPage != numberPage) {
+                    content += ` <li id="page-${orderType}-${currentPage + 1}" class="page-item"><a class="page-link" onclick="selectPage${orderType}(${currentPage + 1})" href="javascript:void(0);">Trang sau</a></li>`;
+                } else {
+                    content += `<li class="page-item" > <a class="page-link" href="javascript:void(0);" style="pointer-events:none; cursor:default; color:#b7b7b7;">Trang sau</a></li> `;
+                }
+                $(elementId).html(content);
+            } else {
+                $(elementId).empty();
+            }
+        }
+
+        function filterDatepicker() {
+            $('.filter-datepicker').datepicker({
+                format: "dd/mm/yyyy",
+                weekStart: 1,
+                startView: 0,
+                startDate: "1/1/2020",
+                maxViewMode: 1,
+                language: "vi",
+                autoclose: true,
+                orientation: "bottom auto",
+            });
+        }
+
+        function orderDatepicker() {
+            let tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            $('#order-datepicker').datepicker({
+                format: "dd/mm/yyyy",
+                weekStart: 1,
+                startView: 0,
+                startDate: tomorrow,
+                maxViewMode: 1,
+                language: "vi",
+                autoclose: true,
+                orientation: "bottom auto",
+            });
+        };
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.vi.min.js"></script>
+}
+

@@ -1,0 +1,393 @@
+﻿@using System.Text.Json
+
+<!doctype html>
+<html class="no-js" lang="vi">
+
+<!-- Mirrored from html.themewin.com/animart-tm-preview/animart/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 15 May 2024 14:33:43 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>@ViewData["Title"]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Favicons -->
+    <link rel="shortcut icon" href="~/img/favicon.png">
+    <!-- icofont css -->
+    <link rel="stylesheet" href="~/css/icofont.css">
+    <!-- Animate css -->
+    <link rel="stylesheet" href="~/css/animate.css">
+
+    <link rel="stylesheet" href="~/css//myStyle.css" />
+    <!-- Nice select css -->
+    <link rel="stylesheet" href="~/css/nice-select.css">
+    <!-- Jquery fancybox css -->
+    <link rel="stylesheet" href="~/css/jquery.fancybox.css">
+    <!-- Jquery ui price slider css -->
+    <link rel="stylesheet" href="~/css/jquery-ui.min.css">
+    <!-- Meanmenu css -->
+    <link rel="stylesheet" href="~/css/meanmenu.min.css">
+    <!-- Slick carousel css -->
+    <link rel="stylesheet" href="~/css/slick-slider.css">
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <!-- Custom css -->
+    <link rel="stylesheet" href="~/css/default.css">
+    <!-- Plugins css -->
+    <link rel="stylesheet" href="~/css/plugins.css">
+    <!-- Main css -->
+    <link rel="stylesheet" href="~/css/style.css">
+    <!-- Responsive css -->
+    <link rel="stylesheet" href="~/css/responsive.css">
+    <!-- Modernizer js -->
+    <script src="~/js/vendor/modernizr-3.5.0.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/8hmoehtsho9qzx2uls4bfsd2haevw9a5nwhp03mpsx4zn0vj/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    @RenderSection("HeadOptional", required: false)
+</head>
+
+<body>
+    <!-- Main Wrapper Start Here -->
+    <div class="wrapper">
+
+        <!-- Header Area Start Here -->
+        <header class="header-area header-style-two header-sticky">
+            <div class="container-fluid">
+
+                <div class="row align-items-center">
+                    <!-- Logo Start -->
+                    <div class="col-xl-2 col-lg-2 col-6">
+                        <div class="logo">
+                            <a asp-controller="Home" asp-action="Index">
+                                <img style="width: 75px" src="~/img/logo/logo2.jpg" alt="logo-image">
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Logo End -->
+
+                    <div class="col-xl-8 col-lg-8 d-none d-lg-block">
+                        <nav>
+                            <ul class="header-menu-list text-center">
+                                <li class="active">
+                                    <a asp-controller="Home" asp-action="Index">Trang Chủ</a>
+                                </li>
+                                <li class="static_class">
+                                    <a asp-controller="Product" asp-action="List">Sản Phẩm</a>
+                                </li>
+
+                                <li><a asp-action="list" asp-controller="news">Tin tức</a></li>
+                                <li><a asp-action="Index" asp-controller="AboutUs">Giới Thiệu</a></li>
+                                <li><a asp-action="Create" asp-controller="Consultation">Tư vấn</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <!-- Option Box Start Here -->
+                    <div class="col-xl-2 col-lg-2 col-6">
+                        <div class="cart-box">
+                            <ul>
+                                <!-- Search Box Start -->
+                                <li class="drodown-show">
+                                    <a href="#"><span class="icofont-search-1"></span></a>
+                                    <div class="dropdown categorie-search-box">
+                                        <form asp-action="search" asp-controller="product" method="get">
+                                            <input type="text" name="key" placeholder="Tìm Kiếm" required>
+                                            <button>
+                                                <span class="icofont-search-1"></span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </li>
+                                <!-- Search Box End -->
+                                <!--Wish List Start-->
+                                @if (TempData["WishList_ErrorMessage"] != null)
+                                {
+                                    <script>
+                                        var errorMessage = @Html.Raw(Json.Serialize(TempData["WishList_ErrorMessage"]));
+                                        alert(errorMessage);
+                                    </script>
+                                }
+                                <li>
+                                    <a asp-controller="WishList" asp-action="Detail"><span class="icofont-heart"></span></a>
+                                </li>
+                                <!--Wish List End-->
+                                <!--Cart Box Start -->
+                                <li class="drodown-show">
+                                    <a href="#"><span class="icofont-shopping-cart"></span><span class="total-pro" id="total_item"></span></a>
+                                    <ul class="dropdown cart-box-width">
+                                        <li>
+                                            <div id="list_item" style="max-height: 300px; overflow-y: auto">
+                                            </div>
+                                            <div class="cart-footer">
+                                                <ul class="price-content">
+                                                    <li style="padding-top: 20px">
+                                                        Tổng
+                                                        <span id="total_price">0</span>
+                                                    </li>
+                                                </ul>
+                                                <div class="cart-actions text-center">
+                                                    @* <a class="cart-checkout" href="checkout.html">Thanh toán</a> *@
+                                                    <a class="cart-checkout" href="/cart/detail">Xem giỏ hàng</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <!-- Cart Box Cart End -->
+                                <!-- Account Start -->
+                                <partial name="_Account.cshtml" />
+                                <!-- Account End -->
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Option Box End Here -->
+                </div>
+                <!-- Row End -->
+                <!-- Mobile Menu Start Here -->
+                <div class="mobile-menu d-block d-lg-none">
+                    <nav>
+                        <ul>
+                            <li>
+                                <a href="index.html">Trang Chủ</a>
+                            </li>
+                            <li>
+                                <a href="#">Sản Phẩm</a>
+                                <!--  Mega-Menu Start -->
+                                <ul class="submobile-mega-dropdown">
+                                    <li>
+                                        <a href="#">Mega Title</a>
+                                        <!-- Single Column Start -->
+                                        <ul>
+                                            <li>
+                                                <a href="about.html">About Us</a>
+                                            </li>
+                                            <li>
+                                                <a href="blog.html">Blog Page</a>
+                                            </li>
+                                            <li>
+                                                <a href="blog-details.html">Blog Details</a>
+                                            </li>
+                                            <li>
+                                                <a href="contact.html">Contact Page</a>
+                                            </li>
+                                            <li>
+                                                <a href="faq.html">FAQ Page</a>
+                                            </li>
+                                        </ul>
+                                        <!-- Single Column End -->
+                                    </li>
+                                    <li>
+                                        <a href="#">Mega Title</a>
+                                        <!-- Single Column Start -->
+                                        <ul>
+                                            <li>
+                                                <a href="shop.html">Shop Grid</a>
+                                            </li>
+                                            <li>
+                                                <a href="shop-list.html">Shop List</a>
+                                            </li>
+                                            <li>
+                                                <a href="cart.html">Cart Page</a>
+                                            </li>
+                                            <li>
+                                                <a href="compare.html">Compare Page</a>
+                                            </li>
+                                            <li>
+                                                <a href="checkout.html">Checkout Page</a>
+                                            </li>
+                                        </ul>
+                                        <!-- Single Column End -->
+                                    </li>
+                                    <li>
+                                        <a href="#">Mega Title</a>
+                                        <!-- Single Column Start -->
+                                        <ul>
+                                            <li>
+                                                <a href="wishlist.html">Wishlist Page</a>
+                                            </li>
+                                            <li>
+                                                <a href="login.html">Login Page</a>
+                                            </li>
+                                            <li>
+                                                <a href="register.html">Register Page</a>
+                                            </li>
+                                            <li>
+                                                <a href="404.html">Error Page</a>
+                                            </li>
+                                            <li>
+                                                <a href="product-details.html">Product Details</a>
+                                            </li>
+                                        </ul>
+                                        <!-- Single Column End -->
+                                    </li>
+                                    <li>
+                                        <a href="#">Mega Title</a>
+                                        <!-- Single Column Start -->
+                                        <ul>
+                                            <li>
+                                                <a href="product-details-2.html">Product Details-2</a>
+                                            </li>
+                                            <li>
+                                                <a href="product-details-3.html">Product Details-3</a>
+                                            </li>
+                                            <li>
+                                                <a href="product-details-4.html">Product Details-4</a>
+                                            </li>
+                                            <li>
+                                                <a href="product-details-5.html">Product Details-5</a>
+                                            </li>
+                                            <li>
+                                                <a href="product-details-6.html">Product Details-6</a>
+                                            </li>
+                                        </ul>
+                                        <!-- Single Column End -->
+                                    </li>
+                                </ul>
+                                <!--  Mega-Menu End -->
+                            </li>
+                            <!--<li><a href="shop.html">Shop</a></li>-->
+                            <li>
+                                <a href="#">Dịch Vụ</a>
+                                <!-- Home Version Dropdown Start -->
+                                <ul>
+                                    <li>
+                                        <a href="product-details.html">Product Details</a>
+                                    </li>
+                                    <li>
+                                        <a href="product-details-2.html">Product Details-2</a>
+                                    </li>
+                                    <li>
+                                        <a href="product-details-3.html">Product Details-3</a>
+                                    </li>
+                                    <li>
+                                        <a href="product-details-4.html">Product Details-4</a>
+                                    </li>
+                                    <li>
+                                        <a href="product-details-5.html">Product Details-5</a>
+                                    </li>
+                                    <li>
+                                        <a href="product-details-6.html">Product Details-6</a>
+                                    </li>
+                                </ul>
+                                <!-- Home Version Dropdown End -->
+                            </li>
+                            <li><a href="blog.html">Blog</a></li>
+                            <li><a href="about.html">Giới Thiệu</a></li>
+                            <li><a href="contact.html">Liên Hệ</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <!-- Mobile Menu End Here -->
+
+            </div>
+            <!-- Container End -->
+        </header>
+        <!-- Header Area End Here -->
+        <!-- Breadcrumb Area Start Here -->
+        @{
+            string currentController = ViewContext.RouteData.Values["controller"].ToString();
+            string currentAction = ViewContext.RouteData.Values["action"].ToString();
+        }
+        @if (currentController != "Home" || currentAction != "Index")
+        {
+            <partial name="_BreadCumb" />
+        }
+        <!-- Breadcrumb Area End Here -->
+        <!-- Render Body Start-->
+        @RenderBody()
+        <!-- Render Body End-->
+        <!-- Footer Area Start Here -->
+        <footer>
+            <div class="footer_area_wrapper footer_color_bg" style="background-color:#1d2536">
+                <div class="container">
+                    <!-- Footer Middle Start -->
+                    <div class="footer-top adp_top adp_bottom">
+                        <div class="row">
+                            <!-- Single Footer Start -->
+                            <div class="col-lg-4 col-md-6">
+                                <div class="footer_widget">
+                                    <h4 class="footer-title">Liên Hệ</h4>
+                                    <div class="footer-content">
+                                        <p>Cửa hàng ECOCAU hân hạnh được phục vụ bạn!</p>
+                                        <ul class="footer_contact">
+                                            <li><i class="icofont-home"></i><span>Địa chỉ:</span>Khu CNC Hòa Lạc, Thạch Thất, Hà Nội</li>
+                                            <li><i class="icofont-ui-dial-phone"></i><span>Phone:</span> 039 848 6547</li>
+                                            <li><i class="icofont-email"></i><span>Email :</span> animartpetshop@gmail.com</li>
+                                            @* <li><i class="icofont-facebook"></i><span>Facebook:</span> animartpetshop</li> *@
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Single Footer Start -->
+                            <!-- Single Footer Start -->
+                            <div class="col-lg-2 col-md-6">
+                                <div class="footer_widget">
+                                    <h4 class="footer-title">Thông Tin</h4>
+                                    <div class="footer-content">
+                                        <ul class="footer-list">
+                                            <li><a href="#">Giới Thiệu</a></li>
+                                            <li><a href="#">Liên Hệ</a></li>
+                                            <li><a href="#">Thanh Toán</a></li>
+                                            <li><a href="#">Vận Chuyển</a></li>
+                                            <li><a href="#">Chính Sách Bảo Mật</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Single Footer Start -->
+                            <!-- Single Footer Start -->
+                            <div class="col-lg-3 col-md-6">
+                                <div class="footer_widget">
+                                    <h4 class="footer-title">Tin tức mới với ứng dụng</h4>
+                                    <p>Nhận tin tức mới nhất qua email</p>
+                                    <div class="subscribtion_form">
+                                        <form action="#" method="post">
+                                            <input type="email" name="mail" class="form-control mail" placeholder="Email của bạn">
+                                            <button type="submit" class="submit"><i class="icofont-long-arrow-right"></i></button>
+                                        </form>
+                                    </div>
+                                    <div class="single_footer_apps">
+                                        <div class="footer_heading">
+                                            <h6>Tải Ứng Dụng Mobile</h6>
+                                        </div>
+                                        <div class="apps_download">
+                                            <a href="#"><img src="~/img/icons/play-store.png" alt="Play Store"></a>
+                                            <a href="#"><img src="~/img/icons/app-store.png" alt="Apple Store"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Single Footer Start -->
+
+                        </div>
+                        <!-- Row End -->
+                    </div>
+                    <!-- Footer Middle End -->
+                </div>
+            </div>
+        </footer>
+        <!-- Footer Area End Here -->
+
+    </div>
+    <!-- Main Wrapper End Here -->
+    <script src="~/js/myjs.js"></script>
+    <!-- jquery 3.3.1 -->
+    <script src="~/js/vendor/jquery-3.3.1.min.js"></script>
+    <!-- Mobile menu js -->
+    <script src="~/js/jquery.meanmenu.min.js"></script>
+    <!-- ScrollUp js -->
+    <script src="~/js/jquery.scrollUp.js"></script>
+    <!-- Jquery nice select js -->
+    <script src="~/js/jquery.nice-select.min.js"></script>
+    <!-- Jquery ui price slider js -->
+    <script src="~/js/jquery-ui.min.js"></script>
+    <!-- Bootstrap popper js -->
+    <script src="~/js/popper.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <!-- Plugin js -->
+    <script src="~/js/plugins.js"></script>
+    <!-- Main activaion js -->
+    <script src="~/js/main.js"></script>
+    @RenderSection("ScriptOptional", required: false)
+
+</body>
+</html>

@@ -1,0 +1,285 @@
+﻿@using PetStoreProject.ViewModels
+@using Newtonsoft;
+@{
+    ViewData["Title"] = "Chi tiết Giỏ Hàng";
+    var cartItems = ViewData["cartItems"] as List<CartItemViewModel>;
+}
+
+<style>
+    .checkbox_style {
+        width: 25px !important;
+    }
+
+    .cart-price{
+        color: #198754;
+    }
+</style>
+<div class="cart-main-area adp_top adp_bottom">
+    <div class="container">
+        <div class="row" id="cart_content">
+            @if (cartItems.Count > 0)
+            {
+                <div class="col-md-12 col-sm-12">
+                    <!-- Form Start -->
+                    <form action="#">
+                        <!-- Table Content Start -->
+                        <div class="table-content table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60px"><input type="checkbox" name="checkbox" class="checkbox_style" style="height:25px" id="checkbox_all" /></th>
+                                        <th class="product-thumbnail">Ảnh</th>
+                                        <th class="product-name">Tên sản phẩm</th>
+                                        <th class="product-price">Giá</th>
+                                        <th class="product-quantity">Số lượng</th>
+                                        <th class="product-subtotal">Tổng</th>
+                                        <th class="product-remove" style="width: 100px">Chỉnh sửa</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cartTable">
+                                    @{
+                                        var i = 0;
+                                        foreach (var item in cartItems)
+                                        {
+                                            var option = "";
+                                            if (!(item.Size.Name == null))
+                                            {
+                                                    option += "( " + item.Size.Name + " )";
+                                            }
+
+                                            var price = item.Price;
+
+                                            if (item.Promotion != null)
+                                            {
+                                                price = price * (1 - (float)item.Promotion.Value / 100);
+                                                <input type="hidden" value="@item.Promotion.PromotionId" id="product_promotionId_@i"/>
+                                            }
+
+                                            var totalPrice = price * item.Quantity;
+                                            <tr id="@item.ProductOptionId" class="item" >
+                                                @if(item.QuantityInStock < item.Quantity) 
+                                                {
+                                                    <td style="width: 60px;"><input type="checkbox" name="checkbox" class="checkboxItem checkbox_style checkbox_@item.ProductOptionId" id="checkbox_@i" onchange="amountCart()" disabled/></td>
+                                                }else
+                                                {
+                                                    <td style="width: 60px"><input type="checkbox" name="checkbox" class="checkboxItem checkbox_style checkbox_@item.ProductOptionId" id="checkbox_@i" onchange="amountCart()" /></td>
+                                                }
+                                                <td class="product-thumbnail">
+                                                    <a href="#"><img src="@item.ImgUrl" id="product_img_@i" alt="cart-image" /></a>
+                                                </td>
+                                                <td class="product-name">
+                                                    <a href="http://localhost:5206/product/detail/@item.ProductId">@item.Name <br /> @option</a>
+                                                    <input type="hidden" id="product_name_@i" value="@item.Name" />
+                                                    <input type="hidden" value="@option" id="product_option_@i" />
+                                                </td>
+                                                <td class="product-price">
+                                                    <span class="amount cart-price" >@price.ToString("#,###") VND</span>
+                                                    <input type="hidden" value="@item.Price" id="product_price_@i"/>
+                                                    @if(item.Promotion != null)
+                                                    {
+                                                        <div>
+                                                            <del class="discount_price">@item.Price.ToString("#,###.###") VND</del>
+                                                        </div>
+                                                        
+                                                    }
+                                                </td>
+                                                <td class="product-quantity"><input id="product_quantity_@i" value="@item.Quantity" readonly /></td>
+                                                <td class="product-subtotal cart-price" id="product_totalPrice_@i">@totalPrice.ToString("#,###") VND</td>
+                                                <td style="width: 60px">
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#myModal" title="Chỉnh sửa" onclick="callQuickEdit(@item.ProductOptionId, @item.ProductId)" style="color: #666666; font-size:18px">
+                                                        <i class="icofont-edit"></i>
+                                                    </a>
+                                                    <a style="cursor:pointer" onclick="confirmDelete(@item.ProductOptionId, '@item.Name.Trim()')" title="Xóa sản phẩm"><i class="icofont-delete-alt" style="font-size: 18px; margin-left: 10px"></i></a>
+                                                </td>
+                                                <input type="hidden" value="@item.ProductOptionId" class="productOptionSelected" id="product_productOption_@i"/>
+                                                <input type="hidden" value="@item.ProductId" id="product_id_@i"/>
+                                            </tr>
+                                            i++;
+                                        }
+                                        <input type="hidden" value="@i" id="totalCheckboxId" />
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Table Content Start -->
+                        <div class="row cart_bottom_wrapper">
+
+                            <!-- Cart Button Start -->
+                            <div class="col-md-8 col-sm-12">
+                                <div class="buttons-cart">
+                                    <a href="/">Tiếp tục mua sắm</a>
+                                </div>
+                            </div>
+                            <!-- Cart Button Start -->
+                            <!-- Cart Totals Start -->
+                            <div class="col-md-4 col-sm-12">
+                                <div class="cart_totals">
+                                    <h2>Tổng đơn hàng</h2>
+                                    <br />
+                                    <table>
+                                        <tbody>
+                                            <tr class="order-total">
+                                                <th>Tổng</th>
+                                                <td>
+                                                    <strong><span class="amount" id="amount">0</span><span class="amount">VND</span></strong>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="wc-proceed-to-checkout">
+
+                                        <a href="#" onclick="selectedProductCheckout()">Thanh Toán</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Cart Totals End -->
+
+                        </div>
+                        <!-- Row End -->
+                    </form>
+                    <!-- Form End -->
+                </div>
+            }
+            else
+            {
+                <div class="row justify-content-center">
+                    <div class="col-md-6 col-sm-10 text-center">
+                        <div class="text-center">
+                            <img style="width: 70%" src="~/img/notfound/cart-empty.jpg" alt="Giỏ hàng trống" />
+                        </div>
+                        <div class="buttons-cart d-inline-block ">
+                            <a style="margin:0" href="/">Tiếp tục mua sắm</a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+        <!-- Row End -->
+    </div>
+</div>
+
+<!-- Quick View Content Start -->
+<div class="main-product-thumbnail quick-thumb-content">
+    <div class="container">
+        <!-- The Modal -->
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="row">
+
+                            <div class="col-lg-6 col-md-6">
+                                <div class="product-details product_details_1">
+                                    <div class="product-details-img">
+                                        <div class="tab-content main_large_img product-details-large" id="quick_image">
+                                        </div>
+
+                                        <div class="shop-details-tab nav product-details-small" id="image_small">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Thumbnail Description Start -->
+                            <div class="col-md-6">
+                                <div class="thubnail-desc ">
+
+                                    <!--Name-->
+                                    <h3 class="product-header"><a href="#" id="quick_name"></a></h3>
+@*                                     <ul class="rating-summary">
+                                        <li class="rating-pro">
+                                            <i class="icofont-ui-rating"></i>
+                                            <i class="icofont-ui-rating"></i>
+                                            <i class="icofont-ui-rate-blank"></i>
+                                            <i class="icofont-ui-rate-blank"></i>
+                                            <i class="icofont-ui-rate-blank"></i>
+                                        </li>
+                                        <li class="read-review"><a href="#">Xem đánh giá</a></li>
+                                        <li class="write-review"><a href="#">Viết đánh giá</a></li>
+                                    </ul> *@
+
+                                    <!--Brand-->
+                                    <div class="rating-summary" id="quick_brand">
+                                    </div>
+
+                                    <!--Price-->
+                                    <div class="pro-thumb-price mt-20">
+                                        <span class="regular-price" id="quick_price"></span>
+                                        <span class="regular-price">VND</span>
+                                        <del class="discount_price" id="quick_price_discount"></del>
+                                    </div>
+
+                                    <!--Option-->
+                                    <div class="thubnail-desc" id="quick_option">
+
+                                        <div class="size_color_wraper" id="quick_attribute">
+                                        </div>
+
+                                        <!--Size-->
+
+                                        <div class="theme_size clearfix" id="quick_size">
+                                        </div>
+                                    </div>
+
+                                    <div style="margin-top: 10px; font-size: 15px;">Trong kho: <span id="quick_quantityInStock"></span> sản phẩm</div>
+
+                                    <div class="details_action_wraper" style="margin-top:10px; font-size:15px; display:flex; align-items:center">
+                                        Số lượng:
+                                        <form action="#" onclick="quick_total_price()" style="border-radius: 10px">
+                                            <input class="quantity" type="number" min="1" max="10" value="1" id="quick_quantity" style="width:60px;height:33px; margin-left:10px" oninput="validateQuantity(this)">
+                                        </form>
+                                    </div>
+
+                                    <div style="margin-top: 10px; font-size: 16px;">
+                                        Tổng số tiền: <span id="quick_amount"></span>
+                                        <span>VND</span>
+                                    </div>
+
+                                    <!--Cart-->
+                                    <div class="details_action_wraper">
+                                        <a class="details_cart link" title="" data-original-title="Lưu sản phẩm" tabindex="0" data-product-option-id="" data-old-product-option-id="" id="quick_add_to_cart" onclick="editCartItem(this.dataset.oldProductOptionId, this.dataset.productOptionId, document.getElementById('quick_quantity').value)" style="cursor: pointer;">
+                                            Lưu thay đổi
+                                        </a>
+                                        @* <a class="details_wishlist" href="wishlist.html" title="" data-original-title="Wishlist" tabindex="0"><i class="icofont-heart-alt"></i></a> *@
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Thumbnail Description End -->
+
+
+                        </div>
+                        <!-- Row End -->
+                    </div>
+                    <!-- Modal footer -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="notification" style="display:none; position:fixed; bottom:10px; right:10px; color:white; padding:10px; border-radius:5px;">
+</div>
+<script>
+    function confirmDelete(productOptionId, name) {
+        console.log("Confirm delete for product option ID:", productOptionId);
+        var confirmation = confirm("Bạn có muốn xóa " + name + " ra khỏi giỏ hàng không?");
+        if (confirmation) {
+            deleteCartItem(productOptionId)
+        }
+    }
+
+    function callQuickEdit(productOptionId, productId) {
+        quickEditCartItem(productOptionId, productId);
+        $('#quick_add_to_cart').html('Lưu thay đổi');
+
+    }
+
+</script>
+<script src="~/js/checkout.js"></script>

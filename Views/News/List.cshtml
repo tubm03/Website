@@ -1,0 +1,142 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList
+
+@model IPagedList<PetStoreProject.ViewModels.NewsViewModel>;
+@{
+	ViewData["Title"] = "Tin Tức";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="UTF-8">
+	<title>@ViewData["Title"]</title>
+	<style>
+		.blog-img {
+			width: 100%;
+			aspect-ratio: 16/10;
+			overflow: hidden;
+		}
+
+			.blog-img img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+		.blog-column {
+			display: flex;
+			flex-direction: column;
+			margin: 10px;
+			flex: 1;
+		}
+
+		.single-animart-blog {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			height: 100%;
+			border: 1px solid #ddd;
+			padding: 15px;
+			box-sizing: border-box;
+			min-height: 450px;
+		}
+
+		.grid-blog-content {
+			flex-grow: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		.blog-btn {
+			display: flex;
+			justify-content: center;
+			margin-top: auto;
+		}
+
+		.pagination-blog {
+			display: flex;
+			justify-content: center;
+			margin-top: 20px;
+		}
+
+		.pagination {
+			display: flex;
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			justify-content: center;
+		}
+
+			.pagination li {
+				margin: 0 5px;
+			}
+
+			.pagination a, .pagination span {
+				color: #007bff;
+				text-decoration: none;
+				border: 1px solid #dee2e6;
+				padding: 8px 12px;
+				border-radius: 4px;
+				transition: background-color 0.3s;
+			}
+
+				.pagination a:hover {
+					background-color: #e9ecef;
+				}
+
+			.pagination .active span {
+				background-color: #007bff;
+				color: white;
+				border-color: #007bff;
+			}
+	</style>
+</head>
+<body>
+	<div class="blog-area adp_top adp_bottom">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-xl-12 col-lg-10 mb-0">
+					<div class="row">
+						@foreach (var news in Model)
+						{
+							<div class="col-lg-4 col-md-6 mb-4 d-flex align-items-stretch">
+								<div class="single-animart-blog">
+									<div class="blog-img">
+										<a href="/News/Detail?newsId=@news.NewsId">
+											<img src="@news.url_thumnail" alt="blog-img">
+										</a>
+										<div class="publish-meta-date">
+											<span>@news.DateOnly</span>
+										</div>
+									</div>
+
+									<div class="grid-blog-content">
+										<h4>
+											<a href="/News/Detail?newsId=@news.NewsId">@news.Title</a>
+										</h4>
+
+										<ul class="blog-post-meta">
+											<li>Người Đăng: ECOCAU</li>
+										</ul>
+
+										<p>@news.Description</p>
+
+										<div class="blog-btn" style="display: flex; justify-content: center; margin-top: auto;">
+											<a href="/News/Detail?newsId=@news.NewsId">Đọc thêm</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+			<div class="pagination-blog">
+				@Html.PagedListPager(Model, page => Url.Action("List", new { page, pagesize = 12 }))
+			</div>
+		</div>
+	</div>
+</body>
+</html>

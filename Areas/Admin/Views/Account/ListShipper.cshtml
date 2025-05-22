@@ -1,0 +1,613 @@
+﻿@using PetStoreProject.Areas.Admin.ViewModels;
+@using Newtonsoft.Json;
+
+@{
+    var listDistricts = ViewData["ListDistrict"] as List<District>;
+    var listShippers = ViewData["ListShipper"] as List<ShipperViewModel>;
+    var numberOfPage = ViewData["NumberOfPage"];
+}
+
+@section HeadOptional {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+    <link href="~/areas/css/list-shipper-style.css" rel="stylesheet" />
+}
+
+
+<div class="modal fade" id="deleteAccount" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content popup_delete">
+            <div class="modal-header header_delete_style">
+                <h3 class="modal-title" id="deleteUserModalLabel">Xóa tài khoản nhân viên</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding:20px 50px 40px 50px!important">
+                <p style="font-size:17px;">Bạn có chắc muốn xóa tài khoản nhân viên <strong id="nameAccountDelete"></strong>?</p>
+                <br />
+                <input type="hidden" id="shipperId" />
+                <div id="error-mess"></div>
+                <div class="input-group">
+                    <input type="password" class="flex-grow" id="passwordAdmin" placeholder="Vui lòng nhập mật khẩu để xác nhận" required />
+                    <div class="btn show-btn" onclick="showPassword()">
+                        <i class="bi bi-eye eye_style" id="eye-icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-bottom:10px">
+                <button type="button" class="btn btn-danger" onclick="confirmDelete()" style="font-size:15px; border-radius:5px;">Có, xóa tài khoản</button>
+                <button type="button" class="btn btn-secondary" aria-label="Close" style="font-size:15px;border-radius:5px;" data-bs-dismiss="modal">Không, giữ tài khoản</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Tất cả nhân viên giao hàng</h3>
+        </div>
+        <!-- Table -->
+        <div class="wg-box">
+            <div class="flex items-center justify-between gap10 flex-wrap">
+                <div class="wg-filter flex-grow">
+                    <form class="form-search" onsubmit="searchShipperName(event)">
+                        <input id="shipper-name-search" type="text" placeholder="Tìm tên nhân viên" tabindex="2" required>
+                        <div class="button-submit">
+                            <button type="submit"><i class="icon-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+                <a class="tf-button style-1 w208" onclick="addShipper()"><i class="icon-plus"></i>Tạo Tài Khoản</a>
+            </div>
+            <div class="wg-table table-countries admin wrap-checkbox">
+                <ul class="table-title flex gap20 mb-14">
+                    <li>
+                        <a class="body-title" onclick="selectShipperName()">Tên nhân viên<i class="bi bi-chevron-expand"></i></i></a>
+                    </li>
+                    <li>
+                        <a class="body-title">Số điện thoại</a>
+                    </li>
+                    <li>
+                        <a class="body-title" onclick="selectDeliveryQuantity()">Số đơn đã giao <i class="bi bi-chevron-expand"></i></a>
+                    </li>
+                    <li style="position: relative">
+                        <a class="body-title">Khu vực <i class="bi bi-funnel"></i></a>
+                        <ul class="common_ddown" id="district-search" style="width: 195px">
+                            <li><a data-district="" onclick="searchDistrict(this)">- Tất cả các quận</a></li>
+                            @foreach (var district in listDistricts)
+                            {
+                                <li><a data-district="@district.DistrictId" onclick="searchDistrict(this)">- @district.Name</a></li>
+                            }
+                        </ul>
+                    </li>
+                    <li style="position: relative">
+                        <a class="body-title">Trạng thái <i class="bi bi-funnel"></i></a>
+                        <ul class="common_ddown" id="account-status-search" style="width: 195px">
+                            <li><a data-status="" onclick="searchAccountStatus(this)">- Tất cả trạng thái</a></li>
+                            <li><a data-status="false" onclick="searchAccountStatus(this)">- Đã kích hoạt</a></li>
+                            <li><a data-status="true" onclick="searchAccountStatus(this)">- Không kích hoạt</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="body-title">Thao tác</div>
+                    </li>
+                </ul>
+                @if (listShippers != null && listShippers.Count > 0)
+                {
+                    <ul id="table-shipper" class="flex flex-column">
+                        @foreach (var shipper in listShippers)
+                        {
+                            <li id="shipper-@shipper.ShipperId" class="countries-item">
+                                <div class="body-text">
+                                    <img src="/areas/images/logo_user/user-avatar.svg.png" alt="Image" />
+                                    <div class="fullName">
+                                        @shipper.FullName
+                                    </div>
+                                </div>
+                                <div class="body-text">@shipper.Phone</div>
+                                <div class="body-text">@shipper.TotalDeliveredQuantity</div>
+                                <div class="body-text">
+                                    @{
+                                        string districts = "";
+                                        foreach (var district in shipper.Districts)
+                                        {
+                                            districts += district.Name + ", ";
+                                        }
+                                    }
+                                    @districts.Substring(0, districts.Length - 2)
+                                </div>
+                                <div>
+                                    @if (shipper.IsDelete == true)
+                                    {
+                                        <div class="account-status block-not-available w-100">Không kích hoạt</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="account-status block-available w-100">Kích hoạt</div>
+                                    }
+                                </div>
+                                <div>
+                                    <div class="list-icon-function">
+                                        <a class="item eye" onclick='viewShipperDetail(@Html.Raw(Json.Serialize(shipper)))'><i class="icon-eye"></i></a>
+                                        @if (shipper.IsDelete == false)
+                                        {
+                                            <a class="item edit " onclick='updateShipper(@Html.Raw(Json.Serialize(shipper)))'><i class="icon-edit-3"></i></a>
+                                            <a class="item trash " onclick="deleteShipper(@shipper.ShipperId)"><i class="icon-trash-2"></i></a>
+                                        }
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="empty-order-history">
+                        <i class="fas fa-box-open"></i>
+                        <h6>Không có dữ liệu.</h6>
+                    </div>
+                }
+            </div>
+            <div class="divider"></div>
+            <div class="flex items-center justify-content-end flex-wrap gap10">
+                @* <div class="text-tiny">Showing 10 to 16 in 16 records</div> *@
+                <nav aria-label="Page navigation example">
+                    <ul id="paging-navigation" class="pagination">
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <!-- /Table -->
+    </div>
+    <!-- /main-content-wrap -->
+</div>
+
+@Html.Partial("ShipperDetail")
+@Html.Partial("ShipperManagement")
+
+@section ScriptOptional {
+    <script>
+        $("document").ready(function () {
+            $("#district-search li:first-child a").addClass("choose");
+            $("#account-status-search li:first-child a").addClass("choose");
+
+            generatePagingNavigation(1, @numberOfPage);
+        });
+
+        let pageIndex = 1;
+        let pageSize = 5;
+
+        let shipperFilter = {
+            name: null,
+            districtId: null,
+            status: null,
+            sortName: null,
+            sortDeliveryQuantity: null,
+        }
+
+        function resetSortOption() {
+            shipperFilter.sortName = null;
+            shipperFilter.sortDeliveryQuantity = null;
+        }
+
+
+        function refreshShipperFilter() {
+            shipperFilter.name = $("#shipper-name-search").val();
+            shipperFilter.districtId = $("#district-search li").find('.choose').attr("data-district");
+            shipperFilter.status = $("#account-status-search li").find('.choose').attr("data-status");
+
+            resetSortOption();
+
+            pageIndex = 1;
+
+            console.log("name", shipperFilter.name);
+            console.log("district", shipperFilter.districtId);
+            console.log("status", shipperFilter.status);
+        }
+
+        function searchShipperName(event) {
+            event.preventDefault();
+            refreshShipperFilter();
+            fetchNewListShipper();
+        }
+
+        function searchDistrict(element) {
+            $("#district-search li a").removeClass('choose');
+            $(element).addClass('choose');
+            refreshShipperFilter();
+            fetchNewListShipper();
+        }
+
+        function searchAccountStatus(element) {
+            $("#account-status-search li a").removeClass('choose');
+            $(element).addClass('choose');
+            refreshShipperFilter();
+            fetchNewListShipper();
+        }
+
+        function selectShipperName() {
+            let currentStateSort = shipperFilter.sortName;
+            resetSortOption();
+            if (currentStateSort === null || currentStateSort === 'Descending') {
+                shipperFilter.sortName = 'Ascending';
+            } else {
+                shipperFilter.sortName = 'Descending';
+            }
+            fetchNewListShipper();
+        }
+
+        function selectDeliveryQuantity() {
+            let currentStateSort = shipperFilter.sortDeliveryQuantity;
+            resetSortOption();
+            if (currentStateSort === null || currentStateSort === 'Descending') {
+                shipperFilter.sortDeliveryQuantity = 'Ascending';
+            } else {
+                shipperFilter.sortDeliveryQuantity = 'Descending';
+            }
+            fetchNewListShipper();
+        }
+
+        function selectPage(currentPage) {
+            $("#paging-navigation").find("li").removeClass("active");
+            $("#paging-navigation").find("#page-" + currentPage).addClass("active");
+
+            pageIndex = currentPage;
+            fetchNewListShipper();
+        }
+
+        function fetchNewListShipper() {
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Account/ListShipper",
+                data: { shipperFilterVM: shipperFilter, pageIndex: pageIndex, pageSize: pageSize },
+
+                success: function (response) {
+                    if (response.listShipper != null && response.listShipper.length > 0) {
+                        let content = '';
+                        response.listShipper.forEach(function (shipper) {
+                            let encodedShipper = encodeURIComponent(JSON.stringify(shipper));
+                            content += `<li id="shipper-${shipper.shipperId}" class="countries-item">
+                                            <div class="body-text">
+                                                <img src="/areas/images/logo_user/user-avatar.svg.png" alt="Image" />
+                                                <div class="fullName">${shipper.fullName}</div>
+                                            </div>
+                                            <div class="body-text">${shipper.phone}</div>
+                                            <div class="body-text">${shipper.totalDeliveredQuantity}</div>
+                                            <div class="body-text">`;
+                            let listDistrict = '';
+                            shipper.districts.forEach(function (district) {
+                                listDistrict += district.name + ", ";
+                            });
+
+                            content += `${listDistrict.substring(0, listDistrict.length - 2)}</div>
+                                                                                                        <div>`;
+
+                            if (shipper.isDelete) {
+                                content += '<div class="account-status block-not-available w-100" >Không kích hoạt</div>';
+                            }
+                            else {
+                                content += '<div class="account-status block-available w-100">Kích hoạt</div>';
+                            }
+
+                            content += `</div>
+                                                                            <div>
+                                                                                <div class="list-icon-function">
+                                                                                    <a class="item eye" onclick='viewShipperDetailParse("${encodedShipper}")'><i class="icon-eye"></i></a>`;
+                            if (shipper.isDelete === false) {
+                                content += `<a class="item edit " onclick='updateShipperParse("${encodedShipper}")'><i class="icon-edit-3"></i></a>
+                                                                            <a class="item trash " onclick="deleteShipper(${shipper.shipperId})"><i class="icon-trash-2"></i></a>`
+                            };
+
+                            content += `</div>
+                                                                                </div>
+                                                                            </li>`;
+                        });
+
+                        $('#table-shipper').empty();
+                        $('#table-shipper').html(content);
+                        generatePagingNavigation(pageIndex, response.numberOfPage);
+                    } else {
+                        $('#table-shipper').empty();
+                        let content = `<div class="empty-order-history">
+                                            <i class="fas fa-box-open"></i>
+                                            <h6>Không có dữ liệu.</h6>
+                                        </div>`;
+                        $('#table-shipper').html(content);
+                        $("#paging-navigation").empty();
+                    }
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function viewShipperDetailParse(shipperJson) {
+            let shipper = JSON.parse(decodeURIComponent(shipperJson));
+            viewShipperDetail(shipper);
+        }
+
+        function updateShipperParse(shipperJson) {
+            let shipper = JSON.parse(decodeURIComponent(shipperJson));
+            updateShipper(shipper);
+        }
+
+        function viewShipperDetail(shipper) {
+            $('#user-name').empty();
+            $('#user-name').text(shipper.fullName);
+
+            $('#role').empty();
+            $('#role').html('<span>Nhân viên giao hàng</span>');
+
+            $('#gender').val('');
+            if (shipper.gender === true) {
+                $('#gender').val('Nam');
+            } else {
+                $('#gender').val('Nữ');
+            }
+
+            $('#dob').val('');
+            $('#dob').val(shipper.doB);
+
+            $('#phone').val('');
+            $('#phone').val(shipper.phone);
+
+            $('#address').val('');
+            $('#address').val(shipper.address);
+
+            $('#email').val('');
+            $('#email').val(shipper.email);
+
+            let listDistrict = '';
+            shipper.districts.forEach(function (district) {
+                listDistrict += district.name + ", ";
+            });
+
+            $('#areaShipping').val('');
+            $('#areaShipping').val(listDistrict.substring(0, listDistrict.length - 2));
+
+            $("#profilePopup").modal("show");
+        }
+
+        function resetFormAndShowModal() {
+            $('#manageShipper .text-danger').text('');
+            $('#registrationForm')[0].reset();
+            $(".shipper-id-container").empty();
+            $(".district-container").empty();
+        }
+
+        function addShipper() {
+            resetFormAndShowModal();
+            $("#manageShipper").find(".modal-title").text("Tạo tài khoản nhân viên giao hàng");
+            $("#manageShipper").find(".tf-button").text("Tạo tài khoản");
+            $("#manageShipper").modal("show");
+            $("#manageShipper").off('submit').on('submit', function (event) {
+                event.preventDefault();
+                resquestShipper('create');
+            });
+        }
+
+        function updateShipper(shipper) {
+            $("#manageShipper").find(".modal-title").text("Cập nhật nhân viên giao hàng");
+            $("#manageShipper").find(".tf-button").text("Cập nhật tài khoản");
+            resetFormAndShowModal();
+
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'ShipperId',
+                value: shipper.shipperId
+            }).appendTo('.shipper-id-container');
+
+            $("#FullName").val(shipper.fullName);
+            $("#DoB").val(shipper.doB);
+            if (shipper.gender === true) {
+                $("#male").prop('checked', true);;
+            } else {
+                $("#female").prop('checked', true);;
+            }
+            $("#Email").val(shipper.email);
+            $("#Phone").val(shipper.phone);
+            $("#Address").val(shipper.address);
+
+            let selectedDistrictIds = shipper.districts.map(d => d.districtId.toString());
+
+            let iframe = $("#districtsIframe");
+
+            iframe.on('load', function () {
+                let iframeDocument = iframe.contents();
+                let districts = iframeDocument.find("#districts");
+
+                setTimeout(function () {
+                    $(districts).children("option").each(function () {
+                        let optionValue = $(this).val().toString();
+                        if (selectedDistrictIds.includes(optionValue)) {
+                            $(this).prop("selected", true).attr("selected", "selected");
+                            let liElement = iframeDocument.find(`.multiselect-container li input[type="checkbox"][value="${optionValue}"]`).closest('li');
+                            liElement.addClass("active");
+                            liElement.find('input[type="checkbox"]').prop('checked', true);
+                        } else {
+                            $(this).prop("selected", false).removeAttr("selected");
+                            let liElement = iframeDocument.find(`.multiselect-container li input[type="checkbox"][value="${optionValue}"]`).closest('li');
+                            liElement.removeClass("active");
+                            liElement.find('input[type="checkbox"]').prop('checked', false);
+                        }
+                    });
+                }, 1000);
+            });
+
+            if (iframe[0].contentDocument.readyState === 'complete') {
+                iframe.trigger('load');
+            }
+
+            $("#manageShipper").modal("show");
+
+            $("#manageShipper").off('submit').on('submit', function (event) {
+                event.preventDefault();
+                resquestShipper('update');
+            });
+        }
+
+        function resquestShipper(action) {
+            let url = '';
+            let alertMessage = '';
+            if (action === 'create') {
+                url = '/Admin/Account/AddShipper';
+                alertMessage = "Tài khoản nhân viên đã tạo thành công. Tiếp tục các hoạt động!";
+            } else {
+                url = '/Admin/Account/UpdateShipper';
+                alertMessage = "Tài khoản nhân viên đã cập nhật thành công. Tiếp tục các hoạt động!";
+            }
+
+            $('#manageShipper .text-danger').text('');
+            let iframe = $("#districtsIframe")[0].contentWindow.document;
+            let selectedDistricts = $(iframe).find("#districts").val();
+            $(".district-container").empty();
+            selectedDistricts.forEach(function (value, index) {
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'Districts[' + index + ']',
+                    value: value
+                }).appendTo('.district-container');
+            });
+
+            let shipper = $("#registrationForm").serialize();
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: shipper,
+
+                success: function (response) {
+                    $('#manageShipper .text-danger').text('');
+                    if (response.success) {
+                        $('#manageShipper').modal('hide');
+                        alert(alertMessage);
+                        refreshShipperFilter();
+                        fetchNewListShipper();
+                    } else {
+                        if (response.errors == "email") {
+                            $('span[data-valmsg-for="Email"]').text(response.message);
+                        } else if (response.errors == "phone") {
+                            $('span[data-valmsg-for="Phone"]').text(response.message);
+                        } else if (response.errors == "district") {
+                            $('span[data-valmsg-for="Districts"]').text(response.message);
+                        }
+                        else {
+                            $.each(response.errors, function (key, errorMessages) {
+                                var errorMessage = errorMessages.join('<br>');
+                                $('span[data-valmsg-for="' + key + '"]').text(errorMessage);
+                            });
+                        }
+                    }
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                },
+
+            });
+        }
+
+        function deleteShipper(shipperId) {
+            var shipperName = $("#shipper-" + shipperId).find(".fullName").text();
+            $('#error-mess').empty();
+            $("#passwordAdmin").val('');
+            $("#nameAccountDelete").html(shipperName);
+            $("#shipperId").val(shipperId);
+            $("#deleteAccount").modal("show");
+        }
+
+        function confirmDelete() {
+            var shipperId = $("#shipperId").val();
+            var password = $("#passwordAdmin").val().trim();
+            if (password === '') {
+                var content = `<div class="alert alert-danger alert-dismissible fade show rounded-0">
+                                                                                        <span>Vui lòng nhập mật khẩu</span>
+                                                                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                                                                    </div>`;
+                $('#error-mess').html(content);
+                return;
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Admin/Account/DeleteShipper',
+                    data: { password: password, shipperId: shipperId },
+
+                    success: function (response) {
+                        if (response.message === "Fail") {
+                            var content = `<div class="alert alert-danger alert-dismissible fade show rounded-0">
+                                                                                                <span>Mật khẩu sai! Vui lòng nhập lại.</span>
+                                                                                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                                                                            </div>`;
+                            $('#error-mess').html(content);
+                        } else {
+                            $("#shipper-" + shipperId).find(".account-status").removeClass("block-available").text('');
+                            $("#shipper-" + shipperId).find(".account-status").addClass("block-not-available").text('Không kích hoạt');
+                            $("#shipper-" + shipperId).find(".item.edit").remove();
+                            $("#shipper-" + shipperId).find(".item.trash").remove();
+                            $("#deleteAccount").modal("hide");
+                        }
+                    },
+
+                    error(xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            }
+        }
+
+        function showPassword() {
+            var pass = document.getElementById("passwordAdmin");
+            var icon = document.getElementById("eye-icon");
+            if (pass.type === "password") {
+                pass.type = "text";
+                icon.classList.replace("bi-eye", "bi-eye-slash");
+            } else {
+                pass.type = "password";
+                icon.classList.replace("bi-eye-slash", "bi-eye");
+            }
+        }
+
+        function generatePagingNavigation(currentPage, numberPage) {
+            if (numberPage > 0) {
+                let content = '';
+                if (currentPage > 1) {
+                    content += `<li id="page-${currentPage - 1}" class="page-item" > <a class="page-link" onclick="selectPage(${currentPage - 1})" href="javascript:void(0);">Trang trước</a></li> `;
+                } else {
+                    content += `<li class="page-item"> <a class="page-link" href="javascript:void(0);" style="pointer-events:none; cursor:default; color:#b7b7b7;">Trang trước</a></li> `;
+                }
+                var startPage = Math.max(1, currentPage - 2);
+                var endPage = Math.min(numberPage, currentPage + 2);
+                if (startPage > 1) {
+                    content += ` <li id="page-1" class="page-item" > <a class="page-link" onclick="selectPage(1)" href="javascript:void(0);">1</a></li> `;
+                    if (startPage > 2) {
+                        content += ` <li class="page-item" > <a class="page-link" href="javascript:void(0);">...</a></li> `;
+                    }
+                }
+                for (let i = startPage; i <= endPage; i++) {
+                    if (currentPage === i) {
+                        content += ` <li id="page-${i}" class="page-item active" > <a class="page-link" href="javascript:void(0);">${i}</a></li> `;
+                    }
+                    else {
+                        content += ` <li id="page-${i}" class="page-item" > <a class="page-link" onclick="selectPage(${i})" href="javascript:void(0);">${i}</a></li> `;
+                    }
+                }
+                if (numberPage >= endPage + 1) {
+                    if (numberPage >= endPage + 2) {
+                        content += ` <li class="page-item" > <a class="page-link" href="javascript:void(0);">...</a></li> `;
+                    }
+                    content += ` <li id="page-${numberPage}" class="page-item" > <a class="page-link" onclick="selectPage(${numberPage})" href="javascript:void(0);">${numberPage}</a></li> `;
+                }
+                if (currentPage != numberPage) {
+                    content += ` <li id="page-${currentPage + 1}" class="page-item" > <a class="page-link" onclick="selectPage(${currentPage + 1})" href="javascript:void(0);">Trang sau</a></li> `;
+                } else {
+                    content += `<li class="page-item" > <a class="page-link" href="javascript:void(0);" style="pointer-events:none; cursor:default; color:#b7b7b7;">Trang sau</a></li> `;
+                }
+                $('#paging-navigation').html(content);
+            } else {
+                $('#paging-navigation').empty();
+            }
+        }
+    </script>
+}

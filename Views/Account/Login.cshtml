@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "Đăng Nhập";
+}
+
+@section HeadOptional {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+}
+
+<!-- Login Page Start Here -->
+<div class="login_wrapper adp_top adp_bottom">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-xl-6 col-lg-8 offset-xl-3 offset-lg-2">
+
+                <div class="login-form">
+                    <h3 class="login-header">Đăng nhập tài khoản</h3>
+                    @if (TempData["Mess"] != null)
+                    {
+                        <div class="px-sm-5">
+                            <div class="alert alert-danger alert-dismissible fade show rounded-0">
+                                <span>@TempData["Mess"]</span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        </div>
+                    }
+                    <form asp-controller="Account" asp-action="Login" method="post">
+                        <div class="px-sm-5 pt-sm-3">
+                            <div class="form-group row">
+                                <label for="email" class="col-sm-3 col-form-label">Email</label>
+                                <div class="col-sm-9 ps-sm-1">
+                                    <input type="email" class="form-control" name="Account.Email" value="@ViewBag.Email" placeholder="Email" required>
+                                </div>
+                            </div>
+                            <div class="form-group row mt-3">
+                                <label for="inputPassword" class="col-sm-3 col-form-label">Mật Khẩu</label>
+                                <div class="col-sm-9 ps-sm-1">
+                                    <input type="password" class="form-control" name="Account.Password" id="password" placeholder="Mật Khẩu" required>
+                                    <div class="btn show-btn" onclick="showPassword()">
+                                        <i class="fa-regular fa-eye-slash" id="eye-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row login-details text-center justify-content-center mt-2">
+                                <a asp-controller="Account" asp-action="ForgotPassword">Quên mật khẩu?</a>
+                                <button type="submit" class="login-btn col-sm-11 rounded-1">Đăng Nhập</button>
+                            </div>
+                            <div class="row login-footer justify-content-around text-center">
+                                <a asp-controller="Account" asp-action="LoginGoogle" class="col-sm-5 register-btn google-btn rounded-1">
+                                    <i class="fab fa-google me-2"></i>Google
+                                </a>
+                                <a asp-controller="Account" asp-action="Register" class="col-sm-5 mt-sm-0 mt-3 register-btn rounded-1">Tạo Tài Khoản</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Login Page End Here -->
+@section ScriptOptional {
+    <script>
+        function showPassword() {
+            var pass = document.getElementById("password");
+            var icon = document.getElementById("eye-icon");
+            if (pass.type === "password") {
+                pass.type = "text";
+                icon.classList.replace("fa-eye-slash", "fa-eye");
+            } else {
+                pass.type = "password";
+                icon.classList.replace("fa-eye", "fa-eye-slash");
+            }
+        }
+    </script>
+}

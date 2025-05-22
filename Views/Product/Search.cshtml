@@ -1,0 +1,239 @@
+﻿@using PetStoreProject.ViewModels
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Tìm kiếm";
+}
+
+<link href="~/css/search.css" rel="stylesheet" />
+
+<h3 style="margin: 20px auto; text-align: center;">
+    Tìm thấy @Model.TotalResults kết quả với từ khóa <b>"@ViewData["key"]"</b>
+</h3>
+@if (Model.Results.Count > 0)
+{
+    <div class="container">
+        <div class="row" id="productContainer">
+            @foreach (var p in Model.Results)
+            {
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mb-4">
+                    <div class="single-template-product">
+                        <!-- Product Image Start -->
+                        <div class="pro-img">
+                            <a href="detail/@p.ProductId">
+                                <img class="primary-img" src="@p.img_url" alt="single-product">
+                            </a>
+                            <div class="item_quick_link">
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#myModal" onclick="quickView(@p.ProductId)" title="Xem chi tiết"><i class="icofont-search"></i></a>
+                            </div>
+                        </div>
+                        <!-- Product Image End -->
+                        <!-- Product Content Start -->
+                        <div class="product_content_wrap">
+                            <div class="product_content">
+                                <h4><a href="detail/@p.ProductId">@p.ProductName</a></h4>
+                                <div class="grid_price">
+                                    <span class="regular-price">@p.price.ToString("#,###", CultureInfo.GetCultureInfo("en-US")) VND</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="item_add_cart">
+                            <a class="grid_cart details_cart link " href="#" data-bs-toggle="modal" data-bs-target="#myModal" title="Add to Cart" onclick="quickView(@p.ProductId)">Thêm Vào Giỏ Hàng</a>
+                            <a class="grid_wishlist" title="Wishlist">
+                                @if (ViewData["listPID"] != null)
+                                {
+                                    <i class="icofont-heart-alt @( ((List<int>)ViewData["listPID"]).Contains(p.ProductId) ? "favorite" : "not-favorite" )"
+                                       data-id="@p.ProductId"
+                                       style="color: @( ((List<int>)ViewData["listPID"]).Contains(p.ProductId) ? "red" : "black" ); cursor: pointer;"
+                                       onclick="Toggle(@p.ProductId, this)"></i>
+                                }
+                                else
+                                {
+                                    <i class="icofont-heart-alt" onclick="Toggle(@p.ProductId, this)"></i>
+                                }
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        @if (@Model.TotalResults > 20)
+        {
+            <div class="row justify-content-center">
+                <button id="load-more" class="btn btn-primary col-md-3 mb-5 py-2" data-id="@ViewData["key"]">Xem thêm</button>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="container-search">
+        <img src="~/img/order-service-empty.png" style="margin:-40px; width:377px; height:auto" />
+        <div class="message-box">
+            <h1>Không tìm thấy sản phẩm</h1>
+            <p>Rất tiếc, chúng tôi không thể tìm thấy sản phẩm bạn yêu cầu.</p>
+            <a asp-action="Index" asp-controller="Home" class="btn">Quay lại trang chủ</a>
+        </div>
+    </div>
+}
+
+@Html.Partial("_QuickView")
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function Toggle(productId, element) {
+        var $this = $(element);
+        var isFavorite = $this.hasClass('favorite');
+
+
+        $this.toggleClass('favorite not-favorite');
+
+
+        if (isFavorite) {
+            $this.css('color', 'black');
+        } else {
+            $this.css('color', 'red');
+        }
+
+        $.ajax({
+            url: '@Url.Action("ToggleFavorite", "Product")',
+            type: 'POST',
+            data: { productId: productId },
+            success: function (response) {
+                console.log('AJAX success:', response);
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX error:', error);
+
+                var errorMessage;
+                switch (xhr.status) {
+                    case 400:
+                        errorMessage = 'Yêu cầu không hợp lệ. Vui lòng kiểm tra lại thông tin.';
+                        break;
+                    case 401:
+                        errorMessage = 'Bạn chưa đăng nhập. Vui lòng đăng nhập để thực hiện thao tác này.';
+                        break;
+                    case 403:
+                        errorMessage = 'Bạn không có quyền thực hiện thao tác này.';
+                        break;
+                    case 404:
+                        errorMessage = 'Không tìm thấy sản phẩm. Vui lòng thử lại.';
+                        break;
+                    case 500:
+                        errorMessage = 'Lỗi máy chủ. Vui lòng thử lại sau.';
+                        break;
+                    default:
+                        errorMessage = 'Đã xảy ra lỗi không xác định. Vui lòng thử lại.';
+                }
+
+                alert(errorMessage);
+
+                // Revert the favorite status on error
+                $this.toggleClass('favorite not-favorite');
+                if (isFavorite) {
+                    $this.css('color', 'red');
+                } else {
+                    $this.css('color', 'black');
+                }
+            }
+        });
+    }
+
+    var page = 1;
+    $(document).ready(function () {
+        $('#load-more').click(function () {
+            page++;
+            var dataId = $(this).attr('data-id');
+            loadRecords(dataId, page);
+        });
+    });
+
+
+    function loadRecords(key, page) {
+        console.log(page);
+        $.ajax({
+            url: '@Url.Action("LoadMoreSearch", "Product")',
+            type: 'POST',
+            data: {
+                page: page,
+                key: key
+            },
+            success: function (response) {
+                if (!response) {
+                    console.error("Response bị null hoặc undefined");
+                    return;
+                }
+
+                if (!response.listResult.length) {
+                    alert("Bạn đã xem hết sản phẩm tìm kiếm");
+                    return;
+                }
+
+                if (!response.wishlist) {
+                    console.error("Thuộc tính wishlist của response bị null hoặc undefined");
+                    return;
+                }
+
+                var productContainer = document.getElementById("productContainer");
+                var html = "";
+                var items = response.listResult;
+                console.log(items.length);
+                for (var index = 0; index < items.length; index++) {
+                    var isFavorite = false;
+                    for (var i = 0; i < response.wishlist.length; i++) {
+                        if (response.wishlist[i] == items[index].productId) {
+                            isFavorite = true;
+                        }
+                    }
+
+                    // Thêm từng dòng HTML vào biến html
+                    html += '<div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mb-4">';
+                    html += '    <div class="single-template-product">';
+                    html += '        <!-- Product Image Start -->';
+                    html += '        <div class="pro-img">';
+                    html += '            <a href="detail/' + items[index].productId + '">';
+                    html += '                <img class="primary-img" src="' + items[index].img_url + '" alt="single-product">';
+                    html += '            </a>';
+                    html += '            <div class="item_quick_link">';
+                    html += '            <a href="#" data-bs-toggle="modal" data-bs-target="#myModal" onclick="quickView(' + items[index].productId + ')" title="Xem chi tiết"><i class="icofont-search"></i></a>';
+                    html += '            </div>';
+                    html += '        </div>';
+                    html += '        <!-- Product Image End -->';
+                    html += '        <!-- Product Content Start -->';
+                    html += '        <div class="product_content_wrap">';
+                    html += '            <div class="product_content">';
+                    html += '                <h4><a href="detail/' + items[index].productId + '">' + items[index].productName + '</a></h4>';
+                    html += '                <div class="grid_price">';
+                    html += '                    <span class="regular-price">' + items[index].price.toLocaleString("vi-VN") + ' VND</span>';
+                    html += '                </div>';
+                    html += '            </div>';
+                    html += '        </div>';
+                    html += '        <div class="item_add_cart">';
+                    html += '            <a class="grid_cart details_cart link " href="#" data-bs-toggle="modal" data-bs-target="#myModal" title="Add to Cart" onclick="quickView(' + items[index].productId + ')">Thêm Vào Giỏ Hàng</a>';
+                    html += '            <a class="grid_wishlist" title="Wishlist">';
+                    if (isFavorite) {
+                        html += '                <i class="icofont-heart-alt favorite"';
+                        html += '                   data-id="' + items[index].productId + '"';
+                        html += '                   style="color: red; cursor: pointer;"';
+                        html += '                   onclick="Toggle(' + items[index].productId + ', this)"></i>';
+                    } else {
+                        html += '                <i class="icofont-heart-alt not-favorite"';
+                        html += '                   data-id="' + items[index].productId + '"';
+                        html += '                   style="color: black; cursor: pointer;"';
+                        html += '                   onclick="Toggle(' + items[index].productId + ', this)"></i>';
+                    }
+                    html += '            </a>';
+                    html += '        </div>';
+                    html += '    </div>';
+                    html += '</div>';
+                }
+                productContainer.innerHTML += html;
+            },
+            error: function () {
+                alert('Đã xảy ra lỗi khi tải dữ liệu.');
+            }
+        });
+    }
+
+</script>

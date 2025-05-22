@@ -1,0 +1,536 @@
+﻿@using PetStoreProject.Areas.Admin.ViewModels;
+
+@{
+    var dashBoard = ViewData["DashBoard"] as DashBoardViewModel;
+}
+@section HeadOptional {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+}
+
+<style>
+
+    .tf-button.style-2 {
+        font-size: 16px;
+    }
+
+        .tf-button.style-2 i {
+            font-size: 18px;
+        }
+
+    .form-search input[type=date] {
+        width: 170px;
+        padding: 14px 14px;
+        margin-left: 10px;
+    }
+
+    .form-search span {
+        font-size: 21px;
+    }
+
+        .form-search span:hover {
+            color: #2275fc;
+        }
+
+    .empty-order-history {
+        height: 355px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .empty-order-history i {
+            font-size: 100px;
+        }
+
+        .empty-order-history h6 {
+            margin-top: 10px;
+            font-size: 20px;
+        }
+
+    .select i {
+        position: absolute;
+        right: 22px;
+        top: 50%;
+        font-family: 'icomoon';
+        font-size: 18px;
+        color: var(--Body-Text);
+        transform: translateY(-50%);
+    }
+
+</style>
+<!-- main-content-wrap -->
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="tf-section-4 mb-30">
+            <!-- chart-default -->
+            <div class="wg-chart-default">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap14">
+                        <div class="image type-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="52" viewBox="0 0 48 52" fill="none">
+                                <path d="M19.1094 2.12943C22.2034 0.343099 26.0154 0.343099 29.1094 2.12943L42.4921 9.85592C45.5861 11.6423 47.4921 14.9435 47.4921 18.5162V33.9692C47.4921 37.5418 45.5861 40.8431 42.4921 42.6294L29.1094 50.3559C26.0154 52.1423 22.2034 52.1423 19.1094 50.3559L5.72669 42.6294C2.63268 40.8431 0.726688 37.5418 0.726688 33.9692V18.5162C0.726688 14.9435 2.63268 11.6423 5.72669 9.85592L19.1094 2.12943Z" fill="#22C55E" />
+                            </svg>
+                            <i class="icon-shopping-cart"></i>
+                        </div>
+                        <div>
+                            <div class="body-text mb-2">Doanh Thu Sản Phẩm</div>
+                            <h4>@dashBoard.TotalProductSale.ToString("#,###") VND</h4>
+                        </div>
+                    </div>
+                    @*   <div class="box-icon-trending up">
+                    <i class="icon-trending-up"></i>
+                    <div class="body-title number">1.56%</div>
+                    </div> *@
+                </div>
+                <div class="wrap-chart">
+                    <div id="line-chart-1"></div>
+                </div>
+            </div>
+            <!-- /chart-default -->
+            <!-- chart-default -->
+            <div class="wg-chart-default">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap14">
+                        <div class="image type-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="52" viewBox="0 0 48 52" fill="none">
+                                <path d="M19.1094 2.12943C22.2034 0.343099 26.0154 0.343099 29.1094 2.12943L42.4921 9.85592C45.5861 11.6423 47.4921 14.9435 47.4921 18.5162V33.9692C47.4921 37.5418 45.5861 40.8431 42.4921 42.6294L29.1094 50.3559C26.0154 52.1423 22.2034 52.1423 19.1094 50.3559L5.72669 42.6294C2.63268 40.8431 0.726688 37.5418 0.726688 33.9692V18.5162C0.726688 14.9435 2.63268 11.6423 5.72669 9.85592L19.1094 2.12943Z" fill="#CBD5E1" />
+                            </svg>
+                            <i class="icon-shopping-bag"></i>
+                        </div>
+                        <div>
+                            <div class="body-text mb-2">Doanh Thu Dịch Vụ</div>
+                            <h4>@dashBoard.TotalServiceSale.ToString("#,###") VND</h4>
+                        </div>
+                    </div>
+                    @* <div class="box-icon-trending">
+                    <i class="icon-trending-up"></i>
+                    <div class="body-title number">0.00%</div>
+                    </div> *@
+                </div>
+                <div class="wrap-chart">
+                    <div id="line-chart-3"></div>
+                </div>
+            </div>
+            <!-- /chart-default -->
+            <!-- chart-default -->
+            <div class="wg-chart-default">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap14">
+                        <div class="image type-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="52" viewBox="0 0 48 52" fill="none">
+                                <path d="M19.1094 2.12943C22.2034 0.343099 26.0154 0.343099 29.1094 2.12943L42.4921 9.85592C45.5861 11.6423 47.4921 14.9435 47.4921 18.5162V33.9692C47.4921 37.5418 45.5861 40.8431 42.4921 42.6294L29.1094 50.3559C26.0154 52.1423 22.2034 52.1423 19.1094 50.3559L5.72669 42.6294C2.63268 40.8431 0.726688 37.5418 0.726688 33.9692V18.5162C0.726688 14.9435 2.63268 11.6423 5.72669 9.85592L19.1094 2.12943Z" fill="#FF5200" />
+                            </svg>
+                            <i class="icon-dollar-sign"></i>
+                        </div>
+                        <div>
+                            <div class="body-text mb-2">Tổng Doanh Thu</div>
+                            <h4>@dashBoard.TotalSale.ToString("#,###") VND</h4>
+                        </div>
+                    </div>
+                    @* <div class="box-icon-trending down">
+                    <i class="icon-trending-down"></i>
+                    <div class="body-title number">1.56%</div>
+                    </div> *@
+                </div>
+                <div class="wrap-chart">
+                    <div id="line-chart-2"></div>
+                </div>
+            </div>
+            <!-- /chart-default -->
+            <!-- chart-default -->
+            <div class="wg-chart-default">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap14">
+                        <div class="image type-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="52" viewBox="0 0 48 52" fill="none">
+                                <path d="M19.1094 2.12943C22.2034 0.343099 26.0154 0.343099 29.1094 2.12943L42.4921 9.85592C45.5861 11.6423 47.4921 14.9435 47.4921 18.5162V33.9692C47.4921 37.5418 45.5861 40.8431 42.4921 42.6294L29.1094 50.3559C26.0154 52.1423 22.2034 52.1423 19.1094 50.3559L5.72669 42.6294C2.63268 40.8431 0.726688 37.5418 0.726688 33.9692V18.5162C0.726688 14.9435 2.63268 11.6423 5.72669 9.85592L19.1094 2.12943Z" fill="#2377FC" />
+                            </svg>
+                            <i class="icon-users"></i>
+                        </div>
+                        <div>
+                            <div class="body-text mb-2">Tổng Số Khách Hàng</div>
+                            <h4>@dashBoard.TotalCustomers.ToString("#,###")</h4>
+                        </div>
+                    </div>
+                    @* <div class="box-icon-trending up">
+                    <i class="icon-trending-up"></i>
+                    <div class="body-title number">1.56%</div>
+                    </div> *@
+                </div>
+                <div class="wrap-chart">
+                    <div id="line-chart-4"></div>
+                </div>
+            </div>
+            <!-- /chart-default -->
+        </div>
+        <div class="tf-section-1 mb-30">
+            <!-- revenue -->
+            <div class="wg-box">
+                <div class="flex items-center justify-between">
+                    <h3 class="ms-4">Doanh Thu Tháng</h3>
+                    <div class="flex flex-row">
+                        <div class="select me-4" style="width: 130px;">
+                            <select class="" id="month" onchange="changeTimeOfRevenueMonth()">
+                            </select>
+                            <i class="icon-chevron-down"></i>
+                        </div>
+                        <div class="select me-4" style="width: 145px;">
+                            <select class="" id="year" onchange="changeTimeOfRevenueMonth()">
+                            </select>
+                            <i class="icon-chevron-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap40">
+                    <div class="ms-4">
+                        <div class="mb-4">
+                            <div class="block-legend">
+                                <div class="dot t1"></div>
+                                <div class="text-tiny" style="font-size: 14px">Sản Phẩm</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap10">
+                            <h4 id="toatalSaleProductMonth"></h4>
+                            @* <div class="box-icon-trending up">
+                            <i class="icon-trending-up"></i>
+                            <div class="body-title number">0.56%</div>
+                            </div> *@
+                        </div>
+                    </div>
+                    <div>
+                        <div class="mb-4">
+                            <div class="block-legend">
+                                <div class="dot t4"></div>
+                                <div class="text-tiny" style="font-size: 14px">Dịch Vụ</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap10">
+                            <h4 id="toatalSaleServiceMonth"></h4>
+                            @* <div class="box-icon-trending up">
+                            <i class="icon-trending-up"></i>
+                            <div class="body-title number">0.56%</div>
+                            </div> *@
+                        </div>
+                    </div>
+                </div>
+                <div id="line-chart-22"></div>
+            </div>
+            <!-- /revenue -->
+        </div>
+        <div class="tf-section-2 mb-30">
+            <!-- product-overview -->
+            <div class="wg-box">
+                <div class="flex items-center justify-between">
+                    <h5>Sản Phẩm Bán Chạy Nhất</h5>
+                    <button class="tf-button style-2" onclick="showFilterProduct()">Lọc <i class="bi bi-funnel"></i></button>
+                </div>
+                <div class="search-sell-product hide">
+                    <form class="form-search flex items-center justify-content-evenly">
+                        <div class="d-inline">
+                            <label style="font-size:15px;">Từ: </label>
+                            <input type="date" id="start-date-product" />
+                        </div>
+                        <div class="d-inline">
+                            <label style="font-size:15px;">Đến: </label>
+                            <input type="date" id="end-date-product" />
+                        </div>
+                        <span type="button" onclick="filterProductSell()"><i class="icon-search"></i></span>
+                    </form>
+                </div>
+                <div class="wg-table table-orders-1" style="position: relative">
+                    <ul class="table-title flex gap20 mb-14" style="min-width:900px; position:sticky; top:0; background-color:white">
+                        <li>
+                            <div class="body-title">Sản phẩm</div>
+                        </li>
+                        <li style="width: 70px;">
+                            <div class="body-title">Đã bán</div>
+                        </li>
+                        <li>
+                            <div class="body-title">Tổng doanh thu</div>
+                        </li>
+                        <li style="width: 120px;">
+                            <div class="body-title">Thương hiệu</div>
+                        </li>
+                        <li style="width: 120px;">
+                            <div class="body-title">Danh mục</div>
+                        </li>
+                    </ul>
+                    <div class="divider mb-14"></div>
+                    <ul id="list-product-sell" class="flex flex-column gap10" style="min-width:900px;">
+                        @foreach (var product in dashBoard.Products)
+                        {
+                            <li class="product-item gap14">
+                                <div class="image">
+                                    <img src="@product.ImgUrl" alt="">
+                                </div>
+                                <div class="flex items-center justify-between flex-grow">
+                                    <div class="name">
+                                        <a href="product-list.html" class="body-title-2">@product.Name</a>
+                                    </div>
+                                    <div class="body-text" style="width: 70px;">@product.SoldQuantity</div>
+                                    <div class="body-text">@product.TotalSale?.ToString("#,###") VND</div>
+                                    <div class="body-text" style="width: 120px;">@product.Brand</div>
+                                    <div class="body-text" style="width: 120px;">@product.Category.Name</div>
+                                </div>
+                            </li>
+                            <li class="divider"></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <!-- /product-overview -->
+            <!-- orders -->
+            <div class="wg-box">
+                <div class="flex items-center justify-between">
+                    <h5>Dịch Vụ Sử Dụng Nhiều Nhất</h5>
+                    <button class="tf-button style-2" onclick="showFilterService()">Lọc <i class="bi bi-funnel"></i></button>
+                </div>
+                <div class="search-sell-service hide">
+                    <form class="form-search flex items-center justify-content-evenly">
+                        <div class="d-inline">
+                            <label style="font-size:15px;">Từ: </label>
+                            <input type="date" id="start-date-service" />
+                        </div>
+                        <div class="d-inline">
+                            <label style="font-size:15px;">Đến: </label>
+                            <input type="date" id="end-date-service" />
+                        </div>
+                        <span type="button" onclick="filterServiceSell()"><i class="icon-search"></i></span>
+                    </form>
+                </div>
+                <div class="wg-table table-orders-1">
+                    <ul class="table-title flex gap10 mb-14" style="min-width:760px; position:sticky; top:0; background-color:white">
+                        <li>
+                            <div class="body-title">Dịch vụ</div>
+                        </li>
+                        <li>
+                            <div class="body-title">Lượt sử dụng</div>
+                        </li>
+                        <li style="width: 150px;">
+                            <div class="body-title">Tổng doanh thu</div>
+                        </li>
+                        <li style="width: 120px;">
+                            <div class="body-title">Loại dịch vụ</div>
+                        </li>
+                    </ul>
+                    <div class="divider mb-14"></div>
+                    <ul id="list-service-sell" class="flex flex-column gap18" style="min-width: 760px;">
+                        @foreach (var service in dashBoard.Services)
+                        {
+                            <li class="product-item gap14">
+                                <div class="image">
+                                    <img src="@service.ImageUrl" alt="">
+                                </div>
+                                <div class="flex items-center justify-between flex-grow gap10">
+                                    <div class="name">
+                                        <a href="product-list.html" class="body-text">@service.Name</a>
+                                    </div>
+                                    <div class="body-text">@service.UsedQuantity</div>
+                                    <div class="body-text" style="width: 150px;">@service.TotalSale.ToString("#,###") VND</div>
+                                    <div class="body-text" style="width: 120px;">@service.Type</div>
+                                </div>
+                            </li>
+                            <li class="divider"></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <!-- /orders -->
+        </div>
+    </div>
+    <!-- /main-content-wrap -->
+</div>
+<!-- /main-content-wrap -->
+@section ScriptOptional {
+    <script>
+        $("document").ready(function () {
+            monthAndYearInitial();
+        });
+
+        function monthAndYearInitial() {
+            let currentDate = new Date();
+            let currentMonth = currentDate.getMonth() + 1;
+            let months = '';
+            for (i = 1; i <= 12; i++) {
+                months += `<option value="${i}" ${currentMonth === i ? "selected" : ""}>Tháng ${i}</option>`;
+            }
+            $("#month").empty();
+            $("#month").html(months);
+
+            let currentYear = currentDate.getFullYear();
+            let years = '';
+            for (i = 2020; i <= currentYear; i++) {
+                years += `<option value="${i}" ${currentYear === i ? "selected" : ""}>Năm ${i}</option>`;
+            }
+            $("#year").empty();
+            $("#year").html(years);
+        }
+
+        function changeTimeOfRevenueMonth(){
+            var selectedMonth = $("#month").val();
+            var selectedYear = $("#year").val();
+
+            getData(selectedMonth, selectedYear);
+        }
+
+        function getData(selectMonth, selectYear) {
+            let lastDateOfMonth = new Date(selectYear, selectMonth, 0);
+            let days = [];
+
+            for (i = 1; i <= lastDateOfMonth.getDate(); i++) {
+                days.push("Ngày " + i);
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/Home/StatisticsSaleOfMonth',
+                data: { month: selectMonth, year: selectYear },
+
+                success: function (response) {
+                    $("#toatalSaleProductMonth").text(response.totalProductOfMonth.toLocaleString('en-US') + ' VND');
+                    $("#toatalSaleServiceMonth").text(response.totalServiceOfMonth.toLocaleString('en-US') + ' VND');
+
+                    let dataProduct = response.dataProduct;
+                    let dataService = response.dataService;
+
+                    tfLineChart.load(days, dataProduct, dataService);
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function showFilterProduct() {
+            let productSelling = $(".search-sell-product");
+            if (productSelling.hasClass("hide")) {
+                productSelling.removeClass("hide");
+            } else {
+                productSelling.addClass("hide");
+            }
+        }
+
+        function showFilterService() {
+            let serviceSelling = $(".search-sell-service");
+            if (serviceSelling.hasClass("hide")) {
+                serviceSelling.removeClass("hide");
+            } else {
+                serviceSelling.addClass("hide");
+            }
+        }
+
+        function filterProductSell() {
+            let startDate = $("#start-date-product").val();
+            let endDate = $("#end-date-product").val();
+            let isValid = false;
+            if (!startDate && !endDate) {
+                isValid = true;
+                console.log("oke");
+            }
+            if (startDate && endDate && startDate <= endDate) {
+                isValid = true;
+                console.log("oke");
+            }
+            if (isValid) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/Home/GetProductBestSelling",
+                    data: { startDate: startDate, endDate: endDate },
+
+                    success: function (response) {
+                        let content = '';
+                        response.forEach(function (product) {
+                            content += `<li class="product-item gap14">
+                                            <div class="image">
+                                                <img src="${product.imgUrl}" alt="">
+                                            </div>
+                                            <div class="flex items-center justify-between flex-grow">
+                                                <div class="name">
+                                                    <a href="product-list.html" class="body-title-2">${product.name}</a>
+                                                </div>
+                                                <div class="body-text" style="width: 70px;">${product.soldQuantity}</div>
+                                                <div class="body-text">${product.totalSale.toLocaleString('en-US')} VND</div>
+                                                <div class="body-text" style="width: 120px;">${product.brand}</div>
+                                                <div class="body-text" style="width: 120px;">${product.category.name}</div>
+                                            </div>
+                                        </li>
+                                        <li class="divider"></li>`;
+                        });
+                        if (content === '') {
+                            content = `<div class="empty-order-history">
+                                            <i class="fas fa-box-open"></i>
+                                            <h6>Không có đơn hàng ở thời điểm này.</h6>
+                                        </div>`;
+                        }
+
+                        $("#list-product-sell").empty();
+                        $("#list-product-sell").html(content);
+                    },
+
+                    error(xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            }
+        }
+
+        function filterServiceSell() {
+            let startDate = $("#start-date-service").val();
+            let endDate = $("#end-date-service").val();
+            let isValid = false;
+            if (!startDate && !endDate) {
+                isValid = true;
+                console.log("oke");
+            }
+            if (startDate && endDate && startDate <= endDate) {
+                isValid = true;
+                console.log("oke");
+            }
+            if (isValid) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/Home/GetServiceBestSelling",
+                    data: { startDate: startDate, endDate: endDate },
+
+                    success: function (response) {
+                        let content = '';
+                        response.forEach(function (service) {
+                            content += `<li class="product-item gap14">
+                                                        <div class="image">
+                                                            <img src="${service.imageUrl}" alt="">
+                                                        </div>
+                                                        <div class="flex items-center justify-between flex-grow gap10">
+                                                            <div class="name">
+                                                                <a href="product-list.html" class="body-text">${service.name}</a>
+                                                            </div>
+                                                            <div class="body-text">${service.usedQuantity}</div>
+                                                            <div class="body-text" style="width: 150px;">${service.totalSale.toLocaleString('en-US')} VND</div>
+                                                            <div class="body-text" style = "width: 120px;">${service.type}</div>
+                                                        </div>
+                                                    </li>
+                                                    <li class="divider"></li>`;
+                        });
+                        if (content === '') {
+                            content = `<div class="empty-order-history">
+                                                    <i class="fas fa-box-open"></i>
+                                                    <h6>Không có đơn dịch vụ ở thời điểm này.</h6>
+                                                </div>`;
+                        }
+
+                        $("#list-service-sell").empty();
+                        $("#list-service-sell").html(content);
+                    },
+
+                    error(xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            }
+        }
+
+    </script>
+}

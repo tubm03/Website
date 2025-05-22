@@ -1,0 +1,88 @@
+﻿@model List<string>
+
+@{
+    ViewData["Title"] = "Từ Chối Truy Cập";
+}
+
+@section HeadOptional {
+    <style>
+        .main-content {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            /* background-color: #fff; */
+            padding: 0px 40px 25px 40px;
+            border-radius: 8px;
+            /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+        }
+
+            .main-content img {
+                width: 75%;
+                height: auto;
+            }
+
+            .main-content h2 {
+                font-size: 29px;
+                font-weight: 700;
+                color: #343a40;
+                margin: 0px 0 10px;
+            }
+
+            .main-content p {
+                font-size: 18px;
+                color: #6c757d;
+                margin-top: 20px;
+                margin-bottom: 30px;
+                padding: 0px 50px;
+            }
+
+            .main-content a {
+                display: inline-block;
+                padding: 10px 20px;
+                font-size: 14px;
+                color: white;
+                background-color: black;
+                border: 1px solid black;
+                border-radius: 4px;
+                text-decoration: none;
+                transition: background-color 0.3s, color 0.3s;
+            }
+
+            .main-content a:hover {
+                background-color: #00adf6;
+                border: 1px solid #00adf6;
+                color: #fff;
+            }
+    </style>
+}
+<div class="profile_wrapper adp_top adp_bottom">
+    <div class="container-xl px-4">
+        <div class="row justify-content-center">
+            <div class="main-content col-sm-6">
+                <img src="/img/access-denied.png" alt="Access Denied">
+                <h2>Từ Chối Truy Cập</h2>
+                <p>
+                    Những tài khoản vai trò
+                    @{
+                        foreach (var role in Model)
+                        {
+                            if (role == "Admin")
+                            {
+                                <strong>quản lý</strong>
+                            }
+                            else if (role == "Employee")
+                            {
+                                <strong>nhân viên</strong>
+                            }
+                            else
+                            {
+                                <strong>khách hàng</strong>
+                            }
+                        }
+                    }
+                    mới có thể sử dụng tính năng này.
+                </p>
+                <a href="/">GO TO HOMEPAGE</a>
+            </div>
+        </div>
+    </div>
+</div>

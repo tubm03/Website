@@ -1,0 +1,410 @@
+﻿@using System.Globalization
+@model PetStoreProject.ViewModels.HomeViewModel;
+
+@{
+    ViewData["Title"] = "Trang Chủ";
+}
+
+@section HeadOptional {
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .blog-img {
+            width: 100%;
+            aspect-ratio: 16/10;
+            overflow: hidden;
+        }
+
+            .blog-img img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .blog-column {
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+            flex: 1;
+        }
+
+        .single-animart-blog {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            border: 1px solid #ddd;
+            padding: 15px;
+            box-sizing: border-box;
+            min-height: 450px;
+        }
+
+        .grid-blog-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .blog-btn {
+            display: flex;
+            justify-content: center;
+            margin-top: auto;
+        }
+
+        .pagination-blog {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            justify-content: center;
+        }
+
+            .pagination li {
+                margin: 0 5px;
+            }
+
+            .pagination a, .pagination span {
+                color: #007bff;
+                text-decoration: none;
+                border: 1px solid #dee2e6;
+                padding: 8px 12px;
+                border-radius: 4px;
+                transition: background-color 0.3s;
+            }
+
+                .pagination a:hover {
+                    background-color: #e9ecef;
+                }
+
+            .pagination .active span {
+                background-color: #007bff;
+                color: white;
+                border-color: #007bff;
+            }
+    </style>
+}
+
+<!--Modal Notification of Successful Account Registration Start-->
+<div id="registerModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box">
+                    <i class="material-icons">&#xE876;</i>
+                </div>
+                <h4 class="modal-title w-100">Thành Công!</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Tài khoản của bạn đã tạo thành công. Tiếp tục trải nghiệm mua sắm nhé!</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-block" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal Notification of Successful Account Registration End-->
+<!-- Slider Area Start -->
+<div class="slider-area slider_common_style fullscreen default_arrow">
+    <!-- Slider Area Start Here -->
+    <div class="main-slider-active">
+        <!-- Start Single Slide -->
+        <div class="single-slide slider_animate_style-02">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="slider-content">
+                            <h1>Khám Phá Thế Giới Sản Phẩm <span>Từ Mo Cau</span></h1>
+                            <p>Hãy bắt đầu hành trình khám phá thế giới của chúng tôi! Tại đây, chúng tôi mang đến bộ sưu tập đa dạng và phong phú với những vật dụng an toàn nhất, được gia công một cách kỹ lưỡng an toàn.</p>
+                            <div class="slide-btn small-btn">
+                                <a href="/product/list">Khám Phá Ngay</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Single Slide -->
+        <!-- Start Single Slide -->
+        <div class="single-slide slider_animate_style-02" style="background:url(/img/slider/slider_6.jpg)">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="slider-content text-center">
+                            <h4>#Phong Cách Và Tiện Ích... </h4>
+                            <h1>Bộ Sưu Tập Đa Dạng</h1>
+                            <p style="color:white">Chúng tôi tự hào giới thiệu những sản phẩm tuyệt vời làm từ mo cau, mang đến sự kết hợp hoàn hảo giữa tính bền vững và thẩm mỹ.</p>
+                            <div class="slide-btn small-btn">
+                                <a style="color:white; background: black" href="/product/list">Khám Phá Ngay</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Single Slide -->
+        <!-- Start Single Slide -->
+        <div class="single-slide slider_animate_style-02" style="background:url(/img/slider/full_slider_11.jpg)">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="slider-content">
+                            <h4>#Dịch Vụ Sản Phẩm... </h4>
+                            <h1 style="color:white">Cung Cấp Trọn Gói <span>Dịch Vụ</span><br> Tư vấn & Thiết Kế</h1>
+                            <p style="color:white">Đem đến cho khách hàng trải nghiệm tuyệt vời với dịch vụ tư vấn tận tâm.</p>
+                            <div class="slide-btn small-btn">
+                                <a style="color: white; background: black" href="/service/list">Khám Phá Ngay</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Single Slide -->
+    </div>
+    <!-- Slider Area End Here -->
+</div>
+<!-- Slider Area End -->
+<!-- Food Categry Area End -->
+<!-- Foods Product Area Start Here -->
+<div class="featured-product adp_bottom">
+    <div class="container">
+        <!-- Section Title Start Here -->
+        <div class="section-title">
+            <h2 style="padding-top:10px">Sản Phẩm</h2>
+        </div>
+        <!-- Section Title End Here -->
+        <!-- main-product Start -->
+        <div class="main-product-tab-area mt-50">
+            <!-- Tab Contetn Start -->
+            <div class="tab-content">
+                <!-- #foods_dog_tab Start Here -->
+                <div id="foods_dog_tab" class="tab-pane fade show active">
+                    <div class="feature-pro-active-4-1 default_arrow small_arrow row">
+                        @foreach (var dogFood in Model.DogFoodsDisplayed)
+                        {
+                            <!-- Single Product Start -->
+                            <div class="col-xl-3 col-lg-4 col-md-6">
+                                <div class="single-template-product">
+                                    <!-- Product Image Start -->
+                                    <div class="pro-img">
+                                        @if (dogFood.Promotion != null && dogFood.Promotion.Value != null)
+                                        {
+                                            <span class="sticker-sale">-@dogFood.Promotion.Value%</span>
+                                        }
+                                        <a href="/product/detail/@dogFood.ProductId">
+                                            <img class="primary-img" src="@dogFood.ImageUrl" alt="single-product">
+                                        </a>
+
+                                        <div class="item_quick_link">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#myModal" title="Xem chi tiết" onclick="quickView(@dogFood.ProductId)"><i class="icofont-search"></i></a>
+                                        </div>
+
+                                        <div class="product-count-wrap">
+                                            @* <div class="product-countdown" data-countdown="2022/06/01"></div> *@
+                                        </div>
+                                    </div>
+                                    <!-- Product Image End -->
+                                    <!-- Product Content Start -->
+                                    <div class="product_content_wrap">
+                                        <div class="product_content">
+                                            <h4><a href="/product/detail/@dogFood.ProductId">@dogFood.ProductName</a></h4>
+
+                                            <div class="grid_price">
+                                                @{
+                                                    float amount = dogFood.Price;
+
+                                                    if (dogFood.Promotion != null && dogFood.Promotion.Value != null)
+                                                    {
+                                                        float amountAfterDiscount = amount * (1 - (float)dogFood.Promotion.Value / 100);
+                                                        <span class="regular-price">@amountAfterDiscount.ToString("#,###")VND</span>
+                                                        <del class="discount_price">@amount.ToString("#,###")VND</del>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="regular-price">@amount.ToString("#,###")VND</span>
+                                                    }
+                                                }
+                                            </div>
+
+                                        </div>
+                                        <div class="item_add_cart">
+                                            @* <a class="grid_compare" href="compare.html" title="Compare"><i class="icofont-random"></i></a> *@
+                                            <a class="grid_cart details_cart link " href="#" data-bs-toggle="modal" data-bs-target="#myModal" title="Add to Cart" onclick="quickView(@dogFood.ProductId)">Thêm Vào Giỏ Hàng</a>
+                                            <a class="grid_wishlist" title="Wishlist">
+                                                @{
+                                                    bool isFavorite = ((List<int>)ViewData["listPID"]).Contains(dogFood.ProductId);
+                                                }
+
+                                                <i class="icofont-heart-alt @((isFavorite) ? "favorite" : "not-favorite")"
+                                                   data-id="@dogFood.ProductId"
+                                                   style="color: @((isFavorite) ? "red" : "black"); cursor: pointer;"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- Product Content End -->
+                                </div>
+                            </div>
+                            <!-- Single Product End -->
+                        }
+                    </div>
+                </div>
+                <!-- #foods_dog_tab End Here -->
+                <!-- #foods_cat_tab Start Here -->
+            </div>
+            <!-- Tab Content End -->
+        </div>
+        <!-- main-product End-->
+    </div>
+</div>
+<!-- Foods Product Area End Here -->
+
+<!-- Latest Blog Area Start -->
+<div class="latest-blog-area">
+    <div class="container">
+        <!-- Section Title Start Here -->
+        <div class="section-title">
+            <span># Tin Tức </span>
+            <h2>Tin Tức Mới Nhất</h2>
+        </div>
+        <!-- Section Title End Here -->
+        <!-- Section Title End -->
+        <div class="row">
+            @foreach (var news in Model.NewsDisplayed)
+            {
+                <div class="col-lg-4 col-md-6 mb-4 d-flex align-items-stretch">
+                    <div class="single-animart-blog">
+                        <div class="blog-img">
+                            <a href="/News/Detail?newsId=@news.NewsId">
+                                <img src="@news.url_thumnail" alt="blog-img">
+                            </a>
+                            <div class="publish-meta-date">
+                                <span>@news.DateOnly</span>
+                            </div>
+                        </div>
+
+                        <div class="grid-blog-content">
+                            <h4>
+                                <a href="/News/Detail?newsId=@news.NewsId">@news.Title</a>
+                            </h4>
+
+                            <ul class="blog-post-meta">
+                                <li>Người Đăng: ECOCAU</li>
+                            </ul>
+
+                            <p>@news.Description</p>
+
+                            <div class="blog-btn" style="display: flex; justify-content: center; margin-top: auto;">
+                                <a href="/News/Detail?newsId=@news.NewsId">Đọc thêm</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Latest Blog Area End -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.icofont-heart-alt').on('click', function () {
+            console.log('Heart clicked');
+
+            var $this = $(this);
+            var productId = $this.data('id');
+            var isFavorite = $this.hasClass('favorite');
+
+            console.log('Product ID:', productId);
+            console.log('Is Favorite:', isFavorite);
+
+            // Toggle the favorite class
+            $this.toggleClass('favorite not-favorite');
+
+            if (isFavorite) {
+                $this.css('color', 'black');
+            } else {
+                $this.css('color', 'red');
+            }
+
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            // Send AJAX request to update the favorite status
+            $.ajax({
+                url: '@Url.Action("ToggleFavorite", "Product")',
+                type: 'POST',
+                headers: {
+                    'RequestVerificationToken': token
+                },
+                data: { productId: productId },
+                success: function (response) {
+                    console.log('AJAX success:', response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX error:', error);
+
+                    var errorMessage;
+
+                    // Kiểm tra mã trạng thái lỗi và đặt thông báo lỗi tương ứng
+                    switch (xhr.status) {
+                        case 400:
+                            alert('Yêu cầu không hợp lệ. Vui lòng kiểm tra lại thông tin.');
+                            break;
+                        case 401:
+                            alert('Bạn chưa đăng nhập. Vui lòng đăng nhập để thực hiện thao tác này.');
+                            break;
+                        case 403:
+                            alert('Bạn không có quyền thực hiện thao tác này.');
+                            break;
+                        case 404:
+                            alert('Không tìm thấy sản phẩm. Vui lòng thử lại.');
+                            break;
+                        case 500:
+                            alert('Lỗi máy chủ. Vui lòng thử lại sau.');
+                            break;
+                        default:
+                            alert('Đã xảy ra lỗi không xác định. Vui lòng thử lại.');
+                    }
+
+
+                    // Hiển thị thông báo lỗi
+                    $('#error-message').text(errorMessage).show();
+
+                    // Rollback the color change if there is an error
+                    $this.toggleClass('favorite not-favorite');
+                    if (isFavorite) {
+                        $this.css('color', 'red');
+                    } else {
+                        $this.css('color', 'black');
+                    }
+                }
+            });
+        });
+    });
+
+</script>
+
+@Html.Partial("_QuickView")
+<!-- Brand Area End Here -->
+@section ScriptOptional {
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(document).ready(function () {
+                $("#registerModal").modal("show");
+
+                $("#registerModal").modal({ backdrop: true });
+            });
+        </script>
+    }
+}
+

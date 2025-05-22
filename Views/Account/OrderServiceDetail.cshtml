@@ -1,0 +1,129 @@
+﻿@using PetStoreProject.ViewModels;
+@model PetStoreProject.ViewModels.BookServiceViewModel;
+
+@{
+    Layout = null;
+    var workingTime = ViewData["WorkingTime"] as List<TimeOnly>;
+    var listServices = ViewData["Services"] as List<ServiceViewModel>;
+    var listPetType = ViewData["PetTypes"] as List<string>;
+    var listWeight = ViewData["Weights"] as List<string>;
+}
+
+<form id="booking-form">
+    <input type="hidden" asp-for="OrderServiceId" />
+    <input type="hidden" asp-for="ServiceOptionId" />
+    <input type="hidden" asp-for="ServiceId" />
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label asp-for="Name" class="form-label">Họ và Tên<em>*</em></label>
+            <input asp-for="Name" class="form-control" disabled="@(Model.Status != "Chưa xác nhận")">
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 form-group">
+            <label asp-for="Phone" class="form-label">Điện thoại<em>*</em></label>
+            <input asp-for="Phone" class="form-control" disabled="@(Model.Status != "Chưa xác nhận")">
+            <span asp-validation-for="Phone" class="text-danger"></span>
+            @if (ViewBag.PhoneMess != null)
+            {
+                <span class="text-danger">@ViewBag.PhoneMess</span>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label asp-for="OrderDate" class="form-label">Ngày hẹn<em>*</em></label>
+            <div class="input-group date" id="order-datepicker">
+                <input asp-for="OrderDate" type="text" onchange="changeOrderDate()" class="form-control" disabled="@(Model.Status != "Chưa xác nhận")" />
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                </div>
+            </div>
+            <span asp-validation-for="OrderDate" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 form-group">
+            <label asp-for="OrderTime" class="form-label">Giờ hẹn<em>*</em></label>
+            <select asp-for="OrderTime" class="form-select" disabled="@(Model.Status != "Chưa xác nhận")">
+                @foreach (var time in workingTime)
+                {
+                    <option value="@time" selected="@(Model.OrderTime == time)">@time.ToString("HH:mm")</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label asp-for="ServiceName" class="form-label">Dịch vụ</label>
+            <select asp-for="ServiceName" class="form-select" onchange="changeService()" disabled="@(Model.Status != "Chưa xác nhận")">
+                @foreach (var service in listServices)
+                {
+                    <option value="@service.Name" data-serviceid="@service.ServiceId"
+                            selected="@(Model.ServiceName == service.Name)">@service.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-6 form-group">
+            <label asp-for="PetType" class="form-label">Loại thú cưng</label>
+            <select asp-for="PetType" class="form-select" onchange="changePetType()" disabled="@(Model.Status != "Chưa xác nhận")">
+                @foreach (var petType in listPetType)
+                {
+                    <option value="@petType" selected="@(Model.PetType == petType)">@petType</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label asp-for="Weight" class="form-label">Cân Nặng</label>
+            <select asp-for="Weight" class="form-select" onchange="changeWeight()" disabled="@(Model.Status != "Chưa xác nhận")">
+                @foreach (var weight in listWeight)
+                {
+                    <option value="@weight" selected="@(Model.PetType == weight)">@weight</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-6 form-group">
+            <label asp-for="Price" class="form-label">Giá Dịch Vụ</label>
+            <input asp-for="Price" class="form-control" readonly>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <label asp-for="Message" class="form-label">Thông tin thêm</label>
+            <textarea asp-for="Message" class="form-control" readonly="@(Model.Status != "Chưa xác nhận")"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 form-group">
+            <label asp-for="DateCreated" class="form-label">Ngày tạo đơn</label>
+            <input asp-for="DateCreated" class="form-control" readonly>
+        </div>
+        <div class="col-md-6 form-group">
+            <label asp-for="Status" class="form-label">Trạng thái</label>
+            <input asp-for="Status" class="form-control" readonly>
+        </div>
+    </div>
+
+
+    @if (Model.Status == "Chưa xác nhận")
+    {
+        <div class="d-flex justify-content-end">
+            <div class="px-3 text-center mt-3 ">
+                <button type="submit" class="btn btn-success py-2">Lưu Thay Đổi</button>
+            </div>
+            <div class="text-center mt-3 ">
+                <a class="btn btn-danger cancel-btn py-2" data-orderserviceid="@Model.OrderServiceId">Hủy Dịch Vụ</a>
+            </div>
+        </div>
+    }
+
+    @if (ViewData["UpdateSuccess"] != null)
+    {
+        <div class="col-md-12 mt-3 update-sucsess">
+            <div class="alert alert-success alert-dismissible fade show rounded-2 mb-0">
+                <span>@ViewData["UpdateSuccess"]</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+</form>
+

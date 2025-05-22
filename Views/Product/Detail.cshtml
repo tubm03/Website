@@ -1,0 +1,796 @@
+﻿@using PetStoreProject.ViewModels
+@{
+	ViewData["Title"] = "Chi tiết Sản Phẩm";
+	var product = ViewData["product_detail"] as ProductDetailViewModel;
+	var productOptions = Newtonsoft.Json.JsonConvert.SerializeObject(product.productOption);
+	var related_products = ViewData["related_products"] as List<RelatedProductViewModel>;
+	var product_json = Newtonsoft.Json.JsonConvert.SerializeObject(product);
+}
+
+@section HeadOptional {
+	<style>
+		#dtail li {
+			margin-top: 10px;
+		}
+
+		.star-rating {
+			direction: rtl;
+			display: inline-block;
+			font-size: 0;
+		}
+
+			.star-rating input[type="radio"] {
+				display: none;
+			}
+
+			.star-rating label {
+				font-size: 2rem;
+				color: #ddd;
+				cursor: pointer;
+			}
+
+			.star-rating input[type="radio"]:checked ~ label {
+				color: gold;
+			}
+
+				.star-rating label:hover,
+				.star-rating label:hover ~ label,
+				.star-rating input[type="radio"]:checked ~ label:hover,
+				.star-rating input[type="radio"]:checked ~ label:hover ~ label {
+					color: gold;
+				}
+
+		.reviews-container {
+			width: 60%;
+			margin: 50px auto;
+			padding: 20px;
+			background-color: #fff;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			border-radius: 8px;
+		}
+
+		.review {
+			border-bottom: 1px solid #e0e0e0;
+			padding: 20px 0;
+		}
+
+			.review:last-child {
+				border-bottom: none;
+			}
+
+		.review-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 10px;
+		}
+
+			.review-header h2 {
+				margin: 0;
+				font-size: 1.2em;
+				color: #555;
+			}
+
+		.rating {
+			font-size: 1.6em;
+			color: #ffcc00;
+		}
+
+		.review-content {
+			margin: 0;
+			color: #777;
+		}
+
+		.response {
+			margin-top: 15px;
+			padding-left: 20px;
+			border-left: 4px solid #e0e0e0;
+		}
+
+		.response-header {
+			margin: 0;
+			font-weight: bold;
+			color: #333;
+		}
+
+		.response-content {
+			margin: 5px 0 0;
+			color: #777;
+		}
+
+		.main{
+			display: flex;
+			gap: 10px;
+			align-items: center;
+		}
+
+		.main > div {
+			width: 40px;
+			height: 40px;
+		}
+	</style>
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Product Thumbnail Start -->
+<div class="main-product-thumbnail product_details_wrap_1 adp_top adp_bottom" style="display:flex; justify-content:center; width:100%">
+	<div class="container" style="margin:0px; width:100%; display:flex; justify-content: space-around; flex-grow:1">
+		<div class="row" style="width:100%">
+
+			<div class="col-lg-7 col-md-12 col-12">
+				<div class="product-details-img product-details-tab product_details_2 left_side">
+					<div id="gallery" class="product-dec-slider-2 thumb_image_small mini_arrow_var">
+						@foreach (var image in product.images)
+						{
+							<div>
+								<a data-image="@image.ImageUrl" data-zoom-image="@image.ImageUrl">
+									<img src="@image.ImageUrl" alt="">
+								</a>
+							</div>
+						}
+
+					</div>
+					<!--Large image-->
+					<div class="zoompro-wrap zoompro-2 thumb_image_large">
+						<div class="zoompro-border zoompro-span">
+							@{
+								var isOutOfStock = "";
+								if (product.IsSoldOut != null && product.IsSoldOut == true)
+								{
+										<div class="overlay">Hết hàng</div>
+									isOutOfStock = "out-of-stock";
+								}
+
+							}
+
+							<img class="zoompro @isOutOfStock" id="large_image" src="@product.productOption[0].img_url" data-zoom-image="@product.productOption[0].img_url" alt="" />
+
+						</div>
+						@if(product.Promotion != null)
+						{
+							<span class="sticker-sale">-@product.Promotion.Value%</span>
+						}
+						@*<span class="sticker-new">New</span> *@
+
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Thumbnail Description Start -->
+			<div class="col-lg-5 col-md-12 col-12">
+				<div class="thubnail-desc ">
+					<!--name-->
+					<h3 class="product-header">@product.Name</h3>
+
+					<!--
+						<div class="pro-thumb-price mt-20">
+						<span class="regular-price">$98.25</span><del class="discount_price">$72.00</del>
+					</div>
+					-->
+					<!--Brand-->
+					@* <div class="rating-summary">
+						Thương hiệu : @product.Brand
+					</div> *@
+					@if(product.Promotion != null){
+						<div style="display: flex; align-items: center; margin-bottom: 10px; gap: 10px">
+							<div>
+								Diễn ra trong: 
+							</div>
+							<div>
+								<div style="display: flex; align-items: center; gap: 10px">
+									<div class="product-countdown main" data-countdown="@(DateTime.Parse(product.Promotion.EndDate).ToString("MM/dd/yyyy hh:mm"))">
+									</div>
+								</div>
+							</div>
+						</div>
+					}
+					
+					<!--Price-->
+					<div class="pro-thumb-price mt-20">
+						<span class="regular-price" id="price">
+							0
+						</span>
+						<span class="regular-price">VND</span>
+						
+						<del class="discount_price_main"></del>
+					</div>
+
+					<!--Attribute-->
+					<div class="size_color_wraper" id="attribute">
+
+						@* @if (product.attributes[0] != null)
+						{
+							<div class="color clearfix mb-30">
+								<label style="margin:0px">Loại :</label>
+								<ul class="color-list">
+									@for (var index = 0; index < product.attributes.Count; index++)
+									{
+										if (product.attributes[index].Name != null)
+										{
+											<li id="attribute_@product.attributes[index].AttributeId" style="cursor:pointer;" onclick="attribute_selected(@index, @product.attributes[index].AttributeId)">@product.attributes[index].Name</li>
+										}
+									}
+								</ul>
+							</div>
+						} *@
+					</div>
+
+
+					<!--Size-->
+					<div class="theme_size clearfix" id="size">
+						@if (product.sizes[0].Name != null)
+						{
+							<label style="margin-top: 5px; margin-bottom:0px">Kích thước :</label>
+							<div class="color-list size_list">
+								<ul class="color-list size_list">
+									@for (var index = 0; index < product.sizes.Count; index++)
+									{
+										if (product.sizes[index].Name != null)
+										{
+											<li id="size_@product.sizes[index].SizeId" style="cursor:pointer" onclick="size_selected(@index, @product.sizes[index].SizeId)">@product.sizes[index].Name</li>
+										}
+									}
+								</ul>
+							</div>
+						}
+					</div>
+
+					<div style="margin-top: 10px; font-size: 15px;">Trong kho: <span id="quantityInStock">0</span> sản phẩm</div>
+					
+					<div class="details_action_wraper" style="margin-top:20px; display:flex;font-size: 15px; align-items:center">
+						Số lượng:
+						<form action="#" onclick="total_price()" style="border-radius: 10px">
+							<input class="quantity" type="number" min="1" max="10" value="1" id="quantity" style="width:60px;height:33px; margin-left:10px" oninput="validateQuantity(this)">
+						</form>
+					</div>
+
+					<div style="margin-top: 10px; font-size: 16px;">
+						Tổng số tiền: <span id="amount"></span>
+						<span>VND</span>
+					</div>
+
+					<div class="details_action_wraper">
+						<a class="details_cart link " title="" data-original-title="Add to Cart" tabindex="0" data-product-option-id="@product.productOption[0].Id" id="add_to_cart" onclick="addToCart(this.dataset.productOptionId, document.getElementById('quantity').value)" style="cursor: pointer;">
+							Thêm Vào Giỏ Hàng
+						</a>
+						<a class="details_wishlist" title="" data-original-title="Wishlist" tabindex="0">
+							@{
+								bool isFavor = ((List<int>)ViewData["listPID"]).Contains(product.ProductId);
+							}
+
+							<i class="icofont-heart-alt @((isFavor) ? "favorite" : "not-favorite")"
+							   data-id="@product.ProductId"
+							   style="color: @((isFavor) ? "red" : "black"); cursor: pointer;"></i>
+						</a>
+					</div>
+
+				</div>
+			</div>
+			<!-- Thumbnail Description End -->
+
+		</div>
+		<!-- Row End -->
+	</div>
+	<!-- Container End -->
+</div>
+<!-- Product Thumbnail End -->
+<!-- Product Thumbnail Description Start -->
+<div class="thumnail-desc">
+	<div class="container">
+		<div class="thumb-desc-inner">
+			<div class="row">
+				<div class="col-sm-12">
+					<ul class="main-thumb-desc nav tabs-area" role="tablist">
+						<li><a class="active" data-bs-toggle="tab" href="#detail">Mô tả</a></li>
+						<li><a data-bs-toggle="tab" href="#review">Đánh giá</a></li>
+						<li><a data-bs-toggle="tab" href="#new_tab_1">Đánh giá khách hàng</a></li>
+					</ul>
+					<!-- Product Thumbnail Tab Content Start -->
+					<div class="tab-content thumb-content">
+						<div id="detail" class="tab-pane fade show active">
+							<p>@Html.Raw(product.Description)</p>
+						</div>
+						<div id="review" class="tab-pane fade">
+							<!-- Reviews Start -->
+							<div class="review">
+								<div class="group-title">
+									<h2>Đánh giá sản phẩm</h2>
+								</div>
+								<form id="feedbackForm" asp-action="submit" asp-controller="feedback" method="post">
+									<input type="hidden" name="pid" value="@product.ProductId"/>
+									<div class="form-group">
+										<label for="FullName">Họ và Tên<em>*</em></label>
+										<input type="text" id="FullName" name="FullName" class="form-control" />
+										<span id="FullNameError" class="text-danger"></span>
+									</div>
+									<div class="form-group">
+										<label for="PhoneNumber">Số điện thoại<em>*</em></label>
+										<input type="text" id="PhoneNumber" name="PhoneNumber" class="form-control" />
+										<span id="PhoneNumberError" class="text-danger"></span>
+									</div>
+									<div class="form-group">
+										<label for="Email">Email</label>
+										<input type="email" id="Email" name="Email" class="form-control" />
+										<span id="EmailError" class="text-danger"></span>
+									</div>
+									<div class="rating_wrap">
+										<h5>Đánh giá</h5>
+										<div class="star-rating">
+											<input type="radio" id="5-stars" name="rating" value="5" checked>
+											<label for="5-stars" class="star">&#9733;</label>
+											<input type="radio" id="4-stars" name="rating" value="4">
+											<label for="4-stars" class="star">&#9733;</label>
+											<input type="radio" id="3-stars" name="rating" value="3">
+											<label for="3-stars" class="star">&#9733;</label>
+											<input type="radio" id="2-stars" name="rating" value="2">
+											<label for="2-stars" class="star">&#9733;</label>
+											<input type="radio" id="1-star" name="rating" value="1">
+											<label for="1-star" class="star">&#9733;</label>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="Content">Nhập nội dung</label>
+										<textarea id="Content" name="Content" class="form-control" rows="5"></textarea>
+										<span id="ContentError" class="text-danger"></span>
+									</div>
+									<button type="submit" class="btn btn-primary mt-3" onclick="checkFormAndSubmit(event, @product.ProductId)">Gửi đánh giá</button>
+								</form>
+
+								<!-- Reviews Field Start -->
+							</div>
+							<!-- Reviews End -->
+						</div>
+						<div id="new_tab_1" class="tab-pane fade">
+
+							<div class="review">
+								@{
+									List<FeedbackViewModels> listFeedbacks = (List<FeedbackViewModels>)ViewData["listFeedback"];
+									if (listFeedbacks.Count > 0)
+									{
+										foreach (var list in listFeedbacks)
+										{
+												<div class="review-header">
+													<h2>@list.CustomerName</h2>
+													@{
+													switch (@list.Rating)
+													{
+														case 1:
+																	<span class="rating">★☆☆☆☆</span>
+															break;
+														case 2:
+																	<span class="rating">★★☆☆☆</span>
+															break;
+														case 3:
+																	<span class="rating">★★★☆☆</span>
+															break;
+														case 4:
+																	<span class="rating">★★★★☆</span>
+															break;
+														case 5:
+																	<span class="rating">★★★★★</span>
+															break;
+														default:
+																	<span class="rating">★★★★★</span>
+															break;
+
+													}
+													}
+												</div>
+
+												<p class="review-content">@list.Content</p>
+												<p>@list.DateCreated</p>
+
+											if (@list.EmployeeName != null)
+											{
+													<div class="response">
+														<p class="response-header">Nhân viên @list.EmployeeName trả lời:</p>
+														<p class="response-content">@list.ContentResponse </p>
+														<p>@list.DateResp</p>
+													</div>
+											}
+
+										}
+									}
+									else
+									{
+											<h3 style="text-align:center;">Sản phẩm hiện chưa có đánh giá nào!</h3>
+									}
+								}
+							</div>
+
+						</div>
+
+					</div>
+
+					<!-- Product Thumbnail Tab Content End -->
+				</div>
+			</div>
+			<!-- Row End -->
+		</div>
+	</div>
+	<!-- Container End -->
+</div>
+<!-- Product Thumbnail Description End -->
+<!-- collective product Area Start Here -->
+<div class="collective-product adp_top adp_bottom">
+	<div class="container">
+		<!-- Section Title Start Here -->
+		<div class="section-title">
+			<h2>Sản phẩm tương tự</h2>
+		</div>
+		<!-- Section Title End Here -->
+		<div class="feature-pro-active-wrapper">
+			<div class="collective-product-active-4 row default_arrow small_arrow">
+				@foreach (var p in related_products)
+				{
+					<!-- Single Product Start -->
+					<div class="col-xl-3 col-lg-4 col-md-6">
+						<div class="single-template-product">
+							<!-- Product Image Start -->
+							<div class="pro-img">
+								@if( p.Promotion != null){
+								<span class="sticker-sale">@p.Promotion?.Value%</span>
+								}
+							@* <span class="sticker-new">New</span> *@
+
+								<a href="/product/detail/@p.ProductId">
+									<img class="primary-img" src="@p.images[0].ImageUrl" alt="single-product">
+									@* <img class="secondary-img" src="img/products/p24.jpg" alt="single-product"> *@
+								</a>
+
+								<div class="item_quick_link">
+									<a href="#" data-bs-toggle="modal" data-bs-target="#myModal" title="Quick View" onclick="quickView(@p.ProductId)"><i class="icofont-search"></i></a>
+								</div>
+								@if(p.Promotion != null){
+									<div class="product-count-wrap">
+										<div class="product-countdown" data-countdown="@(DateTime.Parse(p.Promotion.EndDate).ToString("MM/dd/yyyy hh:mm:00"))"></div>
+									</div>
+								}
+
+							</div>
+							<!-- Product Image End -->
+							<!-- Product Content Start -->
+							<div class="product_content_wrap" style="margin-right: 10px">
+								<div class="product_content" style="text-align:left; font-weight:bold; margin-left: 10px">
+									<div>
+										@p.brand
+									</div>
+									<h5 style="height:50px; padding:5px;font-size:16px; padding: 0px; margin: 0px; text-align: center">
+										<a href="/product/detail/@p.ProductId">@p.Name</a>
+									</h5>
+
+									<div class="grid_price" style="text-align:center">
+										@if(p.Promotion != null)
+										{
+											var price = (decimal)p.Price * (1 - (decimal)p.Promotion.Value / 100);
+											@if (price != null)
+											{
+												<span class="regular-price">@price.ToString("#,###.###") VND</span>
+											}
+											<del class="discount_price">@p.Price.ToString("#,###.###") VND</del>
+										}
+										else
+										{
+											<span class="regular-price">@p.Price.ToString("#,###.###") VND</span>
+										}
+
+									</div>
+								</div>
+								<div class="item_add_cart">
+									<a class="grid_cart details_cart link " href="#" data-bs-toggle="modal" data-bs-target="#myModal" title="Add to Cart" onclick="quickView(@p.ProductId)">Thêm Vào Giỏ Hàng</a>
+									<a class="grid_wishlist" title="Wishlist">
+
+										@{
+											bool isFavorite = ((List<int>)ViewData["listPID"]).Contains(p.ProductId);
+										}
+
+										<i class="icofont-heart-alt @((isFavorite) ? "favorite" : "not-favorite")"
+										   data-id="@p.ProductId"
+										   style="color: @((isFavorite) ? "red" : "black"); cursor: pointer;"></i>
+									</a>
+								</div>
+							</div>
+							<!-- Product Content End -->
+						</div>
+					</div>
+					<!-- Single Product End -->
+				}
+			</div>
+		</div>
+	</div>
+</div>
+@Html.Partial("_QuickView")
+<!-- Main Wrapper End Here -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@section ScriptOptional {
+
+	<script>
+		var product = @Html.Raw(product_json);
+		var attributeId, sizeId, price, img_url, quantityInStock;
+		var productOptions = @Html.Raw(productOptions);
+		var isStill = false;
+		console.log(product)
+		function formatDate(str) {
+			var s = str.split(' ');
+			console.log(s);
+
+			var dateParts = s[0].split('/');
+			var year = dateParts[2];
+			var month = dateParts[1].padStart(2, '0'); // Đảm bảo tháng có 2 chữ số
+			var day = dateParts[0].padStart(2, '0'); // Đảm bảo ngày có 2 chữ số
+
+			var timeParts = s[1].split(':');
+			var hour = parseInt(timeParts[0]);
+			var minute = timeParts[1];
+
+			if (s[2] == 'PM' && hour !== 12) {
+				hour += 12;
+			} else if (s[2] == 'AM' && hour === 12) {
+				hour = 0;
+			}
+
+			hour = hour.toString().padStart(2, '0'); // Đảm bảo giờ có 2 chữ số
+
+			var formattedDate = `${month}/${day}/${year} ${hour}:${minute}:00`;
+			console.log(formattedDate);
+
+			return formattedDate;
+		}
+
+		for (var index = 0; index < productOptions.length; index++) {
+			if (!productOptions[index].IsSoldOut) { // status is boolean
+				sizeId = productOptions[index].size.SizeId;
+				price = productOptions[index].price;
+				img_url = productOptions[index].img_url;
+				quantityInStock = productOptions[index].quantity;
+				isStill = true
+				break;
+			}
+
+		}
+		console.log(sizeId, attributeId)
+		checkOutOfStock()
+		if (isStill) {
+			var list_size = document.getElementById('size').querySelectorAll('li');
+			if (list_size.length > 0) {
+				var sizeElement = document.getElementById('size_' + sizeId);
+				if (sizeElement) {
+					sizeElement.classList.add('select');
+				} else {
+					console.warn('Size element not found: size_' + sizeId);
+				}
+			}
+			updatePriceAndImage()
+		}
+		else {
+			$('#add_to_cart').addClass('out-of-stock');
+			$('#add_to_cart').html('Đã bán hết')
+			$('#quantity').attr('readonly', true)
+			var list_size = $('#size li')
+			var list_attribute = $('#attribute li')
+			if (list_size.length > 0) {
+				list_size.each(function () {
+					$(this).addClass('out-of-stock')
+				})
+            }
+            if (list_attribute.length > 0) {
+				list_attribute.each(function () {
+					$(this).addClass('out-of-stock')
+				})
+            }
+		}
+
+		function checkOutOfStock() {
+			var list_size = document.getElementById('size').querySelectorAll('li');
+			if (list_size.length > 0) {
+				for (var index = 0; index < productOptions.length; index++) {
+					if (productOptions[index].IsSoldOut) {
+						$('#size_' + productOptions[index].size.SizeId).addClass('out-of-stock')
+					}
+				}
+			}
+		}
+
+		function size_selected(index, size_id) {
+			var list_size = document.getElementById('size').querySelectorAll('li');
+			list_size.forEach(function (li) {
+				li.classList.remove('select');
+				li.classList.remove('out-of-stock')
+			});
+			list_size[index].classList.add('select');
+			sizeId = size_id;
+			$('#add_to_cart').removeClass('out-of-stock');
+			updatePriceAndImage();
+		}
+
+		function attribute_selected(index, attribute_id) {
+			var list_size = document.getElementById('size').querySelectorAll('li');
+			var list_attr = document.getElementById('attribute').querySelectorAll('li');
+			list_attr.forEach(function (li) {
+				li.classList.remove('select');
+				li.classList.remove('out-of-stock')
+			});
+			list_size.forEach(function (li) {
+				li.classList.remove('out-of-stock')
+			});
+			list_attr[index].classList.add('select');
+			attributeId = attribute_id;
+			$('#add_to_cart').removeClass('out-of-stock');
+			updatePriceAndImage();
+		}
+
+		function updatePriceAndImage() {
+			var productOptions_json = @Html.Raw(productOptions);
+			for (var id = 0; id <= productOptions_json.length; id++) {
+				if (productOptions_json[id].size.SizeId == sizeId) {
+					price = productOptions_json[id].price
+					if (product.Promotion != null) {
+						$('.discount_price_main').text(price.toLocaleString() + ' VND')
+						price = price*(100 - product.Promotion.Value)/100
+					}
+					img_url = productOptions_json[id].img_url
+					$('#add_to_cart').attr('data-product-option-id', productOptions_json[id].Id)
+					if (productOptions_json[id].IsSoldOut) {
+						$('#add_to_cart').addClass('out-of-stock');
+					}
+					quantityInStock = productOptions_json[id].Quantity
+					document.getElementById('quantityInStock').innerText = quantityInStock
+					break
+				}
+			}
+			document.getElementById('large_image').setAttribute('src', img_url)
+			document.getElementById('large_image').setAttribute('data-zoom-image', img_url)
+			//document.getElementsByClassName('zoomWindow')[0].style.backgroundImage = `url(${img_url})`;
+			document.getElementById('price').innerText = price.toLocaleString('en-US')
+			total_price()
+			checkOutOfStock()
+		}
+
+		setTimeout(total_price, 1000);
+
+		function total_price() {
+			var price = parseFloat(document.getElementById('price').innerText.replace(/,/g, ''));
+			var quantity = document.getElementById('quantity').value
+			console.log(price, quantity)
+			var amount = price * quantity
+			console.log(amount)
+			if (!isNaN(amount)){
+				$('#amount').text(amount.toLocaleString('en-US'))
+			}
+		}
+
+	</script>
+
+	<script>
+		$(document).ready(function () {
+			$('.icofont-heart-alt').on('click', function () {
+				console.log('Heart clicked');
+
+				var $this = $(this);
+				var productId = $this.data('id');
+				var isFavorite = $this.hasClass('favorite');
+
+				console.log('Product ID:', productId);
+				console.log('Is Favorite:', isFavorite);
+
+				$this.toggleClass('favorite not-favorite');
+
+				if (isFavorite) {
+					$this.css('color', 'black');
+				} else {
+					$this.css('color', 'red');
+				}
+
+				var token = $('input[name="__RequestVerificationToken"]').val();
+
+				$.ajax({
+					url: '@Url.Action("ToggleFavorite", "Product")',
+					type: 'POST',
+					headers: {
+						'RequestVerificationToken': token
+					},
+					data: { productId: productId },
+					success: function (response) {
+						console.log('AJAX success:', response);
+					},
+					error: function (xhr, status, error) {
+						console.error('AJAX error:', error);
+
+						var errorMessage;
+
+						switch (xhr.status) {
+							case 400:
+								alert('Yêu cầu không hợp lệ. Vui lòng kiểm tra lại thông tin.');
+								break;
+							case 401:
+								alert('Bạn chưa đăng nhập. Vui lòng đăng nhập để thực hiện thao tác này.');
+								break;
+							case 403:
+								alert('Bạn không có quyền thực hiện thao tác này.');
+								break;
+							case 404:
+								alert('Không tìm thấy sản phẩm. Vui lòng thử lại.');
+								break;
+							case 500:
+								alert('Lỗi máy chủ. Vui lòng thử lại sau.');
+								break;
+							default:
+								alert('Đã xảy ra lỗi không xác định. Vui lòng thử lại.');
+						}
+						// Hiển thị thông báo lỗi
+						$('#error-message').text(errorMessage).show();
+
+						// Rollback the color change if there is an error
+						$this.toggleClass('favorite not-favorite');
+						if (isFavorite) {
+							$this.css('color', 'red');
+						} else {
+							$this.css('color', 'black');
+						}
+					}
+				});
+			});
+		});
+
+		function checkFormAndSubmit(event, pid) {
+			event.preventDefault();
+
+			const fullName = document.getElementById('FullName').value.trim();
+			const phoneNumber = document.getElementById('PhoneNumber').value.trim();
+			const content = document.getElementById('Content').value;
+			const fullNameError = document.getElementById('FullNameError');
+			const phoneNumberError = document.getElementById('PhoneNumberError');
+			const contentError = document.getElementById('ContentError');
+
+			fullNameError.textContent = '';
+			phoneNumberError.textContent = '';
+
+			let isValid = true;
+
+			if (!fullName) {
+				fullNameError.textContent = 'Họ và tên không được để trống.';
+				isValid = false;
+			}
+
+			const phonePattern = /^[0-9]{10,11}$/;
+			if (!phonePattern.test(phoneNumber)) {
+				phoneNumberError.textContent = 'Số điện thoại không hợp lệ.';
+				isValid = false;
+			}
+
+			if (content.length > 500) {
+				contentError.textContent = 'Nội dung không được vượt quá 500 ký tự.';
+				isValid = false;
+			}
+
+			
+			if (isValid) {
+				checkPhoneNumberAndSubmit(pid);
+			}
+		}
+
+		function checkPhoneNumberAndSubmit(pid) {
+			var phoneNumber = $('#PhoneNumber').val();
+
+			$.ajax({
+				url: '@Url.Action("CheckOrderProduct", "Feedback")',
+				type: 'POST',
+				data: {
+					phoneNumber: phoneNumber,
+					pid: pid
+				},
+				success: function (response) {
+					if (response.status === "error") {
+						alert(response.message);
+					} else {
+						$('#feedbackForm').submit();
+					}
+				},
+				error: function () {
+					alert('Đã xảy ra lỗi trong quá trình kiểm tra số điện thoại.');
+				}
+			});
+		}
+	</script>
+}

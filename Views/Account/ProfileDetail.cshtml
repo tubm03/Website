@@ -1,0 +1,82 @@
+﻿@model PetStoreProject.ViewModels.CustomerViewModel;
+
+@{
+    Layout = null;
+}
+
+<!-- Account details card-->
+<div class="card">
+    <div class="card-header">Hồ Sơ Của Tôi</div>
+    <div class="card-body">
+        <form id="formProfileDetail">
+            <input type="hidden" asp-for="CustomerId" value="@Model.CustomerId" />
+            <input type="hidden" asp-for="AccountId" value="@Model.AccountId" />
+            <!-- Form Group (username)-->
+            <div class="mb-3">
+                <label class="label-input mb-1" asp-for="FullName">Họ và Tên</label>
+                <input class="form-control" asp-for="FullName" placeholder="Nhập tên họ và tên của bạn" value="@Model.FullName" id="FullName">
+                <span class="text-danger" asp-validation-for="FullName"></span>
+            </div>
+            <!-- Form Row-->
+            <div class="row gx-3 mb-3">
+                <!-- Form Group (birthday)-->
+                <div class="col-md-6">
+                    <label class="label-input small mb-1" asp-for="DoB">Ngày Sinh</label>
+                    <div class="input-group date" id="dob-datepicker">
+                        <input type="text" class="form-control" asp-for="DoB" placeholder="Nhập ngày sinh của bạn" value="@Model.DoB" />
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                        </div>
+                    </div>
+                    <span class="text-danger" asp-validation-for="DoB"></span>
+                </div>
+                <!-- Form Group (gender)-->
+                <div class="col-md-6">
+                    <label class="label-input small mb-1"></label>
+                    <div class="gender">
+                        <div class="gender-title">Giới Tính: </div>
+                        <div class="gender-radio">
+                            <input type="radio" asp-for="Gender" value="true" />
+                            <span>Nam</span>
+                        </div>
+                        <div class="gender-radio">
+                            <input type="radio" asp-for="Gender" value="false" />
+                            <span>Nữ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Form Row-->
+            <div class="row gx-3 mb-3">
+                <!-- Form Group (email address)-->
+                <div class="col-md-6">
+                    <label class="label-input small mb-1" asp-for="Email">Email</label>
+                    <input class="form-control" asp-for="Email" type="email" placeholder="Nhập địa chỉ email của bạn" value="@Model.Email">
+                    <span class="text-danger" asp-validation-for="Email"></span>
+                    @if (ViewBag.EmailMess != null)
+                    {
+                        <span class="text-danger">@ViewBag.EmailMess</span>
+                    }
+                </div>
+                <!-- Form Group (phone number)-->
+                <div class="col-md-6">
+                    <label class="label-input small mb-1" asp-for="Phone">Số Điện Thoại</label>
+                    <input class="form-control" asp-for="Phone" placeholder="Nhập số điện thoại của bạn" value="@Model.Phone">
+                    <span class="text-danger" asp-validation-for="Phone"></span>
+                    @if (ViewBag.PhoneMess != null)
+                    {
+                        <span class="text-danger">@ViewBag.PhoneMess</span>
+                    }
+                </div>
+            </div>
+            <!-- Form Group (location)-->
+            <div class="mb-3">
+                <label class="label-input small mb-1" asp-for="Address">Địa Chỉ</label>
+                <input class="form-control" asp-for="Address" placeholder="Nhập địa chỉ của bạn" value="@Model.Address">
+                <span class="text-danger" asp-validation-for="Address"></span>
+            </div>
+            <!-- Save changes button-->
+            <input type="submit" class="login-btn rounded-1 mt-3 mb-3" value="Lưu Thay Đổi"/>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,271 @@
+﻿@{
+    Layout = null;
+    double totalAmount = 0;
+    int index = 0;
+    double totalMoney = 0;
+}
+
+@using PetStoreProject.ViewModels;
+@model CheckoutViewModel;
+
+<style>
+    #form_info_order, #money_order {
+        border: 1px solid;
+        border-color: #dee2e6;
+        margin-bottom: 10px;
+    }
+    .padding_10px {
+        padding: 10px!important;
+    }
+    .border_radi {
+        border-radius: 10px;
+    }
+
+    .text-top {
+        vertical-align: top;
+    }
+
+    .text_center {
+        text-align: center;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .margin_btt {
+        margin-bottom: 10px;
+    }
+
+    .margin_0px {
+        margin: 0px;
+    }
+</style>
+
+<div class="modal-header" id="modal-header-style">
+    <h4 class="modal-title" id="orderId">Chi tiết đơn hàng</h4>
+    <button type="button" class="close" data-dismiss="modal" style="font-size:20px; background: none" onclick="CloseDetail()">&times;</button>
+</div>
+<!-- Modal Body -->
+<div class="modal-body">
+    <form id="order-detail-body">
+        <div class="row border_radi padding_10px" id="form_info_order">
+            <div class="form-group col-xl-6">
+                <h6 class="text-decoration-underline">Thông tin đặt hàng</h6>
+                <div class="row">
+                    <div class="col-xl-4"><strong>Người đặt</strong></div>
+                    <div class="col-xl-8"><p>@Model.OrderName</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-4"><strong>SĐT đặt</strong></div>
+                    <div class="col-xl-8"><p>@Model.OrderPhone</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-4"><strong>Email đặt</strong></div>
+                    <div class="col-xl-8">
+                        @if (!string.IsNullOrEmpty(Model.OrderEmail))
+                        {
+                            <p>@Model.OrderEmail</p>
+                        }
+                        else
+                        {
+                            <p>Trống!</p>
+                        }
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-4"><strong>Ngày đặt</strong></div>
+                    <div class="col-xl-8"><p>@Model.OrderDate.ToString("dd/MM/yyyy")</p></div>
+                </div>
+            </div>
+            <div class="form-group col-xl-6">
+                <h6 class="text-decoration-underline">Thông tin nhận hàng</h6>
+                <div class="row">
+                    <div class="col-xl-4"><strong>Người nhận</strong></div>
+                    <div class="col-xl-8"><p>@Model.ConsigneeName</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-4"><strong>SĐT nhận</strong></div>
+                    <div class="col-xl-8"><p>@Model.ConsigneePhone</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-4"><strong>Địa chỉ</strong></div>
+                    <div class="col-xl-8"><p>@Model.ConsigneeAddressDetail</p></div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row margin_btt">
+        <div class="">
+            <table class="table table-centered mb-0 table-nowrap border_radi" style="padding: 0px">
+                @if (ViewBag.listItemOrder != null && ViewBag.listItemOrder.Count > 0)
+                {
+                    <thead>
+                        <tr>
+                            <th class="border-top-0" style="width: 85px;" scope="col">Sản phẩm</th>
+                            <th class="border-top-0" style="width: 500px" scope="col">Mô tả sản phẩm</th>
+                            <th class="border-top-0" scope="col">Giá</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var itemCart in ViewBag.listItemOrder)
+                        {
+                            double amount = 0;
+                            var price = itemCart.Price;
+                            if (itemCart.Promotion != null)
+                            {
+                                price *= (1 - (float)itemCart.Promotion.Value / 100);
+                            }
+                            amount = price * itemCart.Quantity;
+                            totalAmount += amount;
+
+                            if (index > 1)
+                            {
+                                <tr id="display_product_@index" style="display: none">
+                                    <td scope="row"><img src="@itemCart.ImgUrl.Trim()" alt="Hình ảnh sản phẩm" title="product-img" class="avatar-lg rounded"></td>
+                                    <td class="text-top">
+                                        <h7 class="font-size-16 text-truncate"><a href="/admin/product/detail?productId=@itemCart.ProductId" class="text-dark">@itemCart.Name</a></h7>
+                                        <h8 class="font-size-16 text-truncate">@itemCart.Option</h8>
+                                        <p class="text-muted mb-0">
+                                            <i class="bx bxs-star text-warning"></i>
+                                            <i class="bx bxs-star text-warning"></i>
+                                            <i class="bx bxs-star text-warning"></i>
+                                            <i class="bx bxs-star text-warning"></i>
+                                            <i class="bx bxs-star-half text-warning"></i>
+                                        </p>
+                                        <p class="text-muted mb-0 mt-1">@price.ToString("#,###") VND x @itemCart.Quantity</p>
+                                        @if (itemCart.Promotion != null)
+                                        {
+                                            <del class="text-muted mb-0 mt-1">@itemCart.Price.ToString("#,###") VND x @itemCart.Quantity</del>
+                                        }
+                                        <input type="hidden" value="@itemCart.ProductOptionId" id="product_productOptionId_@index" />
+                                        <input type="hidden" value="@itemCart.Price" id="product_price_@index" />
+                                        <input type="hidden" value="@itemCart.Quantity" id="product_quantity_@index" />
+                                    </td>
+                                    <td class="text-center"><p class="float_r margin_auto">@amount.ToString("#,###") VND</p></td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td scope="row"><img src="@itemCart.ImgUrl.Trim()" alt="Hình ảnh sản phẩm" title="product-img" class="avatar-lg rounded"></td>
+                                    <td class="text-top">
+                                        <h7 class="font-size-16 text-truncate"><a href="/admin/product/detail?productId=@itemCart.ProductId" class="text-dark">@itemCart.Name</a></h7>
+                                        <h8 class="font-size-16 text-truncate">@itemCart.Option</h8>
+                                        <p class="text-muted mb-0">
+                                            <i class="bx bxs-star text-warning"></i>
+                                            <i class="bx bxs-star text-warning"></i>
+                                            <i class="bx bxs-star text-warning"></i>
+                                            <i class="bx bxs-star text-warning"></i>
+                                            <i class="bx bxs-star-half text-warning"></i>
+                                        </p>
+                                        <p class="text-muted mb-0 mt-1">@price.ToString("#,###") VND x @itemCart.Quantity</p>
+                                        @if (itemCart.Promotion != null)
+                                        {
+                                            <del class="text-muted mb-0 mt-1">@itemCart.Price.ToString("#,###") VND x @itemCart.Quantity</del>
+                                        }
+                                        <input type="hidden" value="@itemCart.ProductOptionId" id="product_productOptionId_@index" />
+                                        <input type="hidden" value="@itemCart.Price" id="product_price_@index" />
+                                        <input type="hidden" value="@itemCart.Quantity" id="product_quantity_@index" />
+                                    </td>
+                                    <td class="text-center"><p class="float_r margin_auto">@amount.ToString("#,###") VND</p></td>
+                                </tr>
+                            }
+                            totalMoney = totalAmount;
+                            index++;
+                        }
+                        <input type="hidden" value="@index" id="product_index" />
+                        <input type="hidden" value="1" id="products_null" />
+                    </tbody>
+                }
+                else
+                {
+                    <thead>
+                        <p class="text-center">Danh sách sản phẩm hiện trống!</p>
+                    </thead>
+                    <input type="hidden" value="0" id="products_null" />
+                }
+            </table>
+        </div>
+        @if (ViewBag.listItemOrder != null && ViewBag.listItemOrder.Count > 2)
+        {
+            <div onclick="AddViewItem()" class="text_center margin_auto padding_t addView_style"><button type="button" id="selectViewItem" style="border:none; background: none">Xem thêm</button></div>
+        }
+    </div>
+
+    <div class="row border_radi margin_0px padding_10px" id="money_order">
+        <div class="row">
+            <div class="form-group col-xl-8">
+                <p>Tổng tiền:</p>
+            </div>
+            <div class="form-group col-xl-4 text-right">@totalAmount.ToString("#,###")VND</div>
+        </div>
+        <div class="row">
+            <div class="form-group col-xl-8">
+                <p class="margin_0px">Mã giảm giá:</p>
+            </div>
+            @if (ViewBag.priceDiscount != null && ViewBag.priceDiscount != 0)
+            {
+                totalMoney = totalAmount - ViewBag.priceDiscount;
+                <div class="form-group col-xl-4 text-right">- @ViewBag.priceDiscount.ToString("#,###")VND</div>
+            }else
+            {
+                <div class="form-group col-xl-4 text-right">- 0VND</div>
+            }
+        </div>
+        <div class="row">
+            <div class="form-group col-xl-8">
+                <p class="margin_0px">Phí vận chuyển:</p>
+            </div>
+            @if (Model.ShippingFee != 0)
+            {
+                totalMoney = totalMoney + Model.ShippingFee;
+                <div class="form-group col-xl-4 text-right">+ @Model.ShippingFee.ToString("#,###")VND</div>
+            }
+            else
+            {
+                <div class="form-group col-xl-4 text-right">+ 0VND</div>
+            }
+        </div>
+        <div class="row">
+            <div class="form-group col-xl-8">
+                <strong>Thành tiền:</strong>
+            </div>
+            <div class="form-group col-xl-4 text-right"><strong>@totalMoney.ToString("#,###")VND</strong></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var numberViewProduct = 1;
+    function AddViewItem() {
+        if ($('#selectViewItem').text() === "Rút gọn") {
+            for (let i = 1; i <= @index; i++) {
+                $('#display_product_' + i).css({ 'display': 'none' });
+            }
+            numberViewProduct = 1;
+            $('#selectViewItem').text("Xem thêm");
+        } else {
+            if (numberViewProduct > @index) {
+                for (let i = @index; i > 2; i--) {
+                    if (numberViewProduct === @index) {
+                        break;
+                    }
+                    $('#display_product_' + i).css({ 'display': 'none' });
+                    numberViewProduct -= 1;
+                }
+                $('#selectViewItem').text("Xem thêm");
+            } else {
+                const viewProductMin = Math.min(@index - numberViewProduct, 3);
+                for (let i = 0; i < viewProductMin; i++) {
+                    numberViewProduct += 1;
+                    $('#display_product_' + numberViewProduct).css({ 'display': '' });
+                }
+                if (numberViewProduct >= @index) {
+                    $('#selectViewItem').text("Rút gọn");
+                }
+            }
+        }
+    }
+</script>

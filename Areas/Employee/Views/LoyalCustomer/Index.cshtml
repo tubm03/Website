@@ -1,0 +1,119 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList
+@model IPagedList<PetStoreProject.Areas.Employee.ViewModels.LoyalCustomerViewModel>
+
+
+<style>
+    .pagination-blog {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        .pagination
+
+    {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        justify-content: center;
+    }
+
+    .pagination li {
+        margin: 0 5px;
+    }
+
+    .pagination a, .pagination span {
+        color: #007bff;
+        text-decoration: none;
+        border: 1px solid #dee2e6;
+        padding: 8px 12px;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+
+        .pagination a:hover {
+            background-color: #e9ecef;
+        }
+
+    .pagination .active span {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+</style>
+
+
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Danh sách khách hàng thân thiết</h3>
+            <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
+                <li>
+                    <a href="index.html"><div class="text-tiny">Bảng điều khiển</div></a>
+                </li>
+                <li>
+                    <i class="icon-chevron-right"></i>
+                </li>
+                <li>
+                    <a href="#"><div class="text-tiny">Khách hàng thân thiết</div></a>
+                </li>
+                <li>
+                    <i class="icon-chevron-right"></i>
+                </li>
+                <li>
+                    <div class="text-tiny">Danh sách khách hàng thân thiết</div>
+                </li>
+            </ul>
+        </div>
+        <!-- all-roles -->
+        <div class="wg-box">
+            <div class="flex items-center justify-between gap10 flex-wrap">
+                <div class="wg-filter flex-grow">
+                    <form class="form-search" asp-action="Index" asp-controller="LoyalCustomer" method="get">
+                        <fieldset class="name">
+                            <input type="text" placeholder="Tìm kiếm theo số điện thoại..." class="" name="phone" tabindex="2" value="" aria-required="true" required="">
+                        </fieldset>
+                        <div class="button-submit">
+                            <button class="" type="submit"><i class="icon-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+                <a class="tf-button style-1 w208" asp-action="Refresh" asp-controller="LoyalCustomer"><i class="icon-refresh-cw"></i>Làm mới trang</a>
+            </div>
+            <div class="wg-table table-all-attribute">
+                <ul class="table-title flex gap20 mb-14">
+                    <li style="width: 4%;">
+                        <div class="body-title">No.</div>
+                    </li>
+                    <li style="width: 32%;">
+                        <div class="body-title">Tên khách hàng</div>
+                    </li>
+                    <li style="width: 32%;">
+                        <div class="body-title">Số điện thoại</div>
+                    </li>
+                    <li style="width: 32%;">
+                        <div class="body-title">Hạng thân thiết</div>
+                    </li>
+                </ul>
+                <ul class="flex flex-column">
+                    @foreach (var item in Model)
+                    {
+                        <li class="attribute-item flex items-center justify-between gap20">
+                            <div class="body-text" style="width: 4%; word-wrap: break-word;">@item.CustomerId</div>
+                            <div class="body-text" style="width: 32%; word-wrap: break-word;">@item.CustomerName</div>
+                            <div class="body-text" style="width: 32%; word-wrap: break-word;">@item.PhoneNumber</div>
+                            <div class="body-text" style="width: 32%; word-wrap: break-word;">@item.LoyalName</div>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="pagination-blog">
+                @Html.PagedListPager(Model, page => Url.Action("ListNews", new { page, pagesize = 12 }))
+            </div>
+        </div>
+        
+    </div>
+    
+    <!-- /main-content-wrap -->
+</div>

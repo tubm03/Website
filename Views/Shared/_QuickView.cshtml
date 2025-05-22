@@ -1,0 +1,107 @@
+﻿<!-- Quick View Content Start -->
+<div class="main-product-thumbnail quick-thumb-content">
+    <div class="container">
+        <!-- The Modal -->
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="row">
+
+                            <div class="col-lg-7 col-md-7">
+                                <div class="product-details product_details_1">
+                                    <div class="product-details-img">
+                                        <div class="tab-content main_large_img product-details-large" id="quick_image">
+                                        </div>
+
+                                        <div class="shop-details-tab nav product-details-small" id="image_small">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Thumbnail Description Start -->
+                            <div class="col-md-5">
+                                <div class="thubnail-desc ">
+
+                                    <!--Name-->
+                                    <h3 class="product-header"><a href="#" id="quick_name"></a></h3>
+@*                                     <ul class="rating-summary">
+                                        <li class="rating-pro">
+                                            <i class="icofont-ui-rating"></i>
+                                            <i class="icofont-ui-rating"></i>
+                                            <i class="icofont-ui-rate-blank"></i>
+                                            <i class="icofont-ui-rate-blank"></i>
+                                            <i class="icofont-ui-rate-blank"></i>
+                                        </li>
+                                        <li class="read-review"><a href="#">Xem đánh giá</a></li>
+                                        <li class="write-review"><a href="#">Viết đánh giá</a></li>
+                                    </ul> *@
+
+                                    <!--Brand-->
+                                    <div class="rating-summary" id="quick_brand">
+                                        
+                                    </div>
+
+                                    <!--Price-->
+                                    <div class="pro-thumb-price mt-20">
+                                        <span class="regular-price" id="quick_price"></span>
+                                        <span class="regular-price">VND</span>
+                                        <del class="discount_price" id="quick_price_discount"></del>
+                                    </div>
+
+                                    <!--Option-->
+                                    <div class="thubnail-desc" id="quick_option">
+
+                                        <div class="size_color_wraper" id="quick_attribute">
+                                        </div>
+
+                                        <!--Size-->
+
+                                        <div class="theme_size clearfix" id="quick_size">
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: 10px; font-size: 15px;">Trong kho: <span id="quick_quantityInStock">0</span> sản phẩm</div>
+                                    <div class="details_action_wraper" style="margin-top:10px; font-size:15px; display:flex; align-items:center">
+                                        Số lượng:
+                                        <form action="#" onclick="quick_total_price()" style="border-radius: 10px">
+                                            <input class="quantity" type="number" min="1" max="10" value="1" id="quick_quantity" style="width:60px;height:33px; margin-left:10px" oninput="validateQuantity(this)">
+                                        </form>
+                                    </div>
+                                    <div style="margin-top: 10px; font-size: 16px;">
+                                        Tổng số tiền: <span id="quick_amount">0</span>
+                                        <span>VND</span>
+                                    </div>
+
+                                    <!--Cart-->
+                                    <div class="details_action_wraper">
+                                        <a class="details_cart link" title="" data-original-title="Add to Cart" tabindex="0" data-product-option-id="" id="quick_add_to_cart" onclick="addToCart(this.dataset.productOptionId, document.getElementById('quick_quantity').value)" style="cursor: pointer;">
+                                            Thêm Vào Giỏ Hàng
+                                        </a>
+                                        @* <a class="details_wishlist" href="wishlist.html" title="" data-original-title="Wishlist" tabindex="0"><i class="icofont-heart-alt"></i></a> *@
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- Thumbnail Description End -->
+
+
+                        </div>
+                        <!-- Row End -->
+                    </div>
+                    <!-- Modal footer -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Quick View Content End -->
+<div id="notification" style="display:none; position:fixed; bottom:10px; right:10px; background-color:green; color:white; padding:10px; border-radius:5px;">
+    Sản phẩm đã được thêm vào giỏ hàng thành công!
+</div>

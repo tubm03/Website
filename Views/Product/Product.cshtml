@@ -1,0 +1,683 @@
+﻿@{
+    ViewData["Title"] = "Sản phẩm";
+}
+
+@using PetStoreProject.ViewModels;
+@using PetStoreProject.Helpers;
+@model PaginatedList<ProductDetailViewModel>;
+@using PetStoreProject.Models;
+@using System.Globalization;
+
+@{
+    var selectPageSize = ViewBag.pageSize;
+}
+
+<style>
+
+
+    .sidebar-scroll-list {
+        max-height: 300px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #888 #f1f1f1;
+    }
+
+        .sidebar-scroll-list::-webkit-scrollbar {
+            width: 5px; /* Độ rộng của thanh cuộn */
+        }
+
+        /* Màu nền của thanh cuộn trên Chrome và Safari */
+        .sidebar-scroll-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Màu của thanh cuộn trên Chrome và Safari */
+        .sidebar-scroll-list::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+    .price-input {
+        width: 100%;
+        display: flex;
+        margin: 30px 0 35px;
+    }
+
+        .price-input .field {
+            display: flex;
+            width: 100%;
+            height: 45px;
+            align-items: center;
+        }
+
+    .field input {
+        width: 100%;
+        height: 100%;
+        outline: none;
+        font-size: 16px;
+        margin-right: 5px;
+        border-radius: 5px;
+        text-align: center;
+        border: 1px solid #999;
+        -moz-appearance: textfield;
+    }
+
+
+    .price-input .separator {
+        width: 30px;
+        display: flex;
+        font-size: 19px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .slider {
+        height: 5px;
+        position: relative;
+        background: #ddd;
+        border-radius: 5px;
+    }
+
+        .slider .progress {
+            height: 100%;
+            left: 0%;
+            right: 0%;
+            position: absolute;
+            border-radius: 5px;
+            background: #198754;
+        }
+
+    .range-input {
+        position: relative;
+    }
+
+        .range-input input {
+            position: absolute;
+            width: 100%;
+            height: 5px;
+            top: -5px;
+            background: none;
+            pointer-events: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+    input[type="range"]::-webkit-slider-thumb {
+        height: 17px;
+        width: 17px;
+        border-radius: 50%;
+        background: #198754;
+        pointer-events: auto;
+        -webkit-appearance: none;
+        box-shadow: 0 0 6px rgba(0,0,0,0.05);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        height: 17px;
+        width: 17px;
+        border: none;
+        border-radius: 50%;
+        background: #198754;
+        pointer-events: auto;
+        -moz-appearance: none;
+        box-shadow: 0 0 6px rgba(0,0,0,0.05);
+    }
+
+    /* CSS cho nút Lọc sản phẩm và Xóa bộ lọc */
+    .single_sidebar {
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 8px 16px;
+        font-size: 14px;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #f8f9fa;
+        color: #333;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+        .btn:hover {
+            background-color: #e9ecef;
+        }
+
+    .btn-light {
+        background-color: #f8f9fa;
+        color: #333;
+    }
+
+        .btn-light:hover {
+            background-color: #e9ecef;
+        }
+
+    .scrollable-description {
+        max-height: 150px; /* Chiều cao tối đa của thanh cuộn */
+        overflow-y: auto; /* Hiển thị thanh cuộn dọc khi nội dung vượt quá */
+        margin-bottom: 10px;
+    }
+
+    .img_sold_out {
+        opacity: 0.4;
+    }
+
+    .selected_style {
+        border: none;
+        border-radius: 5px;
+        padding: 5px;
+    }
+
+</style>
+
+<div class="main-shop-page adp_top adp_bottom">
+    <div class="container">
+        <!-- Row End -->
+        <div class="row">
+            <!-- Sidebar Shopping Option Start -->
+            <div class="col-lg-3 order-2 order-lg-1">
+                <div class="sidebar shop-sidebar">
+                    <!-- Sidebar Categorie Start -->
+                    @* <div class="sidebar-categorie single_sidebar">
+                        <h3 class="sidebar-title">Thương hiệu</h3>
+                        <div class="sidebar-scroll-list">
+                            <ul class="sidbar-style">
+                                @foreach (var brand in ViewBag.Brands as List<Brand>)
+                                {
+                                    <li class="form-check">
+                                        <input class="form-check-input brand-checkbox" value="@brand.Name" id="@($"camera_{brand.BrandId}")" type="checkbox">
+                                        <label class="form-check-label" for="@($"camera_{brand.BrandId}")">@brand.Name</label>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div> *@
+                    <!-- Sidebar Categorie Start -->
+                    <!-- Price Filter Options Start -->
+                    <div class="search-filter single_sidebar">
+                        <h3 class="sidebar-title">Giá</h3>
+                        <div class="price-input">
+                            <div class="field">
+                                <input type="text" readonly class="input-min" value="@ViewBag.priceMin.ToString("#,###")">
+                                <span>VND</span>
+                            </div>
+                            <div class="separator">-</div>
+                            <div class="field">
+                                <input type="text" readonly class="input-max" value="@ViewBag.priceMax.ToString("#,###")">
+                                <span>VND</span>
+                            </div>
+                        </div>
+                        <div class="slider">
+                            <div class="progress" style="left:0%; right:0%"></div>
+                        </div>
+                        <div class="range-input">
+                            <input type="range" class="range-min" min="@ViewBag.priceMin" max="@ViewBag.priceMax" value="@ViewBag.priceMin" step="1000">
+                            <input type="range" class="range-max" min="@ViewBag.priceMin" max="@ViewBag.priceMax" value="@ViewBag.priceMax" step="1000">
+                        </div>
+                    </div>
+                    <!-- Price Filter Options End -->
+                    <!-- Product Size Start -->
+                    @* <div class="size single_sidebar">
+                        <h3 class="sidebar-title">Kích cỡ</h3>
+                        <div class="sidebar-scroll-list">
+                            <ul class="size-list sidbar-style">
+                                @foreach (var size in ViewBag.Sizes as List<Size>)
+                                {
+                                    if (size.Name != null)
+                                    {
+                                        <li class="form-check">
+                                            <input class="form-check-input size-checkboxes" value="@size.Name" id="dobule_combo_@size.SizeId" type="checkbox">
+                                            <label class="form-check-label" for="dobule_combo_@size.SizeId">@size.Name</label>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+
+                    </div> *@
+                    <div class="single_sidebar">
+                        <h3 class="sidebar-title">Tình trạng</h3>
+                        <ul class="status-option sidbar-style">
+                            <li class="form-check">
+                                <input class="form-check-input status-checkboxes" value="False" id="con_hang" type="checkbox">
+                                <label class="form-check-label" for="con_hang"> Còn hàng </label>
+                                <input class="form-check-input status-checkboxes" value="True" id="het_hang" type="checkbox">
+                                <label class="form-check-label" for="het_hang"> Hết hàng </label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="single_sidebar">
+                        <h3 class="sidebar-title">Khuyến mại</h3>
+                        <ul class="status-option sidbar-style">
+                            <li class="form-check">
+                                <input class="form-check-input promotion-checkboxes" value="True" id="active_promotion" type="checkbox">
+                                <label class="form-check-label" for="active_promotion"> Hoạt động </label>
+                                <input class="form-check-input promotion-checkboxes" value="False" id="no_active_promotion" type="checkbox">
+                                <label class="form-check-label" for="no_active_promotion"> Không hoạt động </label>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Product Size End -->
+                    <div class="single_sidebar">
+                        <button class="btn btn-light" id="filter_button">Lọc sản phẩm</button>
+                        <button class="btn btn-light" id="clear_button">Xóa bộ lọc</button>
+                    </div>
+                    <!-- Product Color End -->
+                    <!-- sidebar bannaer end -->
+
+                </div>
+            </div>
+            <!-- Sidebar Shopping Option End -->
+            <!-- Product Categorie List Start -->
+            <div class="col-lg-9 order-1 order-lg-2">
+                <!-- Grid & List View Start -->
+                <div class="grid-list-top">
+                    <div class="grid-list-view d-flex align-items-center  mb-sm-15">
+                        <ul class="nav tabs-area d-flex align-items-center">
+                            <li>
+                                <a class="active" data-bs-toggle="tab" href="#grid-view">
+                                    <i class="icofont-ghost"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="tab" href="#list-view">
+                                    <i class="icofont-listine-dots"></i>
+                                </a>
+                            </li>
+                        </ul>
+
+                    </div>
+
+
+                    <div class="single-select-block">
+                        <select name="pageSize" id="pageSizeSelect" class="selected_style" onchange="changePageSize()">
+                            <!option @(selectPageSize == 20 ? "selected" : "") value="21">20</!option>
+                            <!option @(selectPageSize == 30 ? "selected" : "") value="30">30</!option>
+                            <!option @(selectPageSize == 40 ? "selected" : "") value="39">40</!option>>
+                        </select>
+                    </div>
+
+                    <!-- Toolbar Short Area Start -->
+                    <div class="main-toolbar-sorter clearfix">
+                        <div class=" d-md-flex align-items-center">
+                            @* <label style="width:80px">Sắp xếp:</label> *@
+                            <select id="selected_sort" onchange="selectedSort()" class="sorter wide selected_style">
+                                <option selected value="">-- Sắp xếp --</option>
+                                <option value="ProductNameAZ">Tên, A tới Z</option>
+                                <option value="ProductNameZA">Tên, Z tới A</option>
+                                <option value="PriceLowToHight">Giá thấp đến cao</option>
+                                <option value="PriceHightToLow">Giá cao đến thấp</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Toolbar Short Area End -->
+                </div>
+                <!-- Grid & List View End -->
+                <div class="shop-area mb-all-40">
+                    <!-- Grid & List Main Area End -->
+                    <div class="tab-content">
+                        <div id="no-products" style="text-align: center; margin-top: 20px;">
+                        </div>
+                        <div id="grid-view" class="tab-pane fade show active class_grid_view">
+
+
+                            <div id="data-grid-view" class="row border-hover-effect ">
+                                @if (Model.Count > 0)
+                                {
+                                    @foreach (var product in Model)
+                                    {
+                                        <!-- Single Product Start -->
+                                        <div class="col-xl-4 col-lg-6 col-md-6">
+                                            <div class="single-template-product">
+                                                <!-- Product Image Start -->
+                                                <div class="pro-img">
+                                                    @if (product.Promotion != null && product.Promotion.Value != null)
+                                                    {
+                                                        <span class="sticker-sale">-@product.Promotion.Value%</span>
+                                                    }
+                                                    <a href="/product/detail/@product.ProductId">
+                                                        @if (product.productOption != null && product.productOption.Count > 0)
+                                                        {
+                                                            bool IsSoldOut = true;
+                                                            foreach (var po in product.productOption)
+                                                            {
+                                                                if (po.IsSoldOut == false || po.Quantity != 0)
+                                                                {
+                                                                    IsSoldOut = false;
+                                                                    break;
+                                                                }
+                                                            }
+                                                            if (IsSoldOut == false)
+                                                            {
+                                                                <img class="primary-img" src="@product.productOption[0].img_url" alt="single-product">
+
+                                                            }
+                                                            else
+                                                            {
+                                                                <img class="primary-img img_sold_out" src="@product.productOption[0].img_url" alt="single-product">
+                                                                <div class="overlay">Hết hàng</div>
+                                                            }
+                                                        }
+                                                    </a>
+
+                                                    <div class="item_quick_link">
+                                                        <a href="#" data-bs-toggle="modal" data-bs-target="#myModal" title="Xem chi tiết" onclick="quickView(@product.ProductId)"><i class="icofont-search"></i></a>
+                                                    </div>
+
+
+                                                    <div class="product-count-wrap">
+                                                    </div>
+
+                                                </div>
+
+                                                <!-- Product Image End -->
+                                                <!-- Product Content Start -->
+                                                <div class="product_content_wrap">
+                                                    <div class="product_content">
+                                                        <h4 style="height: 40px"><a href="/product/detail/@product.ProductId">@product.Name</a></h4>
+
+                                                        <div class="grid_price">
+                                                            @if (product.productOption != null && product.productOption.Count > 0)
+                                                            {
+                                                                float amount = @product.productOption[0].price;
+
+                                                                if (product.Promotion != null && product.Promotion.Value != null)
+                                                                {
+                                                                    float amountAfterDiscount = amount * (1 - (float)product.Promotion.Value / 100);
+                                                                    <span class="regular-price">@amountAfterDiscount.ToString("#,###")VND</span>
+                                                                    <del class="discount_price">@amount.ToString("#,###")VND</del>
+                                                                }else
+                                                                {
+                                                                    <span class="regular-price">@amount.ToString("#,###")VND</span>
+                                                                }
+
+
+                                                            }
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="item_add_cart">
+                                                        @* <a class="grid_compare" href="compare.html" title="Compare"><i class="icofont-random"></i></a> *@
+                                                        @* <a class="grid_cart cart_disable" href="#" title="Sold Out">Sold Out</a> *@
+                                                        <a class="grid_cart details_cart link " href="#" data-bs-toggle="modal" data-bs-target="#myModal" title="Add to Cart" onclick="quickView(@product.ProductId)">Thêm Vào Giỏ Hàng</a>
+                                                        <a class="grid_wishlist" title="Wishlist">
+                                                            @{
+                                                                bool isFavorite = ((List<int>)ViewData["listPID"]).Contains(product.ProductId);
+                                                            }
+
+                                                            <i class="icofont-heart-alt @((isFavorite) ? "favorite" : "not-favorite")"
+                                                               data-id="@product.ProductId"
+                                                               style="color: @((isFavorite) ? "red" : "black"); cursor: pointer;"></i>
+
+
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <!-- Product Content End -->
+                                            </div>
+                                        </div>
+                                        <!-- Single Product End -->
+                                    }
+                                }
+                                else
+                                {
+                                    <div id='no-products' style='text-align: center; margin-left: 20px;'><h4>Sản phẩm khách hàng lựa chọn hiện không có!</h4></div>
+                                }
+                            </div>
+                            @{
+                                var prevDisabled = !Model.hasPreviousPage ? "disabled" : "";
+                                var nextDisabled = !Model.hasNextPage ? "disabled" : "";
+                            }
+                            <!-- Row End -->
+                        </div>
+                        <!-- #grid view End -->
+                        <div id="list-view" class="tab-pane fade fix class_list_view">
+                            @if (Model.Count > 0)
+                            {
+                                @foreach (var product in Model)
+                                {
+                                    <div class="single-template-product">
+                                        <!-- Product Image Start -->
+                                        <div class="pro-img">
+                                            @if (product.Promotion != null && product.Promotion.Value != null)
+                                            {
+                                                <span class="sticker-sale">-@product.Promotion.Value%</span>
+                                            }
+                                            <a href="/product/detail/@product.ProductId">
+                                                @if (product.productOption != null && product.productOption.Count > 0)
+                                                {
+                                                    bool IsSoldOut = true;
+                                                    foreach (var po in product.productOption)
+                                                    {
+                                                        if (po.IsSoldOut == false || po.Quantity != 0)
+                                                        {
+                                                            IsSoldOut = false;
+                                                            break;
+                                                        }
+                                                    }
+                                                    if (IsSoldOut == false)
+                                                    {
+                                                        <img class="primary-img" src="@product.productOption[0].img_url" alt="single-product">
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <img class="primary-img img_sold_out" src="@product.productOption[0].img_url" alt="single-product">
+                                                        <div class="overlay">Hết hàng</div>
+                                                    }
+                                                }
+                                            </a>
+                                            <div class="item_quick_link">
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#myModal" onclick="quickView(@product.ProductId)" title="Xem chi tiết"><i class="icofont-search"></i></a>
+                                            </div>
+
+                                            <div class="product-count-wrap">
+                                            </div>
+                                        </div>
+                                        <!-- Product Image End -->
+                                        <!-- Product Content Start -->
+                                        <div class="product_content_wrap">
+                                            <div class="product_content">
+                                                <h4 style="height: 33px"><a href="product-details.html">@product.Name</a></h4>
+                                                <div class="scrollable-description">
+                                                    <p class="list_des">@Html.Raw(product.Description)</p>
+                                                </div>
+
+
+                                                <div class="grid_price">
+                                                    @if (product.productOption != null && product.productOption.Count > 0)
+                                                    {
+                                                        float amount = @product.productOption[0].price;
+
+                                                        if (product.Promotion != null && product.Promotion.Value != null)
+                                                        {
+                                                            float amountAfterDiscount = amount * (1 - (float)product.Promotion.Value / 100);
+                                                            <span class="regular-price">@amountAfterDiscount.ToString("#,###")VND</span>
+                                                            <del class="discount_price">@amount.ToString("#,###")VND</del>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="regular-price">@amount.ToString("#,###")VND</span>
+                                                        }
+                                                    }
+                                                </div>
+
+                                            </div>
+                                            <div class="item_add_cart">
+                                                <a class="grid_cart details_cart link " href="#" data-bs-toggle="modal" data-bs-target="#myModal" title="Add to Cart" onclick="quickView(@product.ProductId)">Thêm Vào Giỏ Hàng</a>
+                                                <a class="grid_wishlist" title="Wishlist">
+                                                    @{
+                                                        bool isFavorite = ((List<int>)ViewData["listPID"]).Contains(product.ProductId);
+                                                    }
+                                                    <i class="icofont-heart-alt @((isFavorite) ? "favorite" : "not-favorite")"
+                                                       data-id="@product.ProductId"
+                                                       style="color: @((isFavorite) ? "red" : "black"); cursor: pointer;"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <!-- Product Content End -->
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div id='no-products' style='text-align: center; margin-left: 20px;'><h4>Sản phẩm khách hàng lựa chọn hiện không có!</h4></div>
+                            }
+
+                        </div>
+                        <!-- #list view End -->
+                    </div>
+                    <!-- Grid & List Main Area End -->
+                </div>
+                <!-- Shop Breadcrumb Area Start -->
+                <div class="shop-pagination-area border-default">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-12 pagi_left">
+                        </div>
+                        <div id="pagination" class="col-lg-8 col-md-8 col-12 pagi_right">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination">
+                                    @if ((int)@ViewBag.numberPage > 1)
+                                    {
+                                        @if ((int)ViewBag.currentPage > 1)
+                                        {
+                                            <li class="page-item"><a class="page-link" onclick="nextPage(@(ViewBag.currentPage - 1), @(ViewBag.pageSize))" href="javascript:void(0);">Trang trước</a></li>
+                                        }
+
+                                        var startPage = Math.Max(1, (int)ViewBag.currentPage - 2);
+                                        var endPage = Math.Min((int)ViewBag.numberPage, (int)ViewBag.currentPage + 2);
+
+                                        @if (startPage > 1)
+                                        {
+                                            <li class="page-item"><a class="page-link" onclick="nextPage(1, @(ViewBag.pageSize))" href="javascript:void(0);">1</a></li>
+                                            if (startPage > 2)
+                                            {
+                                                <li class="page-item"><a class="page-link" href="javascript:void(0);">...</a></li>
+                                            }
+                                        }
+                                        @for (var i = startPage; i <= endPage; i++)
+                                        {
+                                            @if ((int)ViewBag.currentPage == i)
+                                            {
+                                                <li class="page-item active"><a class="page-link" href="javascript:void(0);">@i</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li class="page-item"><a class="page-link" onclick="nextPage(@i, @(ViewBag.pageSize))" href="javascript:void(0);">@i</a></li>
+                                            }
+                                        }
+                                        @if ((int)ViewBag.numberPage >= endPage + 1)
+                                        {
+                                            @if ((int)ViewBag.numberPage >= endPage + 2)
+                                            {
+
+                                                <li class="page-item"><a class="page-link" href="javascript:void(0);">...</a></li>
+                                            }
+
+                                            <li class="page-item"><a class="page-link" onclick="nextPage(@(ViewBag.numberPage), @(ViewBag.pageSize))" href="javascript:void(0);">@(ViewBag.numberPage)</a></li>
+                                        }
+                                        @if ((int)ViewBag.currentPage != (int)ViewBag.numberPage)
+                                        {
+
+                                            <li class="page-item"><a class="page-link" onclick="nextPage(@(ViewBag.currentPage + 1), @(ViewBag.pageSize))" href="javascript:void(0);">Trang sau</a></li>
+                                        }
+                                    }
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <!-- Shop Breadcrumb Area End -->
+            </div>
+            <!-- product Categorie List End -->
+        </div>
+        <!-- Row End -->
+    </div>
+    <!-- Container End -->
+</div>
+@Html.Partial("_QuickView")
+<!-- Shop Page End -->
+<script src="~/js/list-product.js"></script>
+<script src="~/js/myJs.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.icofont-heart-alt').on('click', function () {
+            console.log('Heart clicked');
+
+            var $this = $(this);
+            var productId = $this.data('id');
+            var isFavorite = $this.hasClass('favorite');
+
+            console.log('Product ID:', productId);
+            console.log('Is Favorite:', isFavorite);
+
+            // Toggle the favorite class
+            $this.toggleClass('favorite not-favorite');
+
+            if (isFavorite) {
+                $this.css('color', 'black');
+            } else {
+                $this.css('color', 'red');
+            }
+
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            $.ajax({
+                url: '@Url.Action("ToggleFavorite", "Product")',
+                type: 'POST',
+                headers: {
+                    'RequestVerificationToken': token
+                },
+                data: { productId: productId },
+                success: function (response) {
+                    console.log('AJAX success:', response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX error:', error);
+
+                    var errorMessage;
+
+                    // Kiểm tra mã trạng thái lỗi và đặt thông báo lỗi tương ứng
+                    switch (xhr.status) {
+                        case 400:
+                            alert('Yêu cầu không hợp lệ. Vui lòng kiểm tra lại thông tin.');
+                            break;
+                        case 401:
+                            alert('Bạn chưa đăng nhập. Vui lòng đăng nhập để thực hiện thao tác này.');
+                            // Bạn có thể chuyển hướng người dùng đến trang đăng nhập nếu muốn
+                            // window.location.href = '@Url.Action("Login", "Account")';
+                            break;
+                        case 403:
+                            alert('Bạn không có quyền thực hiện thao tác này.');
+                            break;
+                        case 404:
+                            alert('Không tìm thấy sản phẩm. Vui lòng thử lại.');
+                            break;
+                        case 500:
+                            alert('Lỗi máy chủ. Vui lòng thử lại sau.');
+                            break;
+                        default:
+                            alert('Đã xảy ra lỗi không xác định. Vui lòng thử lại.');
+                    }
+
+
+                    // Hiển thị thông báo lỗi
+                    $('#error-message').text(errorMessage).show();
+
+                    // Rollback the color change if there is an error
+                    $this.toggleClass('favorite not-favorite');
+                    if (isFavorite) {
+                        $this.css('color', 'red');
+                    } else {
+                        $this.css('color', 'black');
+                    }
+                }
+            });
+        });
+    });
+
+    
+</script>
+

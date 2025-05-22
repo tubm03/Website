@@ -1,0 +1,145 @@
+﻿.tab-content.thumb-content {
+    padding: 0px 15px 50px 15px;
+}
+
+input[type=radio] {
+    margin: 0px;
+}
+
+.radio-buttons{
+    gap: 25px;
+}
+
+.display {
+    opacity: 1;
+    visibility: visible;
+    transform: scaleY(1);
+    border-radius: 12px;
+    width: 100%;
+    margin-top: -10px;
+    overflow-y: scroll;
+}
+
+ul.common_ddown li a {
+    color: #1b1b1c;
+    display: block;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 5px 10px;
+    text-transform: capitalize;
+    text-align: left;
+    line-height: 25px;
+}
+
+    ul.common_ddown li a:hover {
+        color: #2275fc !important;
+        cursor: pointer;
+    }
+
+.caret {
+    display: none;
+}
+
+.btn-group,
+.btn-group .multiselect-container {
+    width: 100%;
+}
+
+    .btn-group button {
+        width: 100%;
+        padding: 14px 12px;
+        border-radius: 12px;
+        border: 1px solid #ecf0f4;
+    }
+
+.multiselect-container label {
+    font-size: 16px;
+}
+
+    .multiselect-container label input[type=checkbox] {
+        padding-right: 5px;
+        width: 16px;
+        margin: 0px 0px 0px -20px;
+    }
+
+.dropdown-menu > .active > a {
+    color: black;
+    background-color: white;
+}
+
+#supdescriptionContainer {
+    max-height: 160px;
+    overflow-y: scroll;
+}
+
+.supdescription .subdescription-tag {
+    display: inline-block;
+    background-color: #2b75ece0;
+    color: white;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 12px;
+}
+
+    .supdescription .subdescription-tag button {
+        padding: 0;
+        background: none;
+        border: none;
+        color: white;
+        font-weight: bold;
+        margin-left: 10px;
+        cursor: pointer;
+    }
+
+.upload-image .item.up-load {
+    min-height: 165px;
+}
+
+.upload-image .item img {
+    height: 155px;
+}
+
+#preview-image {
+    overflow-x: auto;
+    min-height: 160px;
+}
+
+    #preview-image .item {
+        position: relative;
+        min-width: 25%;
+    }
+
+.btn-remove {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 0;
+    border: none;
+    font-size: 16px;
+}
+
+#list-service-option li:nth-child(2n+1) {
+    background-color: #f6f8fbcc;
+}
+
+#list-service-option .text-tiny {
+    font-size: 14px;
+}
+
+a:focus, a:hover {
+    text-decoration: none;
+    color: #00adf6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #1b1b1c;
+    line-height: 1.25;
+    font-family: 'Roboto Condensed', sans-serif;
+    margin: 0;
+    font-weight: 700;
+    text-rendering: optimizeLegibility;
+}
+
+.tox-statusbar {
+    display: none !important;
+}

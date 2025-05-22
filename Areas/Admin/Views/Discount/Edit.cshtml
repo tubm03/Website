@@ -1,0 +1,419 @@
+﻿@using PetStoreProject.Areas.Admin.ViewModels
+@model PetStoreProject.Models.Discount
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Tạo mã giảm giá";
+    var discountTypes = ViewData["discountType"] as List<DiscountTypeViewModel>;
+    var discount = ViewData["discount"] as DiscountViewModel;
+    var loyalTypes = ViewData["loyalType"] as List<LoyaltyLevel>;
+}
+@section HeadOptional {
+
+}
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Tạo mã giảm giá</h3>
+        </div>
+        <!-- form-add-product -->
+        <form class="tf-section-2 form-add-product form-search">
+            <div class="wg-box">
+                <fieldset>
+                    <label class="body-title mb-10">Loại giảm giá</label>
+                    <select id="discount-type" onchange="selectDiscountType()" disabled>
+                        @foreach (var item in discountTypes)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </fieldset>
+                <div class="gap22 cols">
+                    <fieldset>
+                        <label class="body-title mb-10">Mã giảm giá<span class="tf-color-1">*</span></label>
+                        <div class="flex gap22">
+                            <fieldset class="name select">
+                                <input type="text" id="code" placeholder="Nhập mã " class="show-search" name="code" tabindex="2" value="@discount.Code" aria-required="true" required="" readonly>
+                            </fieldset>
+                        </div>
+                        <span id="error-code" class="text-danger"></span>
+                    </fieldset>
+                </div>
+                <div class="gap22 cols">
+                    <div style="flex: 1">
+                        <label class="body-title mb-10">Giá trị<span class="tf-color-1">*</span></label>
+                        <fieldset class="select">
+                            <input type="text" id="value" value=@(discount.DiscountType.Id == 1 ? (int) discount.Value : discount.Value?.ToString("#.###")) />
+                            <div class="button-submit">
+                                <button style="font-size: 12px">%</button>
+                            </div>
+                        </fieldset>
+                        <span id="error-value" class="text-danger"></span>
+                    </div>
+                    <div style="width:50%">
+                        <label class="body-title mb-10">Giảm tối đa<span class="tf-color-1">*</span></label>
+                        <fieldset class="select">
+                            <input type="text" id="max-value" value="@discount.MaxValue?.ToString("#.###")"/>
+                            <div class="button-submit">
+                                <button style="font-size: 12px">VND</button>
+                            </div>
+                        </fieldset>
+                        <span id="error-max-value" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="flex gap22" id="date1">
+                    <fieldset>
+                        <label class="body-title mb-10">Từ ngày<span class="tf-color-1">*</span></label>
+                        <input type="date" name="date" id="start-date" onchange="updateStartDate()" />
+                        <span id="error-start-date" class="text-danger"></span>
+                    </fieldset>
+                    <fieldset>
+                        <label class="body-title mb-10">Đến ngày<span class="tf-color-1">*</span></label>
+                        <input type="date" name="date" id="end-date" />
+                        <span id="error-end-date" class="text-danger"></span>
+                    </fieldset>
+                </div>
+                <div class="flex gap22 hide" id="date2">
+                    <fieldset>
+                        <label class="body-title mb-10">Thời hạn</label>
+                        <input type="text" name="date" readonly value="Không thời hạn" />
+                    </fieldset>
+                </div>
+
+                <fieldset class="quantity-discount">
+                    <label class="body-title mb-10">Số lượng<span class="tf-color-1">*</span></label>
+                    <input type="text" id="quantity" value="@discount.Quantity.ToString()" />
+                    <span id="error-quantity" class="text-danger"></span>
+                </fieldset>
+                <fieldset class="loyal-level hidden">
+                    <label class="body-title mb-10">Khách hàng áp dụng</label>
+                    <select id="loyal-level" disabled>
+                        @foreach (var item in loyalTypes)
+                        {
+                            <option value="@item.LevelID">@item.LevelName</option>
+                        }
+                    </select>
+                </fieldset>
+                <fieldset>
+                    <label class="body-title mb-10">Giới hạn sử dụng<span class="tf-color-1">*</span></label>
+                    <input type="text" id="max-use" value="@discount.MaxUse.ToString()"/>
+                    <span id="error-max-use" class="text-danger"></span>
+                </fieldset>
+            </div>
+            <div class="wg-box">
+                <div>
+                    <label class="body-title mb-10">Giá trị đơn hàng từ<span class="tf-color-1">*</span></label>
+                    <fieldset class="select">
+                        <input type="text" id="min-purchase" value="@discount.MinPurchase?.ToString("#.###")" />
+                        <div class="button-submit">
+                            <button style="font-size: 12px">VND</button>
+                        </div>
+                    </fieldset>
+                    <span id="error-min-purchase" class="text-danger"></span>
+                </div>
+                <fieldset class="description">
+                    <label class="body-title mb-10">Mô tả</label>
+                    <textarea id="description" name="description" class="mb-10" placeholder="Nhập mô tả" tabindex="0" aria-required="true" required=""></textarea>
+                </fieldset>
+                <div class="cols gap10">
+                    <button class="tf-button w-full" type="button" onclick="addDiscountCode()">Lưu mã giảm giá</button>
+                </div>
+            </div>
+        </form>
+        <!-- /form-add-product -->
+    </div>
+    <!-- /main-content-wrap -->
+</div>
+
+@section ScriptOptional {
+    <script>
+        var decimalRegex = /^-?\d+(\.\d+)?$/;
+        var regex = /^[a-zA-Z0-9]+$/;
+        var numberRegex = /^[0-9]+$/;
+        var description = `@discount.Description`
+        tinymce.init({
+            selector: '#description',
+            plugins: 'lists checklist',
+            toolbar: 'bold italic underline | align | checklist numlist bullist | removeformat',
+            menubar: false,
+            setup: function (editor) {
+                editor.on('input', function () {
+                    description = editor.getContent();
+                });
+            }
+        });
+        $('form').find('.button-submit button').each(function () {
+            $(this).on('click', function (event) {
+                event.preventDefault();
+            });
+        });
+
+        if (@discount.DiscountType.Id != 3) {
+            $('#start-date').val(formatDate('@discount.StartDate'))
+            $('#end-date').val(formatDate('@discount.EndDate'))
+        }
+
+        if (@discount.DiscountType.Id == 4) {
+            $('.quantity-discount').addClass('hidden')
+            $('.loyal-level').removeClass('hidden')
+        }
+
+        $('#discount-type').find('option').each(function () {
+            if ($(this).attr('value') == @discount.DiscountType.Id) {
+                $(this).attr('selected', true)
+                return false
+            }
+        })
+
+        $('#loyal-level').find('option').each(function () {
+            if ($(this).attr('value') == @discount.Loyal.LevelID) {
+                $(this).attr('selected', true)
+                return false
+            }
+        })
+
+        function formatDate(str) {
+            var dateParts = str.split('/');
+            var year = dateParts[2];
+            var month = dateParts[1].padStart(2, '0'); // Đảm bảo tháng có 2 chữ số
+            var day = dateParts[0].padStart(2, '0'); // Đảm bảo ngày có 2 chữ số
+
+            var formattedDate = `${year}-${day}-${month}`;
+            console.log(formattedDate);
+
+            return formattedDate;
+        }
+        selectDiscountType()
+
+        function updateStartDate() {
+            const startDate = document.getElementById("start-date").value;
+            const endDate = document.getElementById("end-date");
+            endDate.setAttribute("min", startDate);
+            if (endDate.value && (new Date(endDate.value)) < (new Date(startDate))) {
+                endDate.value = startDate
+            }
+        }
+
+        function generateDiscountCode(event) {
+            event.preventDefault();
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            const charactersLength = characters.length;
+            for (let i = 0; i < 10; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            $('#code').val(result.toUpperCase())
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const startDatePicker = document.getElementById("start-date");
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            startDatePicker.setAttribute("min", formattedDate);
+
+            document.getElementById("start-date").addEventListener('keydown', function (event) {
+                event.preventDefault();
+            });
+            document.getElementById("end-date").addEventListener('keydown', function (event) {
+                event.preventDefault();
+            });
+        });
+
+        function selectDiscountType() {
+            console.log(@discount.DiscountType.Id)
+            var type = $('#discount-type').val()
+            if (type == 2) {
+                $('#max-value').parent().parent().addClass('hide')
+                $('#value').parent().find('button').text('VND')
+            }
+            else {
+                $('#max-value').parent().parent().removeClass('hide')
+                $('#value').parent().find('button').text('%')
+            }
+            if (type == 3) {
+                $('#date1').addClass('hide')
+                $('#date2').removeClass('hide')
+                $('#quantity').attr('value', 'Không giới hạn')
+                $('#max-use').attr('value', 1)
+                $('#quantity').attr('readonly', true)
+                $('#max-use').attr('readonly', true)
+
+            }
+            else {
+                $('#date2').addClass('hide')
+                $('#date1').removeClass('hide')
+                $('#quantity').attr('value', @discount.Quantity)
+                $('#max-use').attr('value', @discount.MaxUse)
+                $('#quantity').attr('readonly', false)
+                $('#max-use').attr('readonly', false)
+            }
+        }
+
+        function addDiscountCode() {
+            var isValid = true
+            var code = $('#code').val().trim()
+            var value = $('#value').val().trim()
+            var maxValue = $('#max-value').val().trim()
+            var startDate = $('#start-date').val().trim()
+            var endDate = $('#end-date').val().trim()
+            var quantity = $('#quantity').val().trim()
+            var maxUse = $('#max-use').val().trim()
+            var minPurchase = $('#min-purchase').val().trim()
+            var type = $('#discount-type').val().trim()
+            var description = $('#description').val().trim()
+            if (code == '') {
+                $('#error-code').text('Vui lòng nhập mã giảm giá')
+                isValid = false
+            }
+            else if (code.length > 15 || code.length < 10) {
+                $('#error-code').text('Mã giảm giá có chiều dài từ 10-15 kí tự')
+                isValid = false
+            }
+            else if (!regex.test(code)) {
+                $('#error-code').text('Mã chỉ bao gồm số và chữ')
+                isValid = false
+            }
+            else {
+                $('#error-code').text('')
+            }
+
+            if (value == '') {
+                $('#error-value').text('Vui lòng nhập giá trị')
+                isValid = false
+            }
+            else if (((type == 1 || type == 4) && !numberRegex.test(value)) || (type == 2 && !decimalRegex.test(value))) {
+                $('#error-value').text('Giá trị phải là số')
+                isValid = false
+            }
+            else if (((type == 1 || type == 4) && (value < 1 || value > 100)) || (type == 2 && value < 1000)) {
+                $('#error-value').text('Giá trị không phù hợp')
+                isValid = false
+            }
+            else {
+                $('#error-value').text('')
+            }
+            if ((type == 1 || type == 4)) {
+                if (maxValue == '') {
+                    $('#error-max-value').text('Vui lòng nhập giá trị giảm tối đa')
+                    isValid = false
+                }
+                else if (!decimalRegex.test(maxValue)) {
+                    isValid = false
+                    $('#error-max-value').text('Giá trị phải là số')
+                }
+                else if (maxValue < 1000 || maxValue > 10000000) {
+                    $('#error-max-value').text('Giá trị không phù hợp')
+                    isValid = false
+                }
+                else {
+                    $('#error-max-value').text('')
+                }
+            }
+
+
+            if (type != 3) {
+                if (startDate == '') {
+                    $('#error-start-date').text('Vui lòng chọn ngày bắt đầu')
+                    isValid = false
+                }
+                else {
+                    $('#error-start-date').text('')
+                }
+
+                if (endDate == '') {
+                    $('#error-end-date').text('Vui lòng chọn ngày kết thúc')
+                    isValid = false
+                }
+                else {
+                    $('#error-end-date').text('')
+                }
+            }
+
+            if (!(type == 3 || type == 4)) {
+                if (quantity == '') {
+                    $('#error-quantity').text('Vui lòng nhập số lượng')
+                    isValid = false
+                }
+                else if (!numberRegex.test(quantity)) {
+                    $('#error-quantity').text('Số lượng phải là số')
+                    isValid = false
+                }
+                else if (quantity < 1) {
+                    $('#error-quantity').text('Số lượng không phù hợp')
+                    isValid = false
+                }
+                else {
+                    $('#error-quantity').text('')
+                }
+
+                if (maxUse == '') {
+                    $('#error-max-use').text('Vui lòng nhập số lần sử dụng')
+                    isValid = false
+                }
+                else if (!numberRegex.test(maxUse)) {
+                    $('#error-max-use').text('Số lần sử dụng phải là số')
+                    isValid = false
+                }
+                else if (maxUse < 1) {
+                    $('#error-max-use').text('Số lần sử dụng không phù hợp')
+                    isValid = false
+                }
+                else {
+                    $('#error-max-use').text('')
+                }
+            }
+
+            if (minPurchase == '') {
+                $('#error-min-purchase').text('Vui lòng nhập giá trị đơn hàng tối thiểu')
+                isValid = false
+            }
+            else if (!decimalRegex.test(minPurchase)) {
+                $('#error-min-purchase').text('Giá trị phải là số')
+                isValid = false
+            }
+            else if (minPurchase < 1000 || minPurchase > 10000000) {
+                $('#error-min-purchase').text('Giá trị không phù hợp')
+                isValid = false
+            }
+            else {
+                $('#error-min-purchase').text('')
+            }
+
+            if (isValid) {
+                var data = {
+                    DiscountId : @discount.Id,
+                    Code: code,
+                    Value: value,
+                    MaxValue: maxValue,
+                    StartDate: startDate,
+                    EndDate: endDate,
+                    Quantity: quantity,
+                    MaxUse: maxUse,
+                    MinPurchase: minPurchase,
+                    DiscountTypeId: type,
+                    Description: description
+                }
+
+                $.ajax({
+                    url: "/admin/discount/edit",
+                    type: "POST",
+                    data: { discount: data },
+                    success: function (response) {
+                        alert('Mã giảm giá ' + response.trim() + ' được sửa thành công')
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Sửa mã giảm giá thất bại')
+                        // Handle AJAX error
+                        console.error("AJAX error: " + error);
+                    }
+
+                })
+            }
+        }
+
+    </script>
+}

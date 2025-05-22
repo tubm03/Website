@@ -1,0 +1,409 @@
+﻿
+
+@using PetStoreProject.ViewModels;
+@model UserViewModel;
+
+<style>
+    .main_content_style {
+        min-height: 700px;
+        padding: 20px;
+        background: var(--White);
+        border-radius: 10px;
+        box-shadow: 0px 4px 24px 2px rgba(20, 25, 38, 0.05);
+    }
+
+    .content_form_style {
+        border-bottom-left-radius: 10px;
+        border-start-start-radius: 10px;
+        border-bottom-right-radius: 10px;
+        background: #f0f2f682;
+        padding: 20px 50px;
+        font-size: 16px;
+        position: relative;
+    }
+
+        .content_form_style input {
+            font-size: 16px !important;
+        }
+
+    .input_style_form input[readonly] {
+        background: none;
+        opacity: 1;
+        border: none;
+    }
+
+    .padding_t_b {
+        padding: 10px 0px;
+    }
+
+    .title_name_style {
+        padding-left: 30px;
+    }
+
+    .button_click {
+        position: absolute;
+        top: 236px;
+        z-index: 1;
+        right: 135px;
+    }
+
+        .button_click button {
+            font-size: 16px !important;
+            background: #575e64;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-start-start-radius: 10px;
+            outline: none;
+        }
+
+            .button_click button:active {
+                background: #f0f2f6;
+                color: #000;
+                border: none;
+                outline: none;
+            }
+
+    #btn_click_change button:hover {
+                background: var(--Main);
+                color: #fff;
+                border: 1px solid var(--Main) !important;
+                outline: none;
+            }
+
+            .button_click button.active {
+                background: #f0f2f6;
+                color: #000;
+                border: none !important;
+                outline: none;
+            }
+
+            .button_click button:focus {
+                outline: none;
+                border: none;
+            }
+
+    .border {
+        border: 1px solid !important;
+    }
+
+    .padding_l30 {
+        padding-left: 30px;
+    }
+
+    .input_radio:checked {
+        background-color: #000 !important;
+    }
+
+    .btn_submit {
+        border: 1px solid var(--Main) !important;
+        color: var(--Main);
+        font-weight: bold;
+        background: none;
+        padding: 10px;
+        font-size: 15px;
+        border-radius: 10px;
+    }
+
+        .btn_submit:hover {
+            border: 1px solid var(--Main) !important;
+            color: #fff;
+            font-weight: bold;
+            background: var(--Main);
+            padding: 10px;
+            font-size: 15px;
+            border-radius: 10px;
+    }
+
+    .btn_profile {
+        background: #fff;
+        border: 1px solid var(--Main) !important;
+        color: #0082f6;
+        border-start-start-radius: 15px;
+        font-size: 18px;
+        position: absolute;
+        z-index: 1;
+        top: -47px;
+        right: 179px;
+        padding: 10px;
+    }
+
+    .btn_changePassword {
+        background: #fff;
+        border: 1px solid var(--Main) !important;
+        color: #0082f6;
+        border-start-end-radius: 15px;
+        font-size: 18px;
+        position: absolute;
+        top: -47px;
+        z-index: 1;
+        right: 0px;
+        padding: 10px
+    }
+
+    .btn_active_style:active {
+        background: rgb(20 111 255 / 22%);
+        border: none;
+        color: #0082f6;
+    }
+    .btn_active_style:hover {
+        border: 1px solid var(--Main) !important;
+        color: #fff;
+        background: var(--Main);
+    }
+
+    .btn_click_change .active {
+        background: #f0f2f6b0;
+        border: none!important;
+        color: black;
+    }
+
+    .link_style:hover {
+        color: #ffff;
+    }
+
+    .border_ra18 {
+        border-radius: 18px!important;
+    }
+</style>
+
+<div id="notification" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:0px!important; margin:auto!important">
+                <div class="icon-box">
+                    <i class="material-icons">&#xE876;</i>
+                </div>
+                <h4 class="modal-title w-100" id="title-noti"></h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center" id="body-noti"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btn-block" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main-content-inner main-content-style">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap main_content_style">
+        <div class="profile_wrapper padding_none">
+            <div class="container-xl px-4">
+                <div class="container-fluid modal_body_style">
+                    <div class="row user-info-main">
+                        <div class="col-md-4 text-center avatar-container">
+                            <img src="/areas/images/logo_user/user-avatar.svg.png" alt="Avatar" class="rounded-circle" width="150" height="150">
+                            @* <button class="btn btn-outline-primary mt-2 btn-change">Change</button> *@
+                        </div>
+                        <div class="col-md-8 title_name_style">
+                            <div class="form-group">
+                                <h3 id="user_name_style">@Model.FullName</h3>
+                            </div>
+                            <div style="display:inline; margin-top:10px;">
+                                <label asp-for="RoleName">Vai trò: <input asp-for="RoleName" name="RoleName" value="@Model.RoleName" style="border:none" readonly /></label>
+                                @* <select class="select-role">
+                                <option value="1">Quản trị viên</option>/option>
+                                <option value="2">Khách hàng</option>
+                                <option value="3">Nhân viên</option>
+                                </select> *@
+                                <div id="role" style="display:inline;"></div>
+                            </div>
+                            <div id="alert-role" style="width:300px"></div>
+                        </div>
+                    </div>
+                    <div class="row content_form_style" id="content_profile">
+                        <div class="col-md-12" id="form_content">
+                            <div id="form_profile">
+
+                            
+                            <form id="updateProfileAccount">
+                                <div class="form-group row padding_t_b">
+                                    <label class="col-sm-4 col-form-label label_style " asp-for="FullName"><strong>Họ và Tên: </strong></label>
+                                    <div class="col-sm-8 input_style_form">
+                                        <input type="text" class="form-control form_control_style border" name="FullName" asp-for="FullName" id="name" value="@Model.FullName" placeholder="@Model.FullName">
+                                        <span class="text-danger" asp-validation-for="FullName"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row padding_t_b" id="form-dob">
+                                    <label class="col-sm-4 col-form-label label_style" asp-for="Gender"><strong>Giới tính: </strong></label>
+                                    <div class="col-sm-8 input_style_form">
+                                        Nam <input type="radio" asp-for="Gender" class="form-control form_control_style input_radio border_ra18" name="Gender" style="border:1px solid black!important; display:inline " name="gender" id="gender" value="true" checked="@(Model.Gender ? "checked" : null)">
+                                        Nữ <input type="radio" asp-for="Gender" class="form-control form_control_style input_radio  border_ra18" name="Gender" style="border:1px solid black!important; display:inline" name="gender" id="gender" value="false" checked="@(Model.Gender ? null : "checked")">
+                                        <span class="text-danger" asp-validation-for="Gender"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row padding_t_b">
+                                    <label class="col-sm-4 col-form-label label_style" asp-for="DoB"><strong>Ngày sinh: </strong></label>
+                                    <div class="col-sm-8 input_style_form">
+                                        <input type="date" class="form-control form_control_style border" asp-for="DoB" name="Dob" id="dob" value='@Model.DoB.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)' placeholder="@Model.DoB.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)" />
+                                        <span class="text-danger" asp-validation-for="DoB"></span>
+                                        @if (ViewBag.Dob != null)
+                                        {
+                                            <span class="text-danger">@ViewBag.Dob</span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="form-group row padding_t_b">
+                                    <label class="col-sm-4 col-form-label label_style " asp-for="Phone"><strong>Số điện thoại: </strong></label>
+                                    <div class="col-sm-8 input_style_form">
+                                        <input type="text" class="form-control form_control_style border" name="Phone" asp-for="Phone" id="phone" value="@Model.Phone" placeholder="@Model.Phone">
+                                        <span class="text-danger" asp-validation-for="Phone"></span>
+                                        @if (ViewBag.PhoneMess != null)
+                                        {
+                                            <span class="text-danger">@ViewBag.PhoneMess</span>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="form-group row padding_t_b">
+                                    <label class="col-sm-4 col-form-label label_style" asp-for="Address"><strong>Địa chỉ: </strong></label>
+                                    <div class="col-sm-8 input_style_form">
+                                        <input type="text" class="form-control form_control_style border" name="Address" asp-for="Address" id="address" value="@Model.Address" placeholder="@Model.Address">
+                                        <span class="text-danger" asp-validation-for="Address"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row padding_t_b">
+                                    <label class="col-sm-4 col-form-label label_style" asp-for="Email"><strong>Email: </strong></label>
+                                    <div class="col-sm-8 input_style_form">
+                                        <input type="email" class="form-control form_control_style border" name="Email" asp-for="Email" id="email" value="@Model.Email" placeholder="@Model.Email">
+                                        <span class="text-danger" asp-validation-for="Email"></span>
+                                        @if (ViewBag.EmailMess != null)
+                                        {
+                                            <span class="text-danger">@ViewBag.EmailMess</span>
+                                        }
+                                    </div>
+                                </div>
+                                <input asp-for="UserId" name="UserId" type="hidden" />
+                                <input asp-for="AccountId" name="AccountId" type="hidden" />
+                                <input asp-for="RoleName" name="RoleName" type="hidden" />
+                                <div class="form-group row padding_t_b" id="btn_submit_update">
+                                    <button class="btn btn-secondary btn_submit" type="submit">Cập nhật thông tin</button>
+                                </div>
+                            </form>
+                            </div>
+                            <div id="form_changePass"></div>
+                        </div>
+                        <div class="btn_click_change">
+                            <button type="button" id="btn_profileInf" class="btn btn-secondary btn_profile active btn_active_style " onclick="profileInfo()">Thông tin tài khoản</button>
+                            <button type="button" id="btn_changePass" class="btn btn-secondary btn_changePassword btn_active_style" onclick="changePassword()">Thay đổi mật khẩu</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script>
+    $(document).ready(function () {
+        console.log('Binding form submit event');
+        $('#updateProfileAccount').on('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+            var formUpdateProfile = $(this).serialize();
+
+            // Send form data via AJAX
+            $.ajax({
+                type: 'POST',
+                url: 'ProfileAccount',
+                data: formUpdateProfile,
+                success: function (response) {
+                    $('span[data-valmsg-for]').text(''); // Clear existing errors
+                    if (!response.isSuccess) {
+                        $.each(response.errors, function (key, value) {
+                            var errorSpan = $('span[data-valmsg-for="' + key + '"]');
+                            errorSpan.text(value);
+                        });
+                    } else {
+                        alert(response.message);
+                        // Handle success
+                        $('#user_name_style').text(response.updatedData.fullName);
+
+                        // Update input values and placeholders
+                        $('input[name="FullName"]').val(response.updatedData.fullName).attr('placeholder', response.updatedData.fullName);
+                        $('input[name="Email"]').val(response.updatedData.email).attr('placeholder', response.updatedData.email);
+                        $('input[name="Phone"]').val(response.updatedData.phone).attr('placeholder', response.updatedData.phone);
+                        $('input[name="Address"]').val(response.updatedData.address).attr('placeholder', response.updatedData.address);
+                        $('#user_name').text(response.updatedData.fullName);
+                        $('#dob').val(response.updatedData.doB).attr('placeholder', response.updatedData.doB); // Update date input
+
+                        // Update gender radio buttons
+                        if (response.updatedData.gender) {
+                            $('input[name="Gender"][value="true"]').prop('checked', true);
+                        } else {
+                            $('input[name="Gender"][value="false"]').prop('checked', true);
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", xhr.responseText, status, error);
+                    alert('An error occurred: ' + error);
+                }
+            });
+        });
+    });
+
+    function profileInfo() {
+        console.log("Click Profile");
+        var btn_profile = $('#btn_profileInf');
+        var btn_changePass = $('#btn_changePass');
+        btn_changePass.removeClass('active');
+        btn_profile.addClass('active');
+        $('#form_changePass').hide();
+        $('#form_profile').show();
+    }
+
+    // Hàm changePassword()
+    function changePassword() {
+        var btn_profile = $('#btn_profileInf');
+        var btn_changePass = $('#btn_changePass');
+        btn_profile.removeClass('active');
+        btn_changePass.addClass('active');
+        $.ajax({
+            url: 'ChangePassword',
+            type: 'get',
+            success: function (response) {
+                $('#form_profile').hide();
+                $('#form_changePass').html(response);
+                $('#form_changePass').show();
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", xhr.responseText, status, error);
+                alert('An error occurred: ' + error);
+            }
+        });
+    }
+
+    function changePasswordSuccess() {
+        if ($('#status_change').val() == "Thành công") {
+            $('#notification').modal("show");
+            $('#title-noti').html("Thông báo");
+            $('#body-noti').html("Thay đổi mật khẩu thành công!");
+        }
+    };
+    function changePasswordClick() {
+        $('#changePasswordForm').on('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting via the browser
+
+            $.ajax({
+                url: 'ChangePassword',
+                type: 'POST',
+                data: $(this).serialize(), // Serialize the form data
+                success: function (response) {
+                    // Handle success (e.g., show a success message)
+
+                    $('#form_changePass').html(response);
+                    if (response.success) {
+                        alert(response.message);
+                        changePassword();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle error (e.g., show an error message)
+                    alert('An error occurred: ' + error);
+                }
+            });
+        });
+    }
+</script>

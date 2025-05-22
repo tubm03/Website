@@ -1,0 +1,221 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList
+@model IPagedList<PetStoreProject.Areas.Admin.ViewModels.LoyalCustomerViewModel>
+
+
+<style>
+    .toggle-container {
+        margin-bottom: 20px;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 34px;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    .pagination-blog {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        .pagination
+
+    {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        justify-content: center;
+    }
+
+    .pagination li {
+        margin: 0 5px;
+    }
+
+    .pagination a, .pagination span {
+        color: #007bff;
+        text-decoration: none;
+        border: 1px solid #dee2e6;
+        padding: 8px 12px;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+
+        .pagination a:hover {
+            background-color: #e9ecef;
+        }
+
+    .pagination .active span {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+</style>
+
+
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Danh sách khách hàng thân thiết</h3>
+            <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
+                <li>
+                    <a href="index.html"><div class="text-tiny">Bảng điều khiển</div></a>
+                </li>
+                <li>
+                    <i class="icon-chevron-right"></i>
+                </li>
+                <li>
+                    <a href="#"><div class="text-tiny">Khách hàng thân thiết</div></a>
+                </li>
+                <li>
+                    <i class="icon-chevron-right"></i>
+                </li>
+                <li>
+                    <div class="text-tiny">Danh sách khách hàng thân thiết</div>
+                </li>
+            </ul>
+        </div>
+        <!-- all-roles -->
+        <div class="wg-box">
+            <div class="flex items-center justify-between gap10 flex-wrap">
+                <div class="wg-filter flex-grow">
+                    <form class="form-search" asp-action="Index" asp-controller="LoyalCustomer" method="get" onsubmit="return validateForm()">
+                        <fieldset class="name">
+                            <input type="text" placeholder="Tìm kiếm theo số điện thoại..." class="" name="phone" tabindex="2" value="" aria-required="true" required="" id="phoneInput">
+                        </fieldset>
+                        <div class="button-submit">
+                            <button class="" type="submit"><i class="icon-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+                <a class="tf-button style-1 w208" asp-action="Refresh" asp-controller="LoyalCustomer"><i class="icon-refresh-cw"></i>Làm mới trang</a>
+            </div>
+            <div class="wg-table table-all-attribute">
+                <ul class="table-title flex gap20 mb-14">
+                    <li style="width: 4%;">
+                        <div class="body-title">No.</div>
+                    </li>
+                    <li style="width: 30%;">
+                        <div class="body-title">Tên khách hàng</div>
+                    </li>
+                    <li style="width: 30%;">
+                        <div class="body-title">Số điện thoại</div>
+                    </li>
+                    <li style="width: 30%;">
+                        <div class="body-title">Hạng thân thiết</div>
+                    </li>
+                    <li style="width: 6%;">
+                        <div class="body-title">Trạng thái</div>
+                    </li>
+                </ul>
+                <ul class="flex flex-column">
+                    @foreach (var item in Model)
+                    {
+                        <li class="attribute-item flex items-center justify-between gap20">
+                            <div class="body-text" style="width: 4%; word-wrap: break-word;">@item.CustomerId</div>
+                            <div class="body-text" style="width: 30%; word-wrap: break-word;">@item.CustomerName</div>
+                            <div class="body-text" style="width: 30%; word-wrap: break-word;">@item.PhoneNumber</div>
+                            <div class="body-text" style="width: 30%; word-wrap: break-word;">@item.LoyalName</div>
+                            <div class="body-text" style="width: 6%; word-wrap: break-word;">
+                                <div class="toggle-container">
+                                    <label class="switch">
+                                        <input type="checkbox" id="toggle-switch-@item.CustomerId" @(item.IsActive ? "checked" : "") onclick="ChangeStatus(@item.CustomerId)">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="pagination-blog">
+                @Html.PagedListPager(Model, page => Url.Action("ListNews", new { page, pagesize = 12 }))
+            </div>
+        </div>
+
+    </div>
+
+    <!-- /main-content-wrap -->
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function validateForm() {
+        var phoneInput = document.getElementById("phoneInput").value;
+        if (/\s/.test(phoneInput)) {
+            alert("Số điện thoại không được chứa khoảng trắng.");
+            return false; 
+        }
+        return true; 
+    }
+
+    function ChangeStatus(CustomerId) {
+
+        $.ajax({
+            url: '@Url.Action("UpdateStatus", "LoyalCustomer")',
+            type: "POST",
+            data: {
+                CustomerId: CustomerId
+            },
+            success: function (response) {
+                if (response.success) {
+                    console.log("Server response:", response.message);
+                } else {
+                    console.error("Server error:", response.message);
+                    alert("Cập nhật không thành công");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error: " + textStatus, errorThrown);
+                alert("Đã sảy ra lỗi trong quá trình cập nhật");
+            }
+        });
+    }
+</script>

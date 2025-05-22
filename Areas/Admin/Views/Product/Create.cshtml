@@ -1,0 +1,694 @@
+@using PetStoreProject.Areas.Admin.ViewModels
+@using PetStoreProject.ViewModels
+@{
+    ViewData["title"] = "Thêm sản phẩm";
+    var brands = ViewData["brands"] as List<PetStoreProject.Areas.Admin.ViewModels.BrandViewModel>;
+    var categories = ViewData["categories"] as List<CategoryViewModel>;
+    var productCategories = ViewData["productCategories"] as List<ProductCategoryViewModel>;
+    var sizes = ViewData["sizes"] as List<SizeViewModel>;
+    var attributes = ViewData["attributes"] as List<AttributeViewModel>;
+}
+@section HeadOptional {
+    <style>
+        .hidden{
+            display: none;
+        }
+
+        li:nth-child(2n+1){
+            background-color: #f6f8fbcc;
+        }
+        .item{
+            cursor: pointer;
+        }
+        .item.select-image{
+            border: 2px solid #000;
+        }
+        .delete-icon {
+            display: flex;
+            width: 25px;
+            heigth: 25px;
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            color: black;
+            border: none;
+            padding: 5px;
+            color: blue;
+        }
+
+        .delete-button {
+            position: absolute;
+            top: -3px;
+            right: 4px;
+            color: black;
+            border: none;
+            padding: 0px;
+        }
+
+        textarea {
+        }
+
+        .tox-statusbar{
+            display:none !important;
+        }
+        #notice{
+            color: red;
+            font-size: 11px;
+        }
+
+        .tf-button.tf-button{
+            height: 49.6px;
+        }
+    </style>
+    
+}
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Thêm sản phẩm</h3>
+        </div>
+        <!-- form-add-product -->
+        <form class="tf-section-2 form-add-product">
+            <div class="wg-box">
+                <fieldset class="name">
+                    <label class="body-title mb-10">Tên sản phẩm<span class="tf-color-1">*</span></label>
+                    <input type="text" class="mb-10" placeholder="Nhập tên sản phẩm" id="name">
+                    <span id="error-name" class="text-danger"></span>
+                </fieldset>
+
+                <fieldset class="description">
+                    <label class="body-title mb-10">Mô tả sản phẩm</label>
+                    <textarea id="description" name="description" class="mb-10" placeholder="Nhập mô tả sản phẩm" tabindex="0" aria-required="true" required=""></textarea>
+                    <span id="error-description" class="text-danger"></span>
+                </fieldset>
+                
+            </div>
+            <div class="wg-box">
+                <fieldset>
+                    <label class="body-title mb-10">Tải ảnh lên<span class="tf-color-1">*</span></label>
+                    <div class="upload-image mb-16" id="upload-image">
+                        <div class="item up-load">
+                            <label class="uploadfile" for="myFile">
+                                <span class="icon">
+                                    <i class="icon-upload-cloud"></i>
+                                </span>
+                                <span class="text-tiny">Thả hình ảnh của bạn vào đây hoặc <span class="tf-color">chọn đường dẫn</span></span>
+                                <input type="file" id="myFile" name="filename" accept="image/*" onchange="previewImage(event)">
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+                <fielset>
+                    <div class="upload-image" id="preview-image">
+
+                    </div>
+                </fielset>
+                <fieldset>
+                    <div class="upload-image mb-16" id="list-image" style="overflow-x: auto">
+                       
+                    </div>
+                    <span id="error-image" class="text-danger"></span>
+                </fieldset>
+                <div class="gap22">
+                    <fieldset class="name hide">
+                        <label class="body-title mb-10">Loại<span><i class="icon-search" style="cursor: pointer; margin-left: 5px"></i></span></label>
+                        <div class="select mb-10 flex gap22" id="list-attribute">
+                            <select id="attribute">
+                                @foreach (var attr in attributes)
+                                {
+                                    if (attr.Name == null)
+                                    {
+                                        <option value="@attr.Id">Trống</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@attr.Id">@attr.Name</option>
+                                    }
+                                }
+                            </select>
+                            <div class="search select flex gap22 search-attribute hide">
+                                <input type="text" id="attributeFilter" placeholder="...">
+                                <button type="button" class="tf-button style-1" onclick="addAttributeOption()">Thêm mới</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="name">
+                        <label class="body-title mb-10">Kích thước<span><i class="icon-search" style="cursor: pointer; margin-left: 5px"></i></span></label>
+                        <div class="select mb-10 flex gap22" id="list-size">
+                            <select class="" id="size">
+                                @foreach (var size in sizes)
+                                {
+                                    if (size.Name == null)
+                                    {
+                                        <option value="@size.Id">Trống</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@size.Id">@size.Name</option>
+                                    }
+                                }
+                            </select>
+                            <div class="search select flex gap22 search-size hide">
+                                <input type="text" id="sizeFilter" placeholder="...">
+                                <button type="button" class="tf-button style-1" onclick="addSizeOption()">Thêm mới</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="gap22 cols">
+                        <fieldset class="name">
+                            <label class="body-title mb-10">Giá sản phẩm<span class="tf-color-1">*</span></label>
+                            <div class="select mb10 flex gap10" style="align-items:center">
+                                <input type="text" id="price" min="1000" style="max-width: 82%" placeholder="Nhập giá sản phẩm">
+                                <div style="flex: 1;text-align: center">VND</div>
+                            </div>
+
+                            <span id="error-price" class="text-danger"></span>
+                        </fieldset>
+                        <fieldset class="name">
+                            <label class="body-title mb-10">Số lượng<span class="tf-color-1">*</span></label>
+                            <div class="select mb10 flex gap22" style="align-items:center">
+                                <input type="text" id="quantity" min="1000" placeholder="Nhập số lượng sản phẩm">
+                            </div>
+
+                            <span id="error-quantity" class="text-danger"></span>
+                        </fieldset>
+                    </div>
+                    
+                </div>
+                <div style="max-height: 155px; overflow-x: auto">
+                    <ul class="flex flex-column" id="list-product-option">
+                        
+                    </ul>
+                    
+                </div>
+                <div id="notice">Lưu ý: Bạn cần thêm các tùy chọn của sản phẩm trước khi bạn có thể lưu sản phẩm<span class="tf-color-1">*</span></div>
+                <div class="cols gap10">
+                    <button class="tf-button w-full" type="button" onclick="addProductOption()">Thêm tùy chọn sản phẩm</button>
+                    <button class="tf-button style-1 w-full" type="button" onclick="saveProduct()">Lưu sản phẩm</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section ScriptOptional {
+    <script>
+        $('.icon-search').click(function () {
+            var icon = $(this);
+            var parent = icon.parent().parent().parent();
+            var search = parent.find('.search');
+            if (search.hasClass('hide')) {
+                search.removeClass('hide');
+                if (parent.find('option') != null) {
+                    categorySelected()
+                }
+            }
+            else {
+                search.addClass('hide');
+                icon.parent().parent().find('option').each(function () {
+                    $(this).removeClass('hide')
+                });
+            }
+        });
+
+        var regex = /^\d+$/;
+        var numberRegex = /^-?\d+(\.\d+)?$/;
+        var description = ''
+        var isUploadFile = false
+        document.getElementById('sizeFilter').addEventListener('input', function () {
+            let filter = this.value.toLowerCase();
+            let dropdown = document.getElementById('list-size');
+            let options = dropdown.getElementsByTagName('option');
+            let isSelect = false;
+            for (let i = 0; i < options.length; i++) {
+                let option = options[i];
+                let txtValue = option.textContent || option.innerText;
+                if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                    option.style.display = "";
+                    if(!isSelect){
+                        option.selected = true;
+                        isSelect = true;
+                    }
+                    else{
+                        option.selected = false;
+                    }
+                } else {
+                    option.style.display = "none";
+                }
+            }
+        });
+
+        tinymce.init({
+            selector: 'textarea',
+            plugins: [
+                // Core editing features
+                'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+                // Your account includes a free trial of TinyMCE premium features
+                // Try the most popular premium features until Apr 2, 2025:
+                'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown', 'importword', 'exportword', 'exportpdf'
+            ],
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            mergetags_list: [
+                { value: 'First.Name', title: 'First Name' },
+                { value: 'Email', title: 'Email' },
+            ],
+            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+            setup: function (editor) {
+                editor.on('change', function () {
+                    description = editor.getContent();
+                });
+                editor.on('input', function () {
+                    description = editor.getContent();
+                });
+            }
+        });
+
+
+
+        function previewImage(event) {
+            isUploadFile = true;
+            var files = event.target.files;
+            var file = files[0];
+            console.log(file.type)
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+            if (!validImageTypes.includes(file.type)) {
+                alert('Vui lòng tải lên một tệp hình ảnh hợp lệ (JPEG, PNG, GIF, JPG).')
+                return false;
+            }
+            var uploadImage = $('#upload-image');
+            var previewImage = $('#preview-image');
+            previewImage.empty();
+            uploadImage.addClass('hidden');
+            removeImageSelect();
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var reader = new FileReader();
+
+                reader.onload = (function (file) {
+                    return function (e) {
+                        var imageContainer = $('<div>', {
+                            class: 'item select-image',
+                            style: 'position: relative; max-width: 100%; border-radius: 2px;',
+                            click: function () {
+                                selectImage(this)
+                            }
+                        });
+
+                        var img = $('<img>', {
+                            src: e.target.result
+                        });
+
+                        var deleteBtn = $('<button>', {
+                            class: 'delete-icon',
+                            html: '<i class="icon-delete"></i>',
+                            click: function () {
+                                uploadImage.removeClass('hidden');
+                                imageContainer.remove();
+                            }
+                        });
+
+                        imageContainer.append(img);
+                        imageContainer.append(deleteBtn);
+                        previewImage.append(imageContainer);
+                    };
+                })(file);
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function addImageToList(src){
+            var listImage = $('#list-image');
+            var isExists = false;
+            listImage.find('div').each(function () {
+                var image = $(this).find('img').attr('src');
+                if (image == src) {
+                    isExists = true;
+                    return false;
+                }
+            });
+            if (!isExists) {
+                var imageContainer = $('<div>', {
+                    class: 'item',
+                    style: 'position: relative; max-width: 25%; min-width: 25%; border-radius: 2px;',
+                    click: function () {
+                        selectImage(this)
+                    }
+                });
+
+                var img = $('<img>', {
+                    src: src
+                });
+
+                imageContainer.append(img);
+                listImage.append(imageContainer);
+            }
+        }
+
+        function selectImage(image) {
+            removeImageSelect()
+            $(image).addClass('select-image');
+        }
+
+        function removeImageSelect(){
+            var images = $('#list-image').children();
+            for (var i = 0; i < images.length; i++) {
+                $(images[i]).removeClass('select-image');
+            }
+
+            images = $('#preview-image').children();
+            if(images.length > 0){
+                $(images[0]).removeClass('select-image');
+            }
+        }
+
+        function addProductOption(){
+            var isExistsOption = isExistsProductOption();
+            var listProductOptions = $('#list-product-option')
+            if (!isExistsOption) {
+                var imgTag = $('.item.select-image img');
+
+                var image = imgTag.attr('src');
+                var imageId = imgTag.attr('value') == '' ? 'new' : imgTag.attr('value');
+
+                var sizeId = $('#size').val();
+                var sizeName = $('#size option:selected').text();
+
+                var price = $('#price').val().trim()
+
+                var quantity = $('#quantity').val().trim()
+
+                var newOption = `
+                                        <li style="padding: 5px; position: relative; min-width: 800px;" id="product-option-id_new">
+                                            <span class="delete-button"><i class="icon-delete"></i></span>
+                                            <div class="gap15" style="align-items: center; width: 100%; display: flex">
+                                                <div class="choose-image" style="width: 7%">
+                                                    <img value='new' class="imageData" style="width: 50px; height: 50px" src="${image}" alt="">
+                                                </div>                                                
+                                                <div style="width: 36%" class="text-tiny sizeData" value=${sizeId}>Kích thước: <span class="tf-color">${sizeName}</span></div>
+                                                <div style="width: 25%" class="text-tiny priceData" value=${price}>Giá: <span class="tf-color">${price}</span> vnd</div>
+                                                <div style="width: 25%" class="text-tiny quantityData" value=${quantity}>Số lượng: <span class="tf-color">${quantity}</span></div>
+                                            </div>
+                                        </li>
+                                        `
+                listProductOptions.append(newOption);
+                addImageToList(image);
+            }
+        }
+
+        function isExistsProductOption() {
+            let isValid = isValidProductOption();
+            var isExistsOption = false;
+
+            var imgTag = $('.item.select-image img');
+
+            var image = imgTag.attr('src');
+            var imageId = imgTag.attr('value') == '' ? 'new' : imgTag.attr('value');
+
+
+            var sizeId = $('#size').val();
+            var sizeName = $('#size option:selected').text().trim();
+
+            var price = $('#price').val().trim()
+
+            var listProductOptions = $('#list-product-option')
+            var numberOptions = listProductOptions.find('li').length;
+
+            if (isValid) {
+                listProductOptions.find('li').each(function () {
+                    var existingOption = $(this);
+                    var existingSizeId = existingOption.find('.sizeData').attr('value');
+                    var existingSizeName = existingOption.find('.sizeData').text().split(':')[1].trim();
+                    console.log(sizeId, existingSizeId)
+                    if (existingSizeId == sizeId
+                        && sizeName == existingSizeName) {
+                        isExistsOption = true;
+                        alert('Không thể thêm. Tùy chọn sản phẩm đã tồn tại')
+                        return false; // Exit the loop if the option already exists
+                    }
+
+                })
+            }
+            else{
+                isExistsOption = true;
+            }
+            return isExistsOption;
+        }
+
+        function saveProduct(){  
+            var isValid = true
+            var name = $('#name').val().trim()
+            var Brand = {
+                BrandId: 0,
+                Name: null
+            }
+            var ProductCategory = {
+                ProductCateId: 0,
+                Name: null
+            }
+            if (name == '') {
+                isValid = false
+                $('#error-name').text('Tên sản phẩm không được để trống');
+            }
+            else if (name.length > 200) {
+                isValid = false
+                $('#error-name').text('Tên sản phẩm không được vượt quá 200 ký tự');
+            }
+            else if (regex.test(name)) {
+                isValid = false
+                $('#error-name').text('Tên sản phẩm không được bao gồm toàn kí tự số và kí tự đặc biệt');
+            }
+            else {
+                $('#error-name').text('');
+            }
+            
+            if (isValid) {
+                var listProductOptions = $('#list-product-option')
+                var numberOptions = listProductOptions.find('li').length
+
+                var options = []
+                if (numberOptions > 0) {
+                    listProductOptions.find('li').each(function () {
+                        var op = $(this);
+
+                        var imageUrl = op.find('.imageData').attr('src');
+
+                        var Image = {
+                            ImageId: 0,
+                            ImageUrl: imageUrl
+                        }
+
+                        var sizeName = op.find('.sizeData').text().split(':')[1].trim()
+                        var sizeId = op.find('.sizeData').attr('value');
+
+                        var Size = {
+                            SizeId: sizeId == 'new' ? 0 : parseInt(sizeId),
+                            Name : sizeName
+                        }
+
+                        var Attribute = {
+                            AttributeId: 0,
+                            Name: null
+                        }
+
+                        var Price = op.find('.priceData').attr('value');
+
+                        var quantity = op.find('.quantityData').attr('value').trim();
+
+                        var option = {
+                            Image: Image,
+                            Size: Size,
+                            Attribute: Attribute,
+                            Price: parseFloat(Price),
+                            Quantity : quantity
+                        };
+                        options.push(option);
+                    });
+
+                    var product = {
+                        Name: name.trim(),
+                        Brand: Brand,
+                        CategoryId: "0",
+                        ProductCategory: ProductCategory,
+                        Description: description,
+                        ProductOptions: options
+                    };
+                    var productCreateRequest = JSON.stringify(product);
+                    console.log(productCreateRequest)
+                    $.ajax({
+                        url: '/Admin/Product/CreateRequest',
+                        type: 'POST',
+                        data: { product: productCreateRequest },
+                        success: function (response) {
+                            if (!isNaN(response.result)) {
+                                window.location.href = 'http://localhost:5206/admin/product/detail?productId=' + response.result;
+                            } else {
+                                // Handle error - display a message or log the error
+                                console.error("Error: " + response.result);
+                                alert("Đã xảy ra lỗi: "+response.result);
+
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle AJAX error
+                            console.error("AJAX error: " + error);
+                            alert("Đã xảy ra lỗi: "+error);
+
+                        }
+                    });
+
+                }
+                else {
+                    alert('Bạn cần thêm các tùy chọn cho sản phẩm')
+                }
+            }
+        }
+
+        $('#list-product-option').on('click', '.delete-button', function () {
+            $(this).parent().remove(); // Remove the parent <li> when the delete button is clicked
+        });
+       
+        function addSizeOption() {
+            var size = $('#sizeFilter').val().trim();
+
+            if (isExistsSize(size)) {
+                alert('Kích thước này đã tồn tại');
+            }
+            else if (isValidString(size)) {
+                if (confirm(`Bạn có muốn thêm '${size}' vào danh sách kích thước không?`)) {
+                    var sizes = $('#size');
+                    var option = $('<option>', {
+                        value: 'new',
+                        text: size
+                    });
+                    option.prop('selected', true);
+                    sizes.append(option);
+                    $('#sizeFilter').val('');
+                    $('#size option').each(function () {
+                        $(this).css('display', 'block');
+                    });
+                }
+            }
+        }
+
+        function isValidString(name) {
+            var isValid = true
+            if (name == '') {
+                isValid = false
+                alert('Không được để trống');
+            }
+            else if (name.length > 200) {
+                isValid = false
+                alert('Không được nhập quá 200 ký tự');
+            }
+            else if (regex.test(name)) {
+                isValid = false
+                alert('Không được nhập toàn kí tự số và kí tự đặc biệt');
+            }
+            return isValid;
+        }
+        function isValidProductOption() {
+            var isValid = true;
+
+            var name = $('#name').val().trim()
+
+            var image = $('.item.select-image img').attr('src');
+
+            var sizeId = $('#size').val();
+            var sizeName = $('#size option:selected').text();
+
+            var price = $('#price').val()
+
+            var quantity = $('#quantity').val().trim();
+
+            if (name == '') {
+                isValid = false
+                $('#error-name').text('Tên sản phẩm không được để trống');
+            }
+            else if (name.length > 200) {
+                isValid = false
+                $('#error-name').text('Tên sản phẩm không được vượt quá 200 ký tự');
+            }
+            else if (regex.test(name)) {
+                isValid = false
+                $('#error-name').text('Tên sản phẩm không được bao gồm toàn kí tự số và kí tự đặc biệt');
+            }
+            else {
+                $('#error-name').text('');
+            }
+
+            if (!isUploadFile) {
+                isValid = false
+                $('#error-image').text('Cần tải lên ít nhất 1 ảnh sản phẩm');
+            }
+            else if (image === undefined) {
+                isValid = false
+                $('#error-image').text('Bạn cần tải ảnh lên hoặc chọn một ảnh để hiển thị theo tùy chọn của sản phẩm');
+            }
+            else {
+                $('#error-image').text('')
+            }
+
+            if (price == '') {
+                isValid = false
+                $('#error-price').text('Giá sản phẩm không được để trống');
+            }
+            else {
+                if (numberRegex.test(price)) {
+                    var p = parseFloat(price);
+                    var decimalCount = (price.split('.')[1] || []).length;
+                    if (p < 1000) {
+                        $('#error-price').text('Giá sản phẩm không được nhỏ hơn 1000 đồng');
+                        isValid = false
+                    }
+                    else if (decimalCount > 3) {
+                        $('#error-price').text('Giá sản phẩm không được có quá 3 số sau dấu "," thập phân');
+                        isValid = false
+                    }
+                    else {
+                        $('#error-price').text('')
+                    }
+                }
+                else {
+                    $('#error-price').text("Giá sản phẩm phải là một số");
+                    isValid = false
+                }
+            }
+
+            if (quantity == '') {
+                isValid = false
+                $('#error-quantity').text('Số lượng sản phẩm không được để trống');
+            }
+            else {
+                if (regex.test(quantity)) {
+                    var q = parseInt(quantity);
+                    if (q < 0) {
+                        $('#error-quantity').text('Số lượng sản phẩm không được nhỏ hơn 1');
+                        isValid = false
+                    }
+                    else {
+                        $('#error-quantity').text('')
+                    }
+                }
+                else {
+                    $('#error-quantity').text("Số lượng sản phẩm phải là một số");
+                    isValid = false
+                }
+            }
+            return isValid
+        }
+        function isExistsSize(size) {
+            var isExists = false;
+            var sizes = $('#size option');
+            sizes.each(function () {
+                if ($(this).text().trim().toLowerCase() === size.toLowerCase()) {
+                    isExists = true;
+                    return false;
+                }
+            });
+            return isExists;
+        }
+    </script>
+}

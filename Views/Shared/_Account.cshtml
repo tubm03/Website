@@ -1,0 +1,31 @@
+﻿@{
+    var name = Context.Session.GetString("userName");
+}
+
+<!--Account Start -->
+<li class="drodown-show">
+    <a href="#"><span class="icofont-ui-user"></span></a>
+    <!-- Currency & Language Selection Start -->
+    <ul class="dropdown account-box-width account-box-title">
+        <li>
+            <div class="single-select-block">
+                @{
+                    if (name == null)
+                    {
+                        <h3>Tài Khoản</h3>
+                        <a asp-controller="Account" asp-action="Login" class="single-account-select">Đăng Nhập</a>
+                        <a asp-controller="Account" asp-action="Register" class="single-account-select mt-2">Đăng Ký</a>
+                    }
+                    else
+                    {
+                        <img class="rounded-circle pe-1" style="height: 2rem" src="~/img/profile-user-2.png" alt="">
+                        <span><h3 id="menu-fullname" class="pt-1 mb-4">@name</h3></span>
+                        <a asp-controller="Account" asp-action="Profile" class="single-account-select">Tài Khoản</a>
+                        <a asp-controller="Account" asp-action="Logout" class="single-account-select mt-2">Đăng Xuất</a>
+                    }
+                }
+            </div>
+        </li>
+    </ul>
+</li>
+<!--Account End -->

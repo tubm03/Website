@@ -1,0 +1,482 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="vi" lang="vi">
+
+<head>
+    <!-- Basic Page Needs -->
+    <meta charset="utf-8">
+
+    <title>Bảng điều khiển</title>
+
+    <meta name="author" content="themesflat.com">
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Theme Style -->
+    <link rel="stylesheet" type="text/css" href="/areas/css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/areas/css/animation.css">
+    <link rel="stylesheet" type="text/css" href="/areas/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/areas/css/bootstrap-select.min.css">
+    <link rel="stylesheet" type="text/css" href="/areas/css/style.css">
+    <link href="~/areas/css/style1.css" rel="stylesheet" />
+    <link href="~/css/mystyle.css" rel="stylesheet" />
+    <link href="~/css/icofont.css" rel="stylesheet" />
+    
+    <!-- Font -->
+    <link rel="stylesheet" href="/areas/font/fonts.css">
+
+    <!-- Icon -->
+    <link rel="stylesheet" href="/areas/icon/style.css">
+
+    <!-- Favicon and Touch Icons  -->
+    <link rel="shortcut icon" href="~/img/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="~/img/favicon.png">
+    <script src="https://cdn.tiny.cloud/1/t59ustcb51mtosn5m5bi7mmy0mjphbhnlni3kylpd0b4buzm/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    @RenderSection("HeadOptional", required: false)
+</head>
+
+<body class="body">
+
+    <!-- #wrapper -->
+    <div id="wrapper">
+        <!-- #page -->
+        <div id="page" class="">
+            <!-- layout-wrap -->
+            <div class="layout-wrap">
+                <!-- preload -->
+                <div id="preload" class="preload-container">
+                    <div class="preloading">
+                        <span></span>
+                    </div>
+                </div>
+                <!-- /preload -->
+                <!-- section-menu-left -->
+                <div class="section-menu-left">
+                    <div class="box-logo">
+                        <a href="/Admin/Home/Index" id="site-logo-inner">
+                            <img class="" alt="" src="~/img/logo/logo2.png">
+                        </a>
+                        <div class="button-show-hide">
+                            <i class="icon-menu-left"></i>
+                        </div>
+                    </div>
+                    <div class="center">
+                        <div class="center-item">
+                            <div class="center-heading">Màn hình chính</div>
+                            <ul class="menu-list">
+                                <li class="menu-item active">
+                                    <a href="/Admin/Home/Index" class="menu-item-button">
+                                        <div class="icon"><i class="icon-grid"></i></div>
+                                        <div class="text">Bảng điều khiển</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="center-item">
+                            <div class="center-heading">Tất cả trang</div>
+                            <ul class="menu-list">
+                                <li class="menu-item has-children">
+                                    <a href="javascript:void(0);" class="menu-item-button">
+                                        <div class="icon"><i class="icon-shopping-cart"></i></div>
+                                        <div class="text">Sản phẩm</div>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="sub-menu-item">
+                                            <a href="/admin/product/list" class="">
+                                                <div class="text">Danh sách sản phẩm</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="/admin/product/create" class="">
+                                                <div class="text">Thêm mới sản phẩm</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="/admin/product/detail?productId=2" class="">
+                                                <div class="text">Chi tiết sản phẩm</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item has-children">
+                                    <a href="javascript:void(0);" class="menu-item-button">
+                                        <div class="icon"><i class="icon-layers"></i></div>
+                                        <div class="text">Danh mục</div>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="sub-menu-item">
+                                            <a href="/admin/productcategory/list" class="">
+                                                <div class="text">Danh mục & Thương hiệu</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item has-children">
+                                    <a href="javascript:void(0);" class="menu-item-button">
+                                        <div class="icon"><i class="icon-shopping-bag"></i></div>
+                                        <div class="text">Dịch vụ</div>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="sub-menu-item">
+                                            <a href="/admin/service/list" class="">
+                                                <div class="text">Danh sách dịch vụ</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="/admin/service/create" class="">
+                                                <div class="text">Thêm mới dịch vụ</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="/admin/service/detail/1" class="">
+                                                <div class="text">Chi tiết dịch vụ</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item has-children">
+                                    <a href="javascript:void(0);" class="menu-item-button">
+                                        <div class="icon"><i class="icon-tag"></i></div>
+                                        <div class="text">Khuyến mại</div>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="sub-menu-item">
+                                            <a href="/admin/discount/list" class="">
+                                                <div class="text">Danh sách mã giảm giá</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="/admin/promotion/list" class="">
+                                                <div class="text">Danh sách khuyến mại</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="/admin/discount/create" class="">
+                                                <div class="text">Tạo mã giảm giá</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="/admin/promotion/create/" class="">
+                                                <div class="text">Tạo khuyến mại</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item has-children">
+                                    <a href="javascript:void(0);" class="menu-item-button">
+                                        <div class="icon"><i class="icon-file-plus"></i></div>
+                                        <div class="text">Đơn hàng</div>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="sub-menu-item">
+                                            <a href="/admin/Order/ListOrderHistory" class="">
+                                                <div class="text">Lịch sử đơn hàng</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item has-children">
+                                    <a href="javascript:void(0);" class="menu-item-button">
+                                        <div class="icon">
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M15.7727 4.27031C15.025 3.51514 14.1357 2.91486 13.1558 2.50383C12.1758 2.09281 11.1244 1.87912 10.0617 1.875H10C7.84512 1.875 5.77849 2.73102 4.25476 4.25476C2.73102 5.77849 1.875 7.84512 1.875 10V14.375C1.875 14.8723 2.07254 15.3492 2.42417 15.7008C2.77581 16.0525 3.25272 16.25 3.75 16.25H5C5.49728 16.25 5.9742 16.0525 6.32583 15.7008C6.67746 15.3492 6.875 14.8723 6.875 14.375V11.25C6.875 10.7527 6.67746 10.2758 6.32583 9.92417C5.9742 9.57254 5.49728 9.375 5 9.375H3.15313C3.27366 8.07182 3.76315 6.83 4.56424 5.79508C5.36532 4.76016 6.44481 3.97502 7.67617 3.53169C8.90753 3.08836 10.2398 3.0052 11.5167 3.29196C12.7936 3.57872 13.9624 4.22352 14.8859 5.15078C16.0148 6.28539 16.7091 7.78052 16.8477 9.375H15C14.5027 9.375 14.0258 9.57254 13.6742 9.92417C13.3225 10.2758 13.125 10.7527 13.125 11.25V14.375C13.125 14.8723 13.3225 15.3492 13.6742 15.7008C14.0258 16.0525 14.5027 16.25 15 16.25H16.875C16.875 16.7473 16.6775 17.2242 16.3258 17.5758C15.9742 17.9275 15.4973 18.125 15 18.125H10.625C10.4592 18.125 10.3003 18.1908 10.1831 18.3081C10.0658 18.4253 10 18.5842 10 18.75C10 18.9158 10.0658 19.0747 10.1831 19.1919C10.3003 19.3092 10.4592 19.375 10.625 19.375H15C15.8288 19.375 16.6237 19.0458 17.2097 18.4597C17.7958 17.8737 18.125 17.0788 18.125 16.25V10C18.1291 8.93717 17.9234 7.88398 17.5197 6.90077C17.1161 5.91757 16.5224 5.02368 15.7727 4.27031ZM5 10.625C5.16576 10.625 5.32473 10.6908 5.44194 10.8081C5.55915 10.9253 5.625 11.0842 5.625 11.25V14.375C5.625 14.5408 5.55915 14.6997 5.44194 14.8169C5.32473 14.9342 5.16576 15 5 15H3.75C3.58424 15 3.42527 14.9342 3.30806 14.8169C3.19085 14.6997 3.125 14.5408 3.125 14.375V10.625H5ZM15 15C14.8342 15 14.6753 14.9342 14.5581 14.8169C14.4408 14.6997 14.375 14.5408 14.375 14.375V11.25C14.375 11.0842 14.4408 10.9253 14.5581 10.8081C14.6753 10.6908 14.8342 10.625 15 10.625H16.875V15H15Z" fill="#111111" />
+                                            </svg>
+                                        </div>
+                                        <div class="text">Tư vấn</div>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="sub-menu-item">
+                                            <a href="/admin/consultation/list" class="">
+                                                <div class="text">Danh sách tư vấn</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item has-children">
+                                    <a href="javascript:void(0);" class="menu-item-button">
+                                        <div class="icon"><i class="icon-user"></i></div>
+                                        <div class="text">Người dùng</div>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="sub-menu-item">
+                                            <a href="/admin/account/list" class="">
+                                                <div class="text">Tất cả nhân viên</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="/admin/account/listShipper" class="">
+                                                <div class="text">Nhân viên giao hàng</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="/admin/account/listCustomer" class="">
+                                                <div class="text">Tất cả khách hàng</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item has-children">
+                                    <a href="javascript:void(0);" class="menu-item-button">
+                                        <div class="icon"><i class="icon-user-plus"></i></div>
+                                        <div class="text">Khách hàng thân thiết</div>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="sub-menu-item">
+                                            <a asp-action="Refresh" asp-controller="LoyalCustomer" class="">
+                                                <div class="text">Danh sách khác hàng thân thiết </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        @* <div class="center-item">
+                            <div class="center-heading">Cài đặt</div>
+                            <ul class="menu-list">
+                                <li class="menu-item has-children">
+                                    <a href="javascript:void(0);" class="menu-item-button">
+                                        <div class="icon"><i class="icon-map-pin"></i></div>
+                                        <div class="text">Vị trí</div>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="sub-menu-item">
+                                            <a href="countries.html" class="">
+                                                <div class="text">Countries</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="states.html" class="">
+                                                <div class="text">States</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="cities.html" class="">
+                                                <div class="text">Cities</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="setting.html" class="">
+                                        <div class="icon"><i class="icon-settings"></i></div>
+                                        <div class="text">Cài đặt</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item has-children">
+                                    <a href="javascript:void(0);" class="menu-item-button">
+                                        <div class="icon"><i class="icon-edit"></i></div>
+                                        <div class="text">Trang</div>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="sub-menu-item">
+                                            <a href="list-page.html" class="">
+                                                <div class="text">List page</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="new-page.html" class="">
+                                                <div class="text">New page</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="edit-page.html" class="">
+                                                <div class="text">Edit page</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="center-item">
+                            <div class="center-heading">Thành phần</div>
+                            <ul class="menu-list">
+                                <li class="menu-item">
+                                    <a href="components.html" class="">
+                                        <div class="icon"><i class="icon-database"></i></div>
+                                        <div class="text">Thành phần</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div> *@
+                    </div>
+                </div>
+                <!-- /section-menu-left -->
+                <!-- section-content-right -->
+                <div class="section-content-right">
+                    <!-- header-dashboard -->
+                    <div class="header-dashboard">
+                        <div class="wrap">
+                            <div class="header-left">
+                                <a href="index.html">
+                                    <img class="" alt="" src="~/img/favicon.png" data-width="154px" data-height="52px" >
+                                </a>
+                                <div class="button-show-hide">
+                                    <i class="icon-menu-left"></i>
+                                </div>
+                            </div>
+                            <div class="header-grid">
+                                @* <div class="header-item country">
+                                    <select class="image-select no-text">
+                                        <option data-thumbnail="/areas/country/1.png">ENG</option>
+                                        <option data-thumbnail="/areas/country/9.png">VIE</option>
+                                    </select>
+                                </div> *@
+                                @* <div class="popup-wrap noti type-header">
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span class="header-item">
+                                                <span class="text-tiny">1</span>
+                                                <i class="icon-bell"></i>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="popup-wrap message type-header">
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span class="header-item">
+                                                <span class="text-tiny">1</span>
+                                                <i class="icon-message-square"></i>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div> *@
+                                <div class="header-item button-zoom-maximize">
+                                    <div class="">
+                                        <i class="icon-maximize"></i>
+                                    </div>
+                                </div>
+                                @* <div class="popup-wrap apps type-header">
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton4" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span class="header-item">
+                                                <i class="icon-grid"></i>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div> *@
+                                <div class="popup-wrap user type-header">
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span class="header-user wg-user">
+                                                <span class="image">
+                                                    <img src="~/img/profile-user-2.png" alt="">
+                                                </span>
+                                                <span class="flex flex-column">
+                                                    <span class="body-title mb-2" id="user_name" style="white-space: break-spaces">Admin</span>
+                                                    <span class="text-tiny">Quản trị viên</span>
+                                                </span>
+                                            </span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end has-content" aria-labelledby="dropdownMenuButton3">
+                                            <li>
+                                                <a href="/admin/account/profileAccount" class="user-item">
+                                                    <div class="icon">
+                                                        <i class="icon-user"></i>
+                                                    </div>
+                                                    <div class="body-title-2">Tài khoản</div>
+                                                </a>
+                                            </li>
+                                            @* <li>
+                                                <a href="#" class="user-item">
+                                                    <div class="icon">
+                                                        <i class="icon-mail"></i>
+                                                    </div>
+                                                    <div class="body-title-2">Hộp thoại</div>
+                                                    <div class="number">27</div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="user-item">
+                                                    <div class="icon">
+                                                        <i class="icon-file-text"></i>
+                                                    </div>
+                                                    <div class="body-title-2">Taskboard</div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="setting.html" class="user-item">
+                                                    <div class="icon">
+                                                        <i class="icon-settings"></i>
+                                                    </div>
+                                                    <div class="body-title-2">Setting</div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="user-item">
+                                                    <div class="icon">
+                                                        <i class="icon-headphones"></i>
+                                                    </div>
+                                                    <div class="body-title-2">Support</div>
+                                                </a>
+                                            </li> *@
+                                            <li>
+                                                <a href="/Account/Logout" class="user-item">
+                                                    <div class="icon">
+                                                        <i class="icon-log-out"></i>
+                                                    </div>
+                                                    <div class="body-title-2">Log out</div>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /header-dashboard -->
+                    <!-- main-content -->
+                    <div class="main-content">
+                        <!-- main-content-wrap -->
+                        @RenderBody()
+                        <!-- /main-content-wrap -->
+                    </div>
+                    <!-- /main-content -->
+                </div>
+                <!-- /section-content-right -->
+            </div>
+            <!-- /layout-wrap -->
+        </div>
+        <!-- /#page -->
+    </div>
+    <!-- /#wrapper -->
+    <!-- Javascript -->
+    <script src="/areas/js/jquery.min.js"></script>
+    <script src="/areas/js/bootstrap.min.js"></script>
+    <script src="/areas/js/bootstrap-select.min.js"></script>
+    <script src="/areas/js/zoom.js"></script>
+    <script src="~/areas/js/raphael.min.js"></script>
+    <script src="/areas/js/apexcharts/apexcharts.js"></script>
+    <script src="/areas/js/apexcharts/line-chart-1.js"></script>
+    <script src="/areas/js/apexcharts/line-chart-2.js"></script>
+    <script src="/areas/js/apexcharts/line-chart-3.js"></script>
+    <script src="/areas/js/apexcharts/line-chart-4.js"></script>
+    <script src="/areas/js/apexcharts/line-chart-5.js"></script>
+    <script src="/areas/js/apexcharts/line-chart-6.js"></script>
+    <script src="/areas/js/apexcharts/line-chart-22.js"></script>
+    @* <script src="/areas/js/switcher.js"></script> *@
+    @* <script src="/areas/js/theme-settings.js"></script> *@
+    <script src="/areas/js/main.js"></script>
+    <script src="~/js/myjs.js"></script>
+    <!-- jquery 3.3.1 -->
+    <script src="~/js/vendor/jquery-3.3.1.min.js"></script>
+    <!-- Mobile menu js -->
+    <script src="~/js/jquery.meanmenu.min.js"></script>
+    <!-- ScrollUp js -->
+    <script src="~/js/jquery.scrollUp.js"></script>
+    <!-- Jquery nice select js -->
+    <script src="~/js/jquery.nice-select.min.js"></script>
+    <!-- Jquery ui price slider js -->
+    <script src="~/js/jquery-ui.min.js"></script>
+    <!-- Bootstrap popper js -->
+    <script src="~/js/popper.min.js"></script>
+    <!-- Plugin js -->
+    <script src="~/js/plugins.js"></script>
+    <!-- Main activaion js -->
+    <script src="~/js/main.js"></script>
+    @RenderSection("ScriptOptional", required: false)
+</body>
+
+
+<!-- Mirrored from themesflat.co/html/remos/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 02 Jun 2024 17:50:55 GMT -->
+</html>

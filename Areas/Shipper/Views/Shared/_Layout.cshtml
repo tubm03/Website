@@ -1,0 +1,220 @@
+﻿@using Microsoft.AspNetCore.Http
+
+@{
+    var userName = Context.Session.GetString("userName");
+}
+
+<!DOCTYPE html>
+
+<html xml:lang="vi" lang="vi">
+
+<head>
+    <!-- Basic Page Needs -->
+    <meta charset="utf-8">
+
+    <title>Bảng điều khiển</title>
+
+    <meta name="author" content="themesflat.com">
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Theme Style -->
+    <link rel="stylesheet" type="text/css" href="/areas/css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/areas/css/animation.css">
+    <link rel="stylesheet" type="text/css" href="/areas/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/areas/css/bootstrap-select.min.css">
+    <link rel="stylesheet" type="text/css" href="/areas/css/style.css">
+    <link href="~/areas/css/style1.css" rel="stylesheet" />
+    <link href="~/css/mystyle.css" rel="stylesheet" />
+    <link href="~/css/icofont.css" rel="stylesheet" />
+
+
+    <!-- Font -->
+    <link rel="stylesheet" href="/areas/font/fonts.css">
+
+    <!-- Icon -->
+    <link rel="stylesheet" href="/areas/icon/style.css">
+
+    <!-- Favicon and Touch Icons  -->
+    <link rel="shortcut icon" href="~/img/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="~/img/favicon.png">
+    <script src="https://cdn.tiny.cloud/1/8hmoehtsho9qzx2uls4bfsd2haevw9a5nwhp03mpsx4zn0vj/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    @RenderSection("HeadOptional", required: false)
+</head>
+
+<body class="body">
+
+    <!-- #wrapper -->
+    <div id="wrapper">
+        <!-- #page -->
+        <div id="page" class="">
+            <!-- layout-wrap -->
+            <div class="layout-wrap">
+                <!-- preload -->
+                <div id="preload" class="preload-container">
+                    <div class="preloading">
+                        <span></span>
+                    </div>
+                </div>
+                <!-- /preload -->
+                <!-- section-menu-left -->
+                <div class="section-menu-left">
+                    <div class="box-logo">
+                        <a href="#" id="site-logo-inner">
+                            <img class="" alt="" src="~/img/logo/logo2.png">
+                        </a>
+                        <div class="button-show-hide">
+                            <i class="icon-menu-left"></i>
+                        </div>
+                    </div>
+                    <div class="center">
+                        <div class="center-item">
+                            <div class="center-heading">Tất cả trang</div>
+                            <ul class="menu-list">
+                                <li class="menu-item has-children">
+                                    <a href="javascript:void(0);" class="menu-item-button">
+                                        <div class="icon"><i class="icon-shopping-cart"></i></div>
+                                        <div class="text">Sản phẩm</div>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="sub-menu-item">
+                                            <a href="/shipper/product/list" class="">
+                                                <div class="text">Danh sách sản phẩm</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="/shipper/product/detail?productId=2" class="">
+                                                <div class="text">Chi tiết sản phẩm</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item has-children">
+                                    <a href="javascript:void(0);" class="menu-item-button">
+                                        <div class="icon"><i class="icon-tag"></i></div>
+                                        <div class="text">Đơn hàng</div>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="sub-menu-item">
+                                            <a href="/shipper/order/list" class="">
+                                                <div class="text">Danh sách đơn hàng</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- /section-menu-left -->
+                <!-- section-content-right -->
+                <div class="section-content-right">
+                    <!-- header-dashboard -->
+                    <div class="header-dashboard">
+                        <div class="wrap">
+                            <div class="header-left">
+                                <a href="index.html">
+                                    <img class="" alt="" src="~/img/favicon.png" data-width="154px" data-height="52px">
+                                </a>
+                                <div class="button-show-hide">
+                                    <i class="icon-menu-left"></i>
+                                </div>
+                            </div>
+                            <div class="header-grid">
+                                <div class="header-item button-zoom-maximize">
+                                    <div class="">
+                                        <i class="icon-maximize"></i>
+                                    </div>
+                                </div>
+                                <div class="popup-wrap user type-header">
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span class="header-user wg-user">
+                                                <span class="image">
+                                                    <img src="~/img/profile-user-2.png" alt="">
+                                                </span>
+                                                <span class="flex flex-column">
+                                                    <span class="body-title mb-2" id="user_name" style="white-space: break-spaces">@userName</span>
+                                                    <span class="text-tiny">Nhân viên</span>
+                                                </span>
+                                            </span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end has-content" aria-labelledby="dropdownMenuButton3">
+                                            <li>
+                                                <a href="/employee/account/profileAccount" class="user-item">
+                                                    <div class="icon">
+                                                        <i class="icon-user"></i>
+                                                    </div>
+                                                    <div class="body-title-2">Tài khoản</div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="/Account/Logout" class="user-item">
+                                                    <div class="icon">
+                                                        <i class="icon-log-out"></i>
+                                                    </div>
+                                                    <div class="body-title-2">Log out</div>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /header-dashboard -->
+                    <!-- main-content -->
+                    <div class="main-content">
+                        <!-- main-content-wrap -->
+                        @RenderBody()
+                        <!-- /main-content-wrap -->
+                    </div>
+                    <!-- /main-content -->
+                </div>
+                <!-- /section-content-right -->
+            </div>
+            <!-- /layout-wrap -->
+        </div>
+        <!-- /#page -->
+    </div>
+    <!-- /#wrapper -->
+    <!-- Javascript -->
+    <script src="/areas/js/jquery.min.js"></script>
+    <script src="/areas/js/bootstrap.min.js"></script>
+    <script src="/areas/js/bootstrap-select.min.js"></script>
+    <script src="/areas/js/zoom.js"></script>
+    <script src="/areas/js/apexcharts/apexcharts.js"></script>
+    <script src="/areas/js/apexcharts/line-chart-1.js"></script>
+    <script src="/areas/js/apexcharts/line-chart-2.js"></script>
+    <script src="/areas/js/apexcharts/line-chart-3.js"></script>
+    <script src="/areas/js/apexcharts/line-chart-4.js"></script>
+    <script src="/areas/js/apexcharts/line-chart-5.js"></script>
+    <script src="/areas/js/apexcharts/line-chart-6.js"></script>
+    @* <script src="/areas/js/switcher.js"></script> *@
+    @* <script src="/areas/js/theme-settings.js"></script> *@
+    <script src="/areas/js/main.js"></script>
+    <!-- jquery 3.3.1 -->
+    <script src="~/js/vendor/jquery-3.3.1.min.js"></script>
+    <!-- Mobile menu js -->
+    <script src="~/js/jquery.meanmenu.min.js"></script>
+    <!-- ScrollUp js -->
+    <script src="~/js/jquery.scrollUp.js"></script>
+    <!-- Jquery nice select js -->
+    <script src="~/js/jquery.nice-select.min.js"></script>
+    <!-- Jquery ui price slider js -->
+    <script src="~/js/jquery-ui.min.js"></script>
+    <!-- Bootstrap popper js -->
+    <script src="~/js/popper.min.js"></script>
+    <!-- Plugin js -->
+    <script src="~/js/plugins.js"></script>
+    <!-- Main activaion js -->
+    <script src="~/js/main.js"></script>
+    <script src="~/js/myjs.js"></script>
+    @RenderSection("ScriptOptional", required: false)
+
+</body>
+
+
+<!-- Mirrored from themesflat.co/html/remos/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 02 Jun 2024 17:50:55 GMT -->
+</html>

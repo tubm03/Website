@@ -1,0 +1,108 @@
+﻿@model List<PetStoreProject.ViewModels.ServiceViewModel>;
+
+@{
+    ViewData["Title"] = "Dịch Vụ Thú Cưng";
+    var listServiceType = ViewData["ServiceTypes"] as List<string>;
+}
+
+<!-- Service Title Area Start Here -->
+<div class="service-area adp_top">
+    <div class="container">
+        <div class="row">
+            <!-- Single Service Area Start Here -->
+            <div class="col-lg-3 col-md-6 mb-all-40">
+                <div class="single-service text-center">
+                    <div class="service-feature-img d-inline-block">
+                        <img src="/img/icons/15.png" alt="service-icon">
+                    </div>
+                    <div class="service-content">
+                        <h4>Chăm Sóc Tận Tình</h4>
+                        <p>Chăm sóc thú cưng với tình yêu và sự ân cần, mang lại trải nghiệm tốt nhất.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Single Service Area End Here -->
+            <!-- Single Service Area Start Here -->
+            <div class="col-lg-3 col-md-6 mb-all-40">
+                <div class="single-service text-center">
+                    <div class="service-feature-img d-inline-block">
+                        <img src="/img/icons/13.png" alt="service-icon">
+                    </div>
+                    <div class="service-content">
+                        <h4>Trang Thiết Bị Hiện Đại</h4>
+                        <p>Sử dụng thiết bị tiên tiến, đảm bảo an toàn và thoải mái cho thú cưng của bạn.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Single Service Area End Here -->
+            <!-- Single Service Area Start Here -->
+            <div class="col-lg-3 col-md-6 mb-all-40">
+                <div class="single-service text-center">
+                    <div class="service-feature-img d-inline-block">
+                        <img src="/img/icons/14.png" alt="service-icon">
+                    </div>
+                    <div class="service-content">
+                        <h4>Đội Ngũ Chuyên Nghiệp</h4>
+                        <p>Đội ngũ nhân viên giàu kinh nghiệm, tận tâm và hiểu biết về chăm sóc thú cưng.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Single Service Area End Here -->
+            <!-- Single Service Area Start Here -->
+            <div class="col-lg-3 col-md-6 mb-all-40">
+                <div class="single-service text-center">
+                    <div class="service-feature-img d-inline-block">
+                        <img src="/img/icons/care_04.png" alt="service-icon">
+                    </div>
+                    <div class="service-content">
+                        <h4>Đặt Lịch Online</h4>
+                        <p>Dễ dàng đặt lịch online, chọn thời gian phù hợp và nhận xác nhận ngay lập tức.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Single Service Area End Here -->
+        </div>
+    </div>
+</div>
+<!-- Service Title Area End  Here -->
+<!--Single service table area start -->
+@foreach (var type in listServiceType)
+{
+    <div class="pricing-table-area adp_top">
+        <div class="container">
+            <!-- Section Title Start Here -->
+            <div class="section-title mb-0">
+                <span>#Spa & Grooming</span>
+                <h2>Gói @type</h2>
+            </div>
+            <!-- Section Title End Here -->
+            <div class="row">
+                @foreach (var service in Model)
+                {
+                    if (service.Type == type)
+                    {
+                        <div class="col-lg-4 col-md-6 col-12 mt-5">
+                            <div class="single-pricing-table text-center">
+                                <div class="price-icon">
+                                    <img class="rounded-circle" src="@service.ImageUrl" alt="pric icon" style="width:150.4px; height: 150.4px">
+                                </div>
+                                <h4 class="d-flex align-items-center justify-content-center">@service.Name</h4>
+                                <div class="price-tag">
+                                    <span>@service.Price.ToString("#,###") VND</span>
+                                </div>
+                                <div class="adv-area">
+                                    @Html.Raw(service.SupDescription)
+                                </div>
+                                <div class="small-btn">
+                                    <a href="/service/detail/@service.ServiceId" tabindex="0">Xem Chi Tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+}
+<!--Single service area end -->
+<div class="adp_bottom"></div>

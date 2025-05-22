@@ -1,0 +1,108 @@
+﻿@model PetStoreProject.ViewModels.NewsViewModel
+
+@{
+    ViewData["Title"] = "Tin Tức";
+}
+
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .blog-details-area {
+            padding: 40px 0;
+        }
+
+        .blog-details {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-img {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+            .blog-img img {
+                max-width: 100%;
+                border-radius: 6px;
+            }
+
+        .publish-meta-date {
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .text-top-side {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .blog-dtl-header {
+            font-size: 28px;
+            font-weight: bold;
+            color: #198754;
+            margin-bottom: 10px;
+        }
+
+        .meta-box {
+            justify-content: center;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .card-text {
+            font-size: 18px;
+            line-height: 1.8;
+            text-align: justify;
+            margin-top: 20px;
+        }
+
+        .tags {
+            font-size: 16px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blog-details-area">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-8 col-lg-10">
+                    <div class="blog-details">
+                        <div class="blog-img">
+                            <img class="img-fluid" src="@Model.url_thumnail" alt="blog-details">
+                            <div class="publish-meta-date">@Model.DateOnly</div>
+                        </div>
+
+                        <div class="text-top-side">
+                            <h3 class="blog-dtl-header">@Model.Title</h3>
+                            <ul class="meta-box meta-blog d-flex">
+                                <li><i class="fa fa-user" aria-hidden="true"></i> Người Đăng: Animart</li>
+                            </ul>
+                        </div>
+
+                        <p class="card-text">@Html.Raw(Model.Content)</p>
+                        <p class="tags">Thẻ: @Model.tagName</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
