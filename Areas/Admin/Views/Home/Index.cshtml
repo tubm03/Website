@@ -268,7 +268,7 @@
                                 </div>
                                 <div class="flex items-center justify-between flex-grow">
                                     <div class="name">
-                                        <a href="product-list.html" class="body-title-2">@product.Name</a>
+                                        <a href="@("/admin/product/detail?productid=" + product.Id)" class="body-title-2">@product.Name</a>
                                     </div>
                                     <div class="body-text" style="width: 70px;">@product.SoldQuantity</div>
                                     <div class="body-text">@product.TotalSale?.ToString("#,###") VND</div>

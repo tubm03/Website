@@ -442,7 +442,7 @@
                                     </div>
                                     <div>
                                         <h5 class="font-size-14 mb-3">Phương thức thanh toán :</h5>
-                                        <div class="row">
+                                        @* <div class="row">
                                             <div class="col-lg-3 col-sm-6">
                                                 <label class="card-radio-label" for="paymentMethod">
                                                     <input type="radio" name="pay-method" id="paymentMethod" value="VNPay" class="card-radio-input">
@@ -457,7 +457,7 @@
                                                 </label>
                                             </div>
 
-                                        </div>
+                                        </div> *@
                                         <div class="row" id="COD_Tag">
                                             <div class="col-lg-3 col-sm-6">
                                                 <label class="card-radio-label" for="COD">
@@ -735,15 +735,10 @@
 
                             let provice = $('#consigneeProvince option:selected').text();
                             console.log("provice: " + provice);
-                            if (provice.includes("Hà Nội")) {
+
                                 $('#COD_Tag').show();
                                 $('#paymentMethod').prop('checked', false);
                                 $('#COD').prop('disabled', false);
-                            } else {
-                                $('#COD_Tag').hide();
-                                $('#paymentMethod').prop('checked', true);
-                                $('#COD').prop('disabled', true);
-                            }
 
                             //Lấy phường xã
                             $("#consigneeDistrict").change(function (e) {
@@ -763,9 +758,9 @@
                                 if (provice.includes('Hà Nội')) {
                                     $('#COD_Tag').css('display', '');
                                     if (!district.includes('Quận')) {
-                                        $('#COD_Tag').hide();
+                                        $('#COD_Tag').show();
                                         $('#paymentMethod').prop('checked', true);
-                                        $('#COD').prop('disabled', true);
+                                        $('#COD').prop('disabled', false);
                                         let price = Number($('#order_value').val());
                                         console.log(price);
                                         if (price >= 0 && price <= 200000) {
@@ -789,9 +784,9 @@
 
 
                                 } else {
-                                    $('#COD_Tag').hide();
+                                    $('#COD_Tag').show();
                                     $('#paymentMethod').prop('checked', true);
-                                    $('#COD').prop('disabled', true);
+                                    $('#COD').prop('disabled', false);
                                     let price = Number($('#order_value').val());
                                     // console.log(price);
                                     if (price >= 0 && price <= 200000) {

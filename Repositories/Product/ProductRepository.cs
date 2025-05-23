@@ -818,20 +818,6 @@ namespace PetStoreProject.Repositories.Product
         {
             var isDelete = productUpdateRequest.IsDeleted;
 
-            var brandId = productUpdateRequest.Brand.BrandId;
-            if (brandId == 0)
-            {
-                var brand = new Models.Brand
-                {
-                    Name = productUpdateRequest.Brand.Name
-                };
-
-                _context.Brands.Add(brand);
-                _context.SaveChanges();
-
-                brandId = brand.BrandId;
-            }
-
             var product = await _context.FindAsync<Models.Product>(productUpdateRequest.ProductId);
 
             var isStill = false;
@@ -869,22 +855,6 @@ namespace PetStoreProject.Repositories.Product
                     sizeId = sizes.Find(s => s.Name == option.Size.Name).SizeId;
                 }
 
-                var attributeId = option.Attribute.AttributeId;
-
-                if (string_attribute.Add(option.Attribute.Name))
-                {
-                    if (attributeId == 0)
-                    {
-                        attributeId = _attribute.CreateAttribute(option.Attribute.Name);
-                        option.Attribute.AttributeId = attributeId;
-                    }
-                    attributes.Add(option.Attribute);
-                }
-                else
-                {
-                    attributeId = attributes.Find(a => a.Name == option.Attribute.Name).AttributeId;
-                }
-
                 var imageId = option.Image.ImageId;
                 if (string_image.Add(option.Image.ImageUrl))
                 {
@@ -914,7 +884,6 @@ namespace PetStoreProject.Repositories.Product
                     {
                         ProductId = productUpdateRequest.ProductId,
                         SizeId = sizeId,
-                        AttributeId = attributeId,
                         Price = option.Price,
                         ImageId = imageId,
                         IsSoldOut = option.IsSoldOut || option.Quantity == 0,
@@ -930,7 +899,6 @@ namespace PetStoreProject.Repositories.Product
                     var productOption = await _context.FindAsync<Models.ProductOption>(productOptionId);
                     if (productOption != null)
                     {
-                        productOption.AttributeId = attributeId;
                         productOption.SizeId = sizeId;
                         productOption.ImageId = imageId;
                         productOption.IsDelete = x;
@@ -955,7 +923,6 @@ namespace PetStoreProject.Repositories.Product
                 }
 
                 product.Name = productUpdateRequest.Name;
-                product.BrandId = brandId;
                 product.Description = productUpdateRequest.Description;
                 _context.Products.Update(product);
             }

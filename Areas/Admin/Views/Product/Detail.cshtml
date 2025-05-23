@@ -396,6 +396,7 @@
                     if (productOptions_json[id].IsDelete) {
                         $('#status').text('Mặt hàng này đã ngừng bán')
                         $('#error-status').removeClass('hide')
+                        $('#quantity').text(productOptions_json[id].Quantity)
                     }
                     else {
                         $('#status').text('')

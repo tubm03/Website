@@ -216,7 +216,7 @@
                                 <img style="border-radius: 0px" src="@po.Image.ImageUrl" alt="" value="@po.Image.ImageId">
                             </div>
                             <div class="flex-grow flex justify-between gap20" style="align-items: center">
-                                <div class="body-text size" style="width: 20%" value="@po.Size.SizeId">@((po.Size.SizeId == 1) ? "Trống" : po.Size.Name)</div>
+                                <div class="body-text size" style="width: 20%" value="@po.Size.SizeId">@( po.Size.Name)</div>
                                 <div class="body-text price" style="width: 15%" value="@po.Price">@po.Price.ToString("#,###") VND</div>
                                 <div style="width: 15%" class="body-text soldQuantity">@po.SoldQuantity đã bán</div>
                                 <div style="width: 15%" class="body-text isSoldOut @((po.IsSoldOut == true) ? "block-not-available" : "block-available")" value="@((po.IsSoldOut == true) ? "1" : "0")"> @((po.IsSoldOut == true) ? "Hết hàng" : "Còn hàng")</div>
@@ -564,56 +564,22 @@
 
         var listProductOptions = $('#list-new-product-option')
         var numberOptions = listProductOptions.find('li').length;
-
         if (isValid) {
             listProductOptions.find('li').each(function () {
                 var existingOption = $(this);
                 var existingSizeId = existingOption.find('.sizeData').attr('value');
-                var existingAttributeId = existingOption.find('.attributeData').attr('value');
+                
                 var existingSizeName = existingOption.find('.sizeData').text().split(':')[1].trim();
-                var existingAttributeName = existingOption.find('.attributeData').text().split(':')[1].trim();
+                
+                console.log(existingSizeName, sizeName)
 
-                    console.log(existingSizeName, sizeName)
-                    console.log(existingAttributeName, attributeName)
-
-                if (existingSizeId == sizeId && existingAttributeId == attributeId
-                    && sizeName == existingSizeName && existingAttributeName == attributeName) {
+                if(sizeName == existingSizeName){
                     isExistsOption = true;
-                    alert('Không thể thêm. Sản phẩm đã có tùy chọn này.')
-                    return false; // Exit the loop if the option already exists
-                }
-
-                if (sizeId == 1 && attributeId == 1) {
-                    if (numberOptions != 0) {
-                        isExistsOption = true;
-                        alert('Không thể thêm. Sản phẩm của bạn đang có các tùy chọn khác nhau')
-                        return false;
-                    }
-                }
-
-                if (existingAttributeId == 1 && attributeId != 1) {
-                    isExistsOption = true;
-                    alert('Không thể thêm. Hãy để trống loại cho tùy chọn sản phẩm.')
+                    alert('Không thể thêm. Sản phẩm của bạn đã có tùy chọn này.1')
                     return false;
                 }
 
-                if (existingAttributeId != 1 && attributeId == 1) {
-                    isExistsOption = true;
-                    alert('Không thể thêm. Hãy chọn loại khác cho sản phẩm.')
-                    return false;
-                }
-
-                if (existingSizeId == 1 && sizeId != 1) {
-                    isExistsOption = true;
-                    alert('Không thể thêm. Hãy để trống kích thước cho tùy chọn sản phẩm.')
-                    return false;
-                }
-
-                if (existingSizeId != 1 && sizeId == 1) {
-                    isExistsOption = true;
-                    alert('Không thể thêm. Hãy chọn kích thước khác cho sản phẩm.')
-                    return false;
-                }
+                
             })
 
             var list_old_product_option = $('#list-old-product-option .data')
@@ -628,36 +594,11 @@
                     var existingAttributeName = $(this).find('.attribute').text()
 
                     if (isNewProductOption){
-                        if (existingSizeId == sizeId && existingAttributeId == attributeId
-                            && sizeName == existingSizeName && existingAttributeName == attributeName) {
+                        if (existingSizeId == sizeId && sizeName == existingSizeName) {
                             isExistsOption = true;
                             alert('Không thể thêm. Sản phẩm của bạn đã có tùy chọn này.')
                             return false;
                         }
-                    }
-
-                    if (existingAttributeId == 1 && attributeId != 1) {
-                        isExistsOption = true;
-                        alert('Không thể thêm. Hãy để trống loại cho tùy chọn sản phẩm.')
-                        return false;
-                    }
-
-                    if (existingAttributeId != 1 && attributeId == 1) {
-                        isExistsOption = true;
-                        alert('Không thể thêm. Hãy chọn loại khác cho sản phẩm.')
-                        return false;
-                    }
-
-                    if (existingSizeId == 1 && sizeId != 1) {
-                        isExistsOption = true;
-                        alert('Không thể thêm. Hãy để trống kích thước cho tùy chọn sản phẩm.')
-                        return false;
-                    }
-
-                    if (existingSizeId != 1 && sizeId == 1) {
-                        isExistsOption = true;
-                        alert('Không thể thêm. Hãy chọn kích thước khác cho sản phẩm.')
-                        return false;
                     }
                 })
             }
@@ -1126,8 +1067,8 @@
                 };
 
                 var Attribute = {
-                    AttributeId: AttributeId == 'new' ? 0 : parseInt(AttributeId),
-                    Name: AttributeName
+                    AttributeId: 0,
+                    Name: "AttributeName"
                 };
 
                 var isSoldOut = op.find('.isSoldOut').attr('value');
@@ -1146,8 +1087,8 @@
             });
 
             var Brand = {
-                BrandId: brandId == 'new' ? 0 : parseInt(brandId),
-                Name: brandName
+                BrandId: 0,
+                Name: "brandName"
             };
 
             var Category = {
