@@ -1,0 +1,76 @@
+﻿<link href="~/areas/css/list-user-style.css" rel="stylesheet" />
+
+<div id="profilePopup" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content modal_content_style">
+            <div class="modal-header model_header_style">
+                <h5 class="modal-title"></h5>
+                <button type="button" onclick="closeQuickViewAccount()" class="btn-close btn_close_style" aria-label="Close"></button>
+            </div>
+            <div class="modal-body modal_body_style">
+                <div class="container-fluid modal_body_style">
+                    <div class="row user-info-main">
+                        <div class="col-md-4 text-center avatar-container">
+                            <img src="/areas/images/logo_user/user-avatar.svg.png" alt="Avatar" class="rounded-circle" width="150" height="150">
+                            @* <button class="btn btn-outline-primary mt-2 btn-change">Change</button> *@
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <h3 id="user-name">Liza Doe</h3>
+                            </div>
+                            <div style="display:inline; margin-top:10px;" >
+                                <label>Vai trò: </label>
+                                @* <select class="select-role">
+                                    <option value="1">Quản trị viên</option>/option>
+                                    <option value="2">Khách hàng</option>
+                                    <option value="3">Nhân viên</option>
+                                </select> *@
+                                <div id="role" style="display:inline;"></div>
+                            </div>
+                            <div id="alert-role" style="width:300px"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form>
+                                <div class="form-group row" id="form-dob">
+                                    <label class="col-sm-4 col-form-label label_style" for="gender">Giới tính: </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control form_control_style" id="gender" value="" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label label_style" for="dob">Ngày sinh: </label>
+                                    <div class="col-sm-8">
+                                        <input type="date" class="form-control form_control_style" id="dob" value="2023-12-02" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label label_style" for="phone">Số điện thoại: </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control form_control_style" id="phone" value="" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label label_style" for="address">Địa chỉ: </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control form_control_style" id="address" value="" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label label_style" for="email">Email: </label>
+                                    <div class="col-sm-8">
+                                        <input type="email" class="form-control form_control_style" id="email" value="" readonly>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+

@@ -1,0 +1,288 @@
+﻿@using PetStoreProject.Areas.Admin.ViewModels
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Chỉnh sửa chương trình khuyến mại";
+    var brands = ViewData["Brands"] as List<BrandViewModel>;
+    var productcategories = ViewData["ProductCategories"] as List<ProductCategoryViewModel>;
+    var promotion = ViewData["Promotion"] as PromotionViewModel;
+}
+@section HeadOptional {
+
+}
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Chỉnh sửa chương trình khuyến mại</h3>
+        </div>
+        <!-- form-add-product -->
+        <form class="tf-section-1 form-add-product form-search">
+            <div class="wg-box">
+                <div class="gap22 cols">
+                    <div class="gap22" style="width: 50%">
+                        <label class="body-title mb-10">Tên<span class="tf-color-1">*</span></label>
+                        <fieldset class="select">
+                            <input type="text" id="name" value="@promotion.Name" />
+                        </fieldset>
+                        <span id="error-name" class="text-danger"></span>
+                    </div>
+                    <div style="width: 50%">
+                        <label class="body-title mb-10">Giá trị<span class="tf-color-1">*</span></label>
+                        <fieldset class="select">
+                            <input type="text" id="value" value="@promotion.Value"/>
+                            <div class="button-submit">
+                                <button style="font-size: 12px">%</button>
+                            </div>
+                        </fieldset>
+                        <span id="error-value" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="flex gap22">
+                    <fieldset>
+                        <label class="body-title mb-10">Từ ngày<span class="tf-color-1">*</span></label>
+                        <input type="datetime-local" name="date" id="start-date" onchange="updateStartDate()"/>
+                        <span id="error-start-date" class="text-danger"></span>
+                    </fieldset>
+                    <fieldset>
+                        <label class="body-title mb-10">Đến ngày<span class="tf-color-1">*</span></label>
+                        <input type="datetime-local" name="date" id="end-date" onchange="updateEndDate()"/>
+                        <span id="error-end-date" class="text-danger"></span>
+                    </fieldset>
+                </div>
+
+                <div>
+                    <label class="body-title mb-10">Thương hiệu<i class="icon-search" style="cursor: pointer; margin-left: 5px"></i></label>
+                    <div class="select flex gap22" id="list-brand">
+                        <select class="" id="brand">
+                            <option value="0">Tất cả</option>
+                            @foreach (var item in brands)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                        <fieldset class="search search-brand hide">
+                            <div class="select flex gap22">
+                                <input type="text" id="brandFilter" placeholder="Nhập thương hiệu ...">
+                            </div>
+                        </fieldset>
+                    </div>
+
+                </div>
+                <div>
+                    <label class="body-title mb-10">Danh mục sản phẩm</label>
+                    <select id="product-category">
+                        <option value="0">Tất cả</option>
+                        @foreach (var item in productcategories)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="cols gap10">
+                    <button class="tf-button w-full" type="button" onclick="addPromotion()">Lưu chương trình khuyến mại</button>
+                </div>
+            </div>
+
+        </form>
+        <!-- /form-add-product -->
+    </div>
+    <!-- /main-content-wrap -->
+</div>
+@section ScriptOptional {
+    <script>
+        $('#start-date').val(formatDate('@promotion.StartDate'))
+        $('#end-date').val(formatDate('@promotion.EndDate'))
+        function formatDate(str) {
+            var s = str.split(' ');
+            var dateParts = s[0].split('/');
+            var year = dateParts[2];
+            var month = dateParts[1].padStart(2, '0'); // Đảm bảo tháng có 2 chữ số
+            var day = dateParts[0].padStart(2, '0'); // Đảm bảo ngày có 2 chữ số
+
+            var timeParts = s[1].split(':');
+            var hour = parseInt(timeParts[0]);
+            var minute = timeParts[1];
+
+            if (s[2] == 'PM' && hour !== 12) {
+                hour += 12;
+            } else if (s[2] == 'AM' && hour === 12) {
+                hour = 0;
+            }
+
+            hour = hour.toString().padStart(2, '0'); // Đảm bảo giờ có 2 chữ số
+
+            var formattedDate = `${year}-${day}-${month}T${hour}:${minute}`;
+            return formattedDate;
+        }
+        
+        $('#brand').find('option').each(function () {
+            if ($(this).attr('value') == @promotion.Brand.BrandId) {
+                $(this).attr('selected', true)
+                return false
+            }
+        })
+
+        $('#product-category').find('option').each(function () {
+            if ($(this).attr('value') == @promotion.ProductCategory.ProductCateId) {
+                $(this).attr('selected', true)
+                return false
+            }
+        })
+        var description = ''
+        $('.icon-search').click(function () {
+            var icon = $(this);
+            var parent = icon.parent().parent().parent();
+            var search = parent.find('.search');
+            if (search.hasClass('hide')) {
+                search.removeClass('hide');
+                if (parent.find('option') != null) {
+                    categorySelected()
+                }
+            }
+            else {
+                search.addClass('hide');
+                icon.parent().parent().find('option').each(function () {
+                    $(this).removeClass('hide')
+                });
+            }
+        });
+
+        document.getElementById('brandFilter').addEventListener('input', function () {
+            let filter = this.value.toLowerCase();
+            let dropdown = document.getElementById('list-brand');
+            let options = dropdown.getElementsByTagName('option');
+            let isSelect = false;
+            for (let i = 0; i < options.length; i++) {
+                let option = options[i];
+                let txtValue = option.textContent || option.innerText;
+                if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                    option.style.display = "";
+                    if (!isSelect) {
+                        option.selected = true;
+                        isSelect = true;
+                    }
+                    else {
+                        option.selected = false;
+                    }
+                } else {
+                    option.style.display = "none";
+                }
+            }
+        });
+
+        function getCurrentDateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const day = now.getDate().toString().padStart(2, '0');
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const startDatePicker = document.getElementById("start-date");
+            startDatePicker.setAttribute("min", getCurrentDateTime())
+
+            document.getElementById("start-date").addEventListener('keydown', function (event) {
+                event.preventDefault();
+            });
+            document.getElementById("end-date").addEventListener('keydown', function (event) {
+                event.preventDefault();
+            });
+        });
+
+        function updateStartDate() {
+            const startDate = document.getElementById("start-date").value;
+            const endDate = document.getElementById("end-date");
+            endDate.setAttribute("min", startDate);
+            if (endDate.value && (new Date(endDate.value)) < (new Date(startDate))) {
+                endDate.value = startDate
+            }
+        }
+
+        function updateEndDate() {
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+            if (endDate < startDate) {
+                document.getElementById('end-date').value = startDate;
+            }
+        }
+
+        function addPromotion() {
+            var decimalRegex = /^-?\d+(\.\d+)?$/;
+            var numberRegex = /^[0-9]+$/;
+            var isValid = true
+            var name = $('#name').val().trim()
+            var value = $('#value').val().trim()
+            var startDate = $('#start-date').val()
+            var endDate = $('#end-date').val()
+            var brand = $('#brand').val()
+            var productCategory = $('#product-category').val()
+            console.log(name)
+            if (name == '') {
+                $('#error-name').text('Tên không được để trống')
+                isValid = false
+            }
+            else {
+                $('#error-name').text('')
+            }
+
+            if (value == '') {
+                $('#error-value').text('Giá trị không được để trống')
+                isValid = false
+            }
+            else if (!numberRegex.test(value)) {
+                $('#error-value').text('Giá trị phải là một số nguyên')
+                isValid = false
+            }
+            else {
+                $('#error-value').text('')
+            }
+
+            console.log(startDate, endDate)
+
+            if (startDate == '') {
+                isValid = false
+                $('#error-start-date').text('Vui lòng chọn ngày bắt đầu')
+            }
+            else {
+                $('#error-start-date').text('')
+            }
+
+            if (endDate == '') {
+                isValid = false
+                $('#error-end-date').text('Vui lòng chọn ngày kết thúc')
+            }
+            else {
+                $('#error-end-date').text('')
+            }
+            if (isValid && confirm('Bạn có chắc chắn muốn lưu thay đổi không')) {
+                var data = {
+                    Id : @promotion.Id,
+                    Name: name,
+                    Value: value,
+                    StartDate: startDate,
+                    EndDate: endDate,
+                    BrandId: brand,
+                    ProductCateId: productCategory
+                }
+                $.ajax({
+                    url: "/admin/promotion/edit",
+                    method: "POST",
+                    data: { promotion: data },
+                    success: function (response) {
+                        alert('Sửa thành công chương trình khuyến mại ' + name)
+                    },
+                    error: function (response) {
+                        alert('Sửa chương trình khuyến mại thất bại')
+                    }
+                })
+            }
+        }
+    </script>
+}

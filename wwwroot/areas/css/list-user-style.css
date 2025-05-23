@@ -1,0 +1,232 @@
+﻿/* add view */
+
+/*.tf-button.style-1:hover {
+    cursor: pointer;
+}*/
+
+.input-regis {
+    border: 1px solid black !important;
+}
+
+.btn_add_account {
+    font-size: 18px;
+}
+
+/* quick view */
+
+.model_header_style {
+    padding: 0px !important;
+    margin: 0px 10px 0 50px !important;
+}
+
+/*.modal_body_style {
+    padding: 0px !important;
+}*/
+
+.modal_content_style {
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+.modal_body_style {
+    padding: 0px 20px 20px 20px
+}
+
+.nav-tabs .nav-link {
+    border-radius: 0;
+}
+
+.form_control_style {
+    margin: 5px 0px;
+}
+
+.avatar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+    .avatar-container img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 2px solid black;
+    }
+
+    .avatar-container .btn-change {
+        margin-top: 10px;
+        font-weight: bold;
+        padding: 5px 20px;
+        border-radius: 20px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+        .avatar-container .btn-change:hover {
+            background-color: black;
+            color: white;
+        }
+
+.btn_close_style {
+    padding: 20px !important;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+
+.user-info-main {
+    border-bottom: 1px solid grey;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+
+
+.form-control[readonly] {
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+    padding-left: 0;
+    cursor: default;
+}
+
+.label_style {
+    align-content: center;
+    padding-left: 20px;
+}
+
+.form-check-input {
+    margin-right: 5px;
+    appearance: auto;
+}
+
+/* list */
+
+
+.pa1215 {
+    padding: 12px 15px 12px 15px !important;
+}
+
+.account-non-active {
+    color: #f4fff4;
+    background-color: #d63737;
+    padding: 2px 6px;
+    border-radius: 5px;
+}
+
+.account-active {
+    color: #f4fff4;
+    background-color: #5ba35b;
+    padding: 2px 6px;
+    border-radius: 5px;
+}
+
+.name {
+    max-width: 218px;
+}
+
+.phone {
+    max-width: 130px;
+}
+
+.email, .user {
+    max-width: 285px;
+}
+
+.total_fb .totalOrderService {
+    width: 200px!important;
+}
+
+.status {
+    max-width: 150px;
+}
+
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-body {
+    font-size: 1.1em;
+}
+
+.modal-footer {
+    border-top: none;
+    justify-content: center;
+}
+
+.close {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+}
+
+.modal-header .w-100 {
+    position: relative;
+}
+
+#passwordAdmin {
+
+    font-size: 15px;
+    border: none;
+    width: 100%;
+    position: absolute;
+    z-index: 0;
+    outline: 0;
+    box-shadow: none;
+    width: 100%;
+    padding: 14px 22px;
+    font-size: 14px;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    line-height: 20px;
+    background-color: transparent;
+    border: 1px solid var(--Input);
+    border-radius: 12px;
+    color: var(--Heading);
+    overflow: hidden;
+    margin-bottom: 0
+}
+
+.eye_style {
+    font-size: 18px;
+    position: relative;
+    top: 10px;
+    left: 377px;
+    z-index: 1;
+}
+
+#title-table, #list-body {
+    justify-content: flex-start;
+}
+
+.no-select {
+    user-select: none; /* Standard syntax */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+}
+
+.header_delete_style {
+    padding: 13px 20px 0px 51px;
+}
+
+.popup_delete {
+    border-radius: 10px;
+}
+
+.header_menu_style li {
+    padding: 0px !important;
+}
+
+.dropdown_style li {
+    width: 250px!important;
+    font-weight: normal;
+    line-height: 2;
+}
+
+/* Add account employee*/
+
+.cursor_style {
+    cursor: pointer;
+}
+

@@ -1,0 +1,53 @@
+﻿@{
+    Layout = null;
+    var listDistricts = ViewData["ListDistrict"] as List<District>;
+}
+
+<link href="~/areas/css/style1.css" rel="stylesheet" />
+<link href="~/css/mystyle.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" rel="stylesheet">
+<link href="~/areas/css/manage-service-style.css" rel="stylesheet" />
+<style>
+    .multiselect-container label input[type=checkbox] {
+        padding-right: 5px;
+        width: 16px;
+        height: 22px;
+        margin: 0px 0px 0px -25px;
+    }
+</style>
+
+
+<div class="select mb-10">
+    <select id="districts" multiple="multiple">
+        @foreach (var district in listDistricts)
+        {
+            <option value="@district.DistrictId">@district.Name</option>
+        }
+    </select>
+</div>
+
+<script src="/areas/js/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#districts').multiselect({
+            includeSelectAllOption: true,
+            maxHeight: 200,
+            buttonText: function (options, select) {
+                if (options.length === 0) {
+                    return 'Chọn khu vực';
+                } else if (options.length > 3) {
+                    return options.length + ' khu vực đã chọn';
+                } else {
+                    let selected = '';
+                    options.each(function () {
+                        selected += $(this).text() + ', ';
+                    });
+                    return selected.substr(0, selected.length - 2);
+                }
+            }
+        });
+    });
+</script>

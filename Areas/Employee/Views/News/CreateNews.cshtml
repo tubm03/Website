@@ -1,0 +1,156 @@
+﻿@model IEnumerable<PetStoreProject.Models.TagNews>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TinyMCE Example</title>
+    <script src="https://cdn.tiny.cloud/1/0ijx3m07i7lf0cgl9pwia06kthwnu8ky87f1rjx6gmtjrk5k/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            language: 'vi',
+            language_url: 'https://cdn.tiny.cloud/1/0ijx3m07i7lf0cgl9pwia06kthwnu8ky87f1rjx6gmtjrk5k/tinymce/tinymce/7/langs/vi.js',
+            height: 1000,
+            branding: false,
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss markdown',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            mergetags_list: [
+                { value: 'First.Name', title: 'First Name' },
+                { value: 'Email', title: 'Email' },
+            ],
+            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+            images_upload_url: '/Employee/News/UploadImage',
+            automatic_uploads: true
+        });
+
+        tinymce.addI18n('vi', {
+            "File": "Tệp",
+            "View": "Xem",
+            "Tools": "Công cụ",
+            "Format": "Định dạng",
+            "Format": "Định dạng",
+            "Paragraph": "Đoạn văn",
+            "System Font": "Kiểu chữ",
+        });
+
+        function previewThumbnail(event) {
+            const fileInput = event.target;
+            const file = fileInput.files[0];
+            const errorMessage = document.getElementById('error-message');
+
+            if (file) {
+                const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'];
+
+                if (!validImageTypes.includes(file.type)) {
+                    errorMessage.textContent = "Please upload a valid image file (JPEG, PNG, GIF, BMP, WebP).";
+                    fileInput.value = ""; 
+                } else {
+                    errorMessage.textContent = "";
+                    var reader = new FileReader();
+                    reader.onload = function () {
+                        var output = document.getElementById('thumbnailPreview');
+                        output.src = reader.result;
+                        output.style.display = 'block';
+                    };
+                    reader.readAsDataURL(event.target.files[0]);
+                }
+            }
+        }
+        function validateForm() {
+            var title = document.getElementById("title").value;
+            var summary = document.getElementById("summary").value;
+            var thumbnail = document.getElementById("thumbnail").files.length;
+            var content = document.getElementById("editor").value;
+
+            if (title.trim() === "") {
+                alert("Tiêu đề không được bỏ trống.");
+                return false;
+            }
+
+            if (title.length > 100) {
+                alert("Tiêu đề không được vượt quá 100 ký tự.");
+                return false;
+            }
+
+            if (summary.trim() === "") {
+                alert("Tóm tắt không được bỏ trống.");
+                return false;
+            }
+
+            if (summary.length > 250) {
+                alert("Tóm tắt không được vượt quá 250 ký tự.");
+                return false;
+            }
+
+            if (content.trim() === "") {
+                alert("Nội dung không được bỏ trống.");
+                return false;
+            }
+            return true;
+        }
+    </script>
+    <style>
+        .img-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content-inner">
+        <!-- main-content-wrap -->
+        <div class="main-content-wrap">
+            <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+                <h3>Tạo tin tức mới</h3>
+            </div>
+            <!-- new-attribute -->
+            <div class="wg-box">
+                <form id="newsForm" method="post" action="/Employee/news/SaveContent" enctype="multipart/form-data" onsubmit="return validateForm()">
+                    <fieldset class="title">
+                        <div class="body-title mb-10">Tiêu đề <span class="tf-color-1">*</span></div>
+                        <input class="mb-10" id="title" type="text" name="title" placeholder="Nhập tiêu đề">
+                    </fieldset>
+                    <fieldset class="summary">
+                        <div class="body-title mb-10">Tóm tắt <span class="tf-color-1">*</span></div>
+                        <input class="mb-10" id="summary" type="text" name="Summary" placeholder="Nhập tóm tắt">
+                    </fieldset>
+                    <fieldset class="tag">
+                        <div class="body-title mb-10">Thẻ <span class="tf-color-1">*</span></div>
+                        <select class="mb-10" id="tag" name="tag" tabindex="0" aria-required="true" required>
+                            @foreach (var tag in Model)
+                            {
+                                <option value="@tag.TagId">@tag.TagName</option>
+                            }
+                        </select>
+                    </fieldset>
+                    <fieldset>
+                        <div class="body-title mb-10">Thumbnail <span class="tf-color-1">*</span></div>
+                        <input class="mb-10" type="file" id="thumbnail" name="Thumbnail" style="border: none;" accept="image/*" onchange="previewThumbnail(event)" tabindex="0">
+                        <div id="error-message" class="error" style="color: red"></div>
+                        <div class="img-container">
+                            <img id="thumbnailPreview" class="thumbnail-preview" src="#" alt="Thumbnail Preview" style="display: none; width: 250px; height: 250px;" />
+                        </div>
+                    </fieldset>
+                    <fieldset class="content">
+                        <div class="body-title mb-10">Nội Dung <span class="tf-color-1">*</span></div>
+                        <textarea class="mb-10" id="editor" name="content" placeholder="Nhập nội dung" tabindex="0"></textarea>
+                    </fieldset>
+                    <div class="bot" style="margin-top: 10px;">
+                        <div></div>
+                        <button class="tf-button w208" type="submit">Lưu</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /new-category -->
+        </div>
+        <!-- /main-content-wrap -->
+    </div>
+    <!-- /main-content-wrap -->
+</body>
+</html>

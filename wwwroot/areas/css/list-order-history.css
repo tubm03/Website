@@ -1,0 +1,222 @@
+﻿.table-title > li > ul.common_ddown li {
+    width: 100% !important;
+}
+
+    .table-title > li > ul.common_ddown li a {
+        color: #1b1b1c;
+        display: block;
+        font-size: 14px;
+        font-weight: 400;
+        padding: 5px 10px;
+        text-transform: capitalize;
+        text-align: left;
+        line-height: 25px;
+    }
+
+        .table-title > li > ul.common_ddown li a:hover {
+            color: var(--Main);
+            cursor: pointer;
+        }
+
+.table-title li:hover ul.common_ddown {
+    opacity: 1;
+    visibility: visible;
+    -webkiit-transform: scaleY(1);
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+}
+
+.common_ddown {
+    max-height: 265px;
+    overflow-y: scroll;
+    background: #fff;
+    left: 0;
+    opacity: 0;
+    padding: 10px;
+    position: absolute;
+    top: 160%;
+    -webkiit-transform: scaleY(0);
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0);
+    -webkit-transform-origin: 0 0 0;
+    transform-origin: 0 0 0;
+    width: 170px;
+    visibility: hidden;
+    z-index: 9999;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    -webkit-box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.1);
+    -ms-box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.1);
+}
+
+.wg-table.table-countries {
+    min-height: 400px;
+}
+
+    .wg-table.table-countries > * {
+        min-width: auto;
+        line-height: 20px;
+    }
+
+    .wg-table.table-countries .countries-item {
+        justify-content: space-between;
+    }
+
+        .wg-table.table-countries .countries-item > div {
+            display: flex;
+            height: 40px;
+            align-items: center;
+        }
+
+    .wg-table.table-countries.admin ul.table-title li:nth-child(1) {
+        cursor: pointer;
+        width: 170px;
+    }
+
+    .wg-table.table-countries.admin .countries-item > div:nth-child(1) {
+        width: 180px;
+        font-weight: 600;
+    }
+
+    .wg-table.table-countries.admin ul.table-title li:nth-child(2) {
+        cursor: pointer;
+        width: 152px;
+    }
+
+    .wg-table.table-countries.admin .countries-item > div:nth-child(2) {
+        width: 155px;
+    }
+
+    .wg-table.table-countries.admin ul.table-title li:nth-child(3) {
+        cursor: pointer;
+        width: 80px
+    }
+
+    .wg-table.table-countries.admin .countries-item > div:nth-child(3) {
+        width: 90px;
+    }
+
+    .wg-table.table-countries.admin ul.table-title li:nth-child(4) {
+        cursor: pointer;
+        width: 85px;
+    }
+
+    .wg-table.table-countries.admin .countries-item > div:nth-child(4) {
+        width: 100px;
+    }
+
+    .wg-table.table-countries.admin ul.table-title li:nth-child(5) {
+        cursor: pointer;
+        width: 130px;
+    }
+
+    .wg-table.table-countries.admin .countries-item > div:nth-child(5) {
+        width: 152px;
+    }
+
+    .wg-table.table-countries.admin ul.table-title li:nth-child(6) {
+        cursor: pointer;
+        width: 98px;
+    }
+
+    .wg-table.table-countries.admin .countries-item > div:nth-child(6) {
+        width: 98px;
+    }
+
+    .wg-table.table-countries.admin ul.table-title li:nth-child(7) {
+        width: 100px;
+    }
+
+    .wg-table.table-countries.admin .countries-item > div:nth-child(7) {
+        /*padding-left:40px;*/
+        width: 100px;
+    }
+
+    .wg-table.table-countries.admin ul.table-title li:nth-child(8) {
+        width: 90px;
+    }
+
+    .wg-table.table-countries.admin .countries-item > div:nth-child(8) {
+        /*padding-left:5px;*/
+        width: 100px;
+    }
+
+.no-select {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Tiêu chuẩn */
+
+}
+    .no-select:hover {
+        text-decoration: underline;
+        cursor:pointer;
+    }
+
+#icon-box-empty {
+    font-size:90px;
+}
+
+.empty-order-history {
+    text-align:center;
+    margin-top: 100px;
+}
+/*Order detail*/
+#order-detail-body {
+    padding: 0px 10px;
+
+}
+#order-detail-body .row {
+    padding: 5px 0px;
+}
+
+#orderDetail .form-group {
+    border-radius:10px;
+}
+
+#modal-header-style {
+    padding: 15px 14px 10px 40px;
+}
+
+#form_info_order {
+    padding: 10px;
+}
+
+.block-orage {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: max-content;
+    height: 24px;
+    padding: 2px 8px;
+    gap: 10px;
+    border-radius: 4px;
+    background: #c394796b;
+    color: #9e5b09 !important;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.block-green {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: max-content;
+    height: 24px;
+    padding: 2px 8px;
+    gap: 10px;
+    border-radius: 4px;
+    background: #07960a8a;
+    color: #000000 !important;
+    font-size: 12px;
+    font-weight: 500;
+}

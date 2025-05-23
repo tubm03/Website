@@ -1,0 +1,146 @@
+﻿@using PetStoreProject.Areas.Admin.ViewModels
+@using X.PagedList.Mvc.Core
+@using X.PagedList
+
+@model IPagedList<PetStoreProject.Areas.Admin.ViewModels.DiscountViewModel>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Danh sách mã giảm giá";
+    var discounts = ViewData["discounts"] as List<DiscountViewModel>;
+}
+@section HeadOptional {
+    <style>
+        .wg-table.table-all-category .product-item > .flex > div {
+            width: 0;
+        }
+
+        .wg-table .table-title {
+            justify-content: normal;
+        }
+
+        .wg-table.table-all-category > * {
+            min-width: 1455px;
+        }
+
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            justify-content: center;
+        }
+
+            .pagination li {
+                margin: 0 5px;
+            }
+
+            .pagination a, .pagination span {
+                color: #007bff;
+                text-decoration: none;
+                border: 1px solid #dee2e6;
+                padding: 8px 12px;
+                border-radius: 4px;
+                transition: background-color 0.3s;
+            }
+
+                .pagination a:hover {
+                    background-color: #e9ecef;
+                }
+
+            .pagination .active span {
+                background-color: #007bff;
+                color: white;
+                border-color: #007bff;
+            }
+    </style>
+}
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap gap20 mb-27">
+            <h3>Danh sách mã giảm giá</h3>
+        </div>
+        <!-- form-add-product -->
+        <div class="wg-box">
+            @if (Model != null)
+            {
+                <div class="wg-table table-all-category" style="width: 100%">
+                    <ul class="table-title flex gap20 mb-14" style="width: 100%">
+                        <li style="width: 30px">
+                            <div style="width: 30px" class="body-title">STT</div>
+                        </li>
+                        <li style="width: 130px">
+                            <div style="width: 130px" class="body-title">Mã giảm giá</div>
+                        </li>
+                        <li style="width: 150px">
+                            <div style="width: 150px" class="body-title">Giảm giá</div>
+                        </li>
+                        <li style="width: 180px">
+                            <div style="width: 180px" class="body-title">Thời gian</div>
+                        </li>
+                        <li style="width: 150px">
+                            <div class="body-title" style="width: 150px">Đơn hàng tối thiểu</div>
+                        </li>
+                        <li style="width: 80px">
+                            <div style="width: 80px" class="body-title">Số lượng</div>
+                        </li>
+                        <li style="width: 70px">
+                            <div class="body-title" style="width: 70px">Giới hạn</div>
+                        </li>
+                        <li style="width: 70px">
+                            <div class="body-title" style="width: 70px">Đã dùng</div>
+                        </li>
+                        <li style="width: 180px">
+                            <div class="body-title" style="width: 180px">Ngày tạo</div>
+                        </li>
+                        <li style="width: 130px">
+                            <div class="body-title" style="width: 130px">Trạng thái</div>
+                        </li>
+                    </ul>
+                    <ul class="flex flex-column" id="list-category" style="width: 100%">
+                        @{
+                            var index = 1;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <li class="product-item gap14 discount-@item.Id">
+                                <div class="flex items-center gap20 flex-grow">
+                                    <div class="name" style="width: 30px">
+                                        @index
+                                    </div>
+
+                                    <div class="body-text" style="width: 130px">@item.Code</div>
+                                    <div class="body-text" style="width: 150px">@(item.DiscountType.Id != 2 ? (int)item.Value + "% tối đa " + item.MaxValue?.ToString("#,###") + " vnd" : item.Value?.ToString("#,###") + " vnd")</div>
+                                    <div class="body-text" style="width: 180px">@(item.DiscountType.Id == 3 ? "Không giới hạn" : @item.StartDate.ToString() + '-' + @item.EndDate.ToString())</div>
+                                    <div class="body-text" style="width: 150px">@item.MinPurchase?.ToString("#,###.###") vnd</div>
+                                    <div class="body-text" style="width: 80px">@(item.DiscountType.Id == 3 ? "Vô cùng" : @item.Quantity)</div>
+                                    <div class="body-text" style="width: 70px">@item.MaxUse</div>
+                                    <div class="body-text" style="width: 70px">@item.Used</div>
+                                    <div class="body-text" style="width: 180px">@item.CreatedAt</div>
+                                    <div class="body-text status @(item.Status == true ? "block-available" : "block-not-available")" style="width: 130px">@item.StatusString</div>
+                                    <div class="body-text list-icon-function" style="width: 40px; cursor: pointer">
+                                        
+                                    </div>
+                                </div>
+                            </li>
+                            index += 1;
+                        }
+                    </ul>
+                </div>
+                <div class="pagination-blog">
+                    @Html.PagedListPager(Model, page => Url.Action("list", new { page, pagesize = 10 }))
+                </div>
+            }
+            else
+            {
+                <div class="empty-order-history hidden">
+                    <i class="fas fa-box-open"></i>
+                    <h6>Trống</h6>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

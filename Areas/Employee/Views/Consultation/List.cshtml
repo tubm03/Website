@@ -1,0 +1,359 @@
+﻿@using PetStoreProject.Areas.Admin.ViewModels
+@using X.PagedList.Mvc.Core
+@using X.PagedList
+
+@model IPagedList<PetStoreProject.Areas.Admin.ViewModels.ConsultationViewForAdmin>
+@{
+    Layout = "~/Areas/Employee/Views/Shared/_Layout.cshtml";
+}
+
+@section HeadOptional {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+
+    <style>
+        a {
+            cursor: pointer;
+        }
+
+        div input, textarea {
+            outline: 0;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+            width: 100%;
+            padding: 14px 22px;
+            font-size: 14px;
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            line-height: 20px;
+            background-color: transparent;
+            border: 1px solid var(--Input);
+            border-radius: 12px;
+            color: var(--Heading);
+            overflow: hidden;
+        }
+
+        .scrollable-brand-list {
+            max-height: 400px; /* Giới hạn chiều cao của danh sách */
+            overflow-y: auto; /* Thêm thanh cuộn dọc nếu nội dung vượt quá chiều cao tối đa */
+            overflow-x: hidden; /* Ẩn thanh cuộn ngang */
+        }
+
+        .header-menu-list > li, .cart-box > ul > li {
+            padding: 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .empty-order-history {
+            margin-top: 4%;
+            margin-bottom: 4%;
+            text-align: center;
+        }
+
+            .empty-order-history h6 {
+                font-family: "Inter", sans-serif;
+                line-height: 25px;
+            }
+
+        .wg-table.table-all-category ul.table-title li{
+            width: 0;
+        }
+
+        .wg-table.table-all-category .product-item > .flex > div {
+            width: 0;
+        }
+
+        .wg-table .table-title {
+            justify-content: normal;
+        }
+
+        .wg-table.table-all-category > * {
+            min-width: 1180px;
+        }
+
+        .pagination-blog {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            justify-content: center;
+        }
+
+            .pagination li {
+                margin: 0 5px;
+            }
+
+            .pagination a, .pagination span {
+                color: #007bff;
+                text-decoration: none;
+                border: 1px solid #dee2e6;
+                padding: 8px 12px;
+                border-radius: 4px;
+                transition: background-color 0.3s;
+            }
+
+                .pagination a:hover {
+                    background-color: #e9ecef;
+                }
+
+            .pagination .active span {
+                background-color: #007bff;
+                color: white;
+                border-color: #007bff;
+            }
+
+        .header-menu-list > li, .cart-box > ul > li {
+            padding: 0;
+        }
+    </style>
+}
+<!--List Category-->
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Tất cả đơn tư vấn</h3>
+        </div>
+        <!-- all-category -->
+        <div class="wg-box">
+            <div class="wg-table table-all-category">
+                <ul class="table-title flex gap20 mb-14 header-menu-list" style="width: 100%">
+                    <li style="width: 200px">
+                        <a class="body-title" onclick="sortProductCateName()">Tên khách hàng<i class="bi bi-chevron-expand"></i></a>
+                    </li>
+                    <li style="width: 130px">
+                        <a class="body-title" style="width: 130px">Số điện thoại</a>
+                    </li>
+                    <li style="width: 200px">
+                        <a style="width: 200px" class="body-title">Email khách hàng</a>
+                    </li>
+                    <li style="width: 100px">
+                        <a class="body-title">Tiêu đề</a>
+                    </li>
+                    <li style="width: 150px">
+                        <a class="body-title">Ngày gửi</a>
+                    </li>
+                    <li style="width: 150px">
+                        <a class="drop-icon " href="#">Trạng thái</a>
+                        <ul class="common_ddown dropdown_style" id="status_list_customer">
+                            <li style="width:100%"><a href="#" onclick="orderStatus('status')">- Tất cả</a></li>
+                            <li style="width:100%"><a href="#" onclick="orderStatus('block-available')">- Đã trả lời</a></li>
+                            <li style="width:100%"><a href="#" onclick="orderStatus('block-not-available')">- Chưa trả lời</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="body-title">Thao tác</div>
+                    </li>
+                </ul>
+                <ul class="flex flex-column" id="list-consultation">
+                    @foreach (var item in Model)
+                    {
+                        <li class="product-item gap14 consultation-@item.Id">
+                            <input type="hidden" value="@item.Id" class="productCategoryId">
+                            <input type="hidden" value="@item.Id" class="categoryId">
+                            <div class="flex items-center gap20 flex-grow">
+                                <div class="productCateName" style="width: 200px">
+                                    @item.Name
+                                </div>
+                                <div class="body-text totalProduct" style="width: 130px">@item.Phone</div>
+                                <div class="body-text quantitySold" style="width: 200px">@item.Email</div>
+                                <div class="body-text quantitySold" style="width: 100px">@item.Title</div>
+                                <div class="body-text quantitySold" style="width: 150px">@item.Date</div>
+                                <div style="width: 150px" class="body-text status @(item.Status ? "block-available" : "block-not-available") isDelete" value="@(item.Status ? 1 : 0)">
+                                    @(item.Status ? "Đã trả lời" : "Chưa trả lời")
+                                </div>
+                                <div class="list-icon-function">
+                                    <div class="item edit @(item.Status ? "hidden" : "" )" onclick="responseConsultation(this, @item.Id)">
+                                        <i class="icon-edit-3"></i>
+                                    </div>
+                                    <div class="item eye @(item.Status ? "" : "hidden" )" onclick="viewDetailConsultation(@item.Id)">
+                                        <i class="icon-eye"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                    <div class="empty-order-history hidden">
+                        <i class="fas fa-box-open"></i>
+                        <h6>Trống</h6>
+                    </div>
+                </ul>
+            </div>
+        </div>
+        <!-- /all-category -->
+        <div class="pagination-blog">
+            @Html.PagedListPager(Model, page => Url.Action("list", new { page, pagesize = 10 }))
+        </div>
+
+    </div>
+    <!-- /main-content-wrap -->
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="border-radius:12px">
+            <div class="modal-header mb-20 pt-5 px-5">
+                <h5 class="modal-title" id="staticBackdropLabel">Yêu cầu từ khách hàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pb-4">
+                <div class="form-add-product">
+                    <div class="wg-box" style="gap: 0px">
+                        <input type="hidden" id="consultationId" />
+                        <div class="flex gap14">
+                            <fieldset class="name">
+                                <label class="body-title mb-10">Tên khách hàng</label>
+                                <input type="text" class="mb-10" id="name" readonly>
+                            </fieldset>
+                            <fieldset class="name">
+                                <label class="body-title mb-10">Số điện thoại</label>
+                                <input type="text" class="mb-10" id="phone" readonly>
+                            </fieldset>
+                        </div>
+                        <fieldset class="name">
+                            <label class="body-title mb-10">Nội dung</label>
+                            <textarea type="text" class="mb-10" id="content" readonly></textarea>
+                        </fieldset>
+                        <fieldset class="name">
+                            <label class="body-title mb-10">Trả lời<span class="tf-color-1">*</span></label>
+                            <textarea type="text" class="mb-10" placeholder="Nhập câu trả lời" id="message" style="height:100px"></textarea>
+                            <span class="text-danger" id="error-message"></span>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer pt-3 pb-4 px-5 border-0">
+                <button style="padding: 5px 15px; font-size: 14px;" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Thoát
+                </button>
+                <button style="padding: 5px 15px; font-size: 14px;" type="button" class="btn btn-primary" onclick="reply()">Gửi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptOptional{
+    <script>
+        function responseConsultation(tag, consultationId){
+            $('#staticBackdrop').modal('show')
+            $.ajax({
+                url: "/admin/consultation/detail",
+                type: "POST",
+                data: {consultionId : consultationId},
+                success: function (response) {
+                    console.log(response)
+                    $('#staticBackdropLabel').text(response.title);
+                    $('#name').val(response.name);
+                    $('#phone').val(response.phone);
+                    $('#content').val(response.content);
+                    $('#consultationId').val(response.id);
+                    $('#message').val('');
+                    $('#message').attr('readonly', false);
+                }
+            })
+        }
+
+        function reply(){
+            var message = $('#message').val().trim();
+            if(message === ''){
+                $('#error-message').text('Câu trả lời không được để trống.')
+            }
+            else{
+                var consultationId = $('#consultationId').val();
+            $.ajax({
+                url: "/admin/consultation/reply",
+                type: "POST",
+                data: {consultionId : consultationId, messagge : message},
+                success: function (response) {
+                    console.log(response)
+                    $('#staticBackdrop').modal('hide')
+                    let li = $('#list-consultation .consultation-'+consultationId)
+                    li.find('.status').text('Đã trả lời')
+                    li.find('.status').addClass('block-available')
+                    li.find('.status').removeClass('block-not-available')
+                    li.find('.edit').addClass('hidden')
+                    li.find('.eye').removeClass('hidden')
+                    $('#message').val('')
+                    $('#message').attr('readonly', false);
+                    alert('Đã trả lời.')
+                }
+            })
+            }
+        }
+
+        function viewDetailConsultation(consultationId){
+            $('#staticBackdrop').modal('show')
+            $.ajax({
+                url: "/admin/consultation/detail",
+                type: "POST",
+                data: { consultionId: consultationId },
+                success: function (response) {
+                    $('#staticBackdropLabel').text(response.title);
+                    $('#name').val(response.name)
+                    $('#phone').val(response.phone)
+                    $('#content').val(response.content)
+                    $('#consultationId').val(response.id)
+                    if (response.response === null){
+                        $('#message').val('')
+                    }
+                    else{
+                        $('#message').val(response.response)
+                    }
+                    $('#message').attr('readonly', true);
+                }
+            })
+        }
+
+        let productCateName = true;
+
+        function orderStatus(str) {
+            var list = $('#list-consultation').find('li');
+            var flag = false;
+
+            list.each(function () {
+                if ($(this).find('.isDelete').hasClass(str)) {
+                    flag = true;
+                    $(this).removeClass('hidden');
+                } else {
+                    $(this).addClass('hidden');
+                }
+            });
+
+            if (!flag) {
+                $('.empty-order-history').removeClass('hidden');
+            } else {
+                $('.empty-order-history').addClass('hidden');
+            }
+        }
+
+        function sortProductCateName() {
+            var list = $('#list-consultation').find('li')
+            console.log(productCateName)
+            list.sort(function (a, b) {
+                var nameA = $(a).find('.productCateName').text().trim();
+                var nameB = $(b).find('.productCateName').text().trim();
+                if (productCateName) {
+                    return nameA.localeCompare(nameB, 'vi');
+                }
+                else {
+                    return nameB.localeCompare(nameA, 'vi');
+                }
+
+            })
+            productCateName = !(productCateName);
+            $('#list-consultation').empty().append(list);
+        }
+
+    </script>
+}

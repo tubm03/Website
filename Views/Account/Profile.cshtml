@@ -1,0 +1,674 @@
+﻿@{
+    ViewData["Title"] = "Tài Khoản";
+    var name = Context.Session.GetString("userName");
+}
+
+@section HeadOptional {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .img-account-profile {
+            height: 9rem;
+        }
+
+        .rounded-circle {
+            border-radius: 50% !important;
+        }
+
+        .card {
+            box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
+        }
+
+            .card .card-header {
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+        .card-header:first-child {
+            border-radius: 0.35rem 0.35rem 0 0;
+        }
+
+        .card-header {
+            padding: 1rem 1.35rem;
+            margin-bottom: 0;
+            background-color: rgba(33, 40, 50, 0.03);
+            border-bottom: 1px solid rgba(33, 40, 50, 0.125);
+        }
+
+        .card-body .label-input {
+            font-size: 15px;
+        }
+
+        .form-control, .dataTable-input {
+            display: block;
+            width: 100%;
+            padding: 0.875rem 1.125rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1;
+            color: black;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #c5ccd6;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border-radius: 0.35rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .input-group-text:hover {
+            cursor: pointer;
+        }
+
+        .profile_wrapper .profile-name {
+            padding-top: 10px;
+            font-size: 19px;
+            color: black;
+            font-weight: 500;
+        }
+
+        .profile_wrapper .show-btn {
+            top: 37px;
+        }
+
+        .profile_wrapper .gender-title {
+            padding: 1.15rem 1.15rem 1.15rem 2.15rem;
+            display: inline-block;
+            width: 35%;
+            font-size: 19px;
+        }
+
+        .profile_wrapper .gender-radio {
+            display: inline-block;
+            width: 20%;
+            font-size: 19px;
+            color: black;
+        }
+
+            .profile_wrapper .gender-radio input {
+                cursor: pointer;
+            }
+
+        .profile_wrapper .login-btn:hover {
+            background-color: #00adf6;
+            transition: all 0.3s ease-in-out 0s;
+        }
+
+        .profile-option-btn {
+            padding-left: 30px;
+            padding-right: 0px;
+            border: none;
+            font-size: 16px;
+        }
+
+        #main-content .card-body {
+            height: 512px;
+        }
+
+        #main-content .table-order-history td,
+        #main-content .table-order-history th {
+            line-height: 3;
+            border: none;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #main-content .table-order-history thead {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+            border-bottom: 2px solid #000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-order-history .status-cell span{
+            padding: 5px 7px;
+            border-radius: 6px;
+        }
+
+        .order-service-detail-btn {
+            font-size: 14px;
+            background-color: #418af6;
+            border-color: #418af6;
+        }
+
+        .order-empty img {
+            width: 45%;
+            height: auto;
+        }
+
+        .order-empty h3 {
+            font-size: 29px;
+            font-weight: 700;
+            color: #343a40;
+            margin-bottom: 40px;
+        }
+    </style>
+}
+
+<div class="profile_wrapper adp_top adp_bottom">
+    <div class="container-xl px-4">
+        <!-- Account page navigation-->
+        <div class="row">
+            <div class="col-xl-4">
+                <!-- Profile picture card-->
+                <div class="card mb-4 mb-xl-0">
+                    <div class="card-header">Ảnh Đại Diện</div>
+                    <div class="card-body text-center">
+                        <!-- Profile picture image-->
+                        <img class="img-account-profile rounded-circle mb-2" src="~/img/profile-user-2.png" alt="">
+                        <!-- Profile picture help block-->
+                        <div id="profile-full-name" class="profile-name">@name</div>
+                        Hội viên:
+                        @if (TempData["Rank"] != null)
+                        {
+                            var rank = TempData["Rank"].ToString();
+                            <b>@rank</b>
+                            @switch (rank)
+                            {
+                                case "Thân thiết":
+                                    <i class="fas fa-user-friends" style="color: green;"></i>
+                                    break;
+                                case "Bạc":
+                                    <i class="fas fa-medal" style="color: silver;"></i>
+                                    break;
+                                case "Titan":
+                                    <i class="fas fa-medal" style="color: gray;"></i>
+                                    break;
+                                case "Vàng":
+                                    <i class="fas fa-medal" style="color: gold;"></i>
+                                    break;
+                                case "Kim Cương":
+                                    <i class="fas fa-gem" style="color: deepskyblue;"></i>
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        <!-- Profile picture upload button-->
+                    </div>
+                    <div class="card-footer">
+                        <div>
+                            <a class="single-account-select profile-option-btn" onclick="profileDetail()">Thông Tin Tài Khoản</a>
+                            <a class="single-account-select profile-option-btn" onclick="changePassword()">Đổi Mật Khẩu</a>
+                            <a class="single-account-select profile-option-btn" onclick="getOrdersServices()">Lịch Sử Đặt Dịch Vụ</a>
+                            <a class="single-account-select profile-option-btn" onclick="getOrdersHistory()">Lịch Sử Đơn Hàng</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="main-content" class="col-xl-8">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking service modal start-->
+<div class="booking-service-area">
+    <div class="container">
+        <!--The Modal-->
+        <div class="modal fade" id="booking-modal">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header d-block text-center position-relative pb-3">
+                        <h5 class="modal-title d-inline-block">Chi Tiết Lịch Hẹn</h5>
+                        <button type="button" class="btn-close position-absolute end-0 mt-1 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!-- Modal Header -->
+                    <!-- Modal body -->
+                    <div class="modal-body" id="booking-modal-content">
+                    </div>
+                    <!-- Modal body -->
+                </div>
+            </div>
+        </div>
+        <!--The Modal-->
+    </div>
+</div>
+<!-- Booking service modal end-->
+@section ScriptOptional {
+    <script>
+        $(document).ready(function () {
+            profileDetail();
+            dobDatepicker();
+
+            $("#formProfileDetail").on("submit", function (event) {
+                event.preventDefault();
+                updateProfileDetail();
+            });
+
+            $("#formChangePassword").on("submit", function (event) {
+                event.preventDefault();
+                updateChangePassword();
+            });
+        });
+
+        function profileDetail() {
+            $.ajax({
+                url: '@Url.Action("ProfileDetail", "Account")',
+                type: 'Get',
+
+                success: function (response) {
+                    $("#main-content").empty();
+                    $("#main-content").html(response);
+
+                    $("#formProfileDetail").on("submit", function (event) {
+                        event.preventDefault();
+                        updateProfileDetail();
+                    });
+
+                    dobDatepicker();
+                },
+
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        };
+
+        function updateProfileDetail() {
+            var formProfileDetail = $("#formProfileDetail").serialize();
+            $.ajax({
+                url: '@Url.Action("ProfileDetail", "Account")',
+                type: 'POST',
+                data: formProfileDetail,
+
+                success: function (response) {
+                    $("#main-content").empty();
+                    $("#main-content").html(response);
+                    var currentName = $(response).find("#FullName").val();
+                    $("#profile-full-name").text(currentName);
+                    $("#menu-fullname").text(currentName);
+
+                    $("#formProfileDetail").on("submit", function (event) {
+                        event.preventDefault();
+                        updateProfileDetail();
+                    });
+
+                    dobDatepicker();
+                },
+
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        };
+
+        function changePassword() {
+            $.ajax({
+                url: '@Url.Action("ChangePassword", "Account")',
+                type: 'GET',
+
+                success: function (response) {
+                    $("#main-content").empty();
+                    $("#main-content").html(response);
+
+                    $("#formChangePassword").on("submit", function (event) {
+                        event.preventDefault();
+                        updateChangePassword();
+                    });
+                },
+
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        };
+
+        function updateChangePassword() {
+            var formChangePassword = $("#formChangePassword").serialize();
+            $.ajax({
+                url: '@Url.Action("ChangePassword", "Account")',
+                type: 'POST',
+                data: formChangePassword,
+
+                success: function (response) {
+                    $("#main-content").empty();
+                    $("#main-content").html(response);
+                    
+                    $("#formChangePassword").on("submit", function (event) {
+                        event.preventDefault();
+                        updateChangePassword();
+                    });
+                },
+
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            })
+        }
+
+        function getOrdersServices() {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("OrderServiceHistory", "Account")',
+
+                success: function (response) {
+                    $("#main-content").empty;
+                    $("#main-content").html(response);
+
+                    //Gắn lại sự kiện click cho nút xem chi tiết lịch hẹn đã đặt
+                    $("#main-content").on("click", ".order-service-detail-btn", function () {
+                        var orderServiceId = $(this).data("orderserviceid");
+                        orderedServiceDetail(orderServiceId);
+                    });
+
+                    let statusCells = document.querySelectorAll('.status-cell span');
+                    statusCells.forEach(function (cell) {
+                        let content = cell.textContent.trim();
+                        switch (content) {
+                            case 'Đã hủy':
+                                cell.style.backgroundColor = '#FFF2ED';
+                                cell.style.color = '#FF5200';
+                                break;
+                            case 'Chưa xác nhận':
+                                cell.style.backgroundColor = '#fffcde';
+                                cell.style.color = '#fc7222';
+                                break;
+                            case 'Đã xác nhận':
+                                cell.style.backgroundColor = '#ECF3FF';
+                                cell.style.color = '#2275fc';
+                                break;
+                            case 'Đã thanh toán':
+                                cell.style.backgroundColor = '#F0FDF4';
+                                cell.style.color = '#158f42';
+                                break;
+                        };
+                    });
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function orderedServiceDetail(orderServiceId) {
+            console.log(orderServiceId);
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("OrderServiceDetail", "Account")',
+                data: { orderServiceId: orderServiceId },
+
+                success: function (response) {
+                    $("#booking-modal-content").html(response);
+                    $("#booking-modal").modal("show");
+
+                    //Gắn lại sự kiện submit cho nút submit lịch hẹn đã cập nhật
+                    $("#booking-form").on("submit", function (event) {
+                        event.preventDefault();
+                        updateOrderedService();
+                    });
+
+                    //Gắn lại sự kiện click cho nút hủy lịch hẹn
+                    $("#booking-form").on("click", ".cancel-btn", function () {
+                        var orderServiceId = $(this).data("orderserviceid");
+                        cancelOrderService(orderServiceId);
+                    });
+
+                    //Gắn lại sự kiện chọn ngày tháng cho thẻ input chọn ngày hẹn
+                    orderDatepicker();
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function changeOrderDate() {
+            let date = $("#OrderDate").val();
+            let orderServiceId = $("#OrderServiceId").val();
+            $.ajax({
+                type: 'GET',
+                url: '/Account/GetWorkingTimeByDate',
+                data: { date: date, orderServiceId: orderServiceId },
+                success: function (response) {
+                    let content = '';
+                    response.forEach(function (orderTime) {
+                        let time = orderTime.substring(0, 5);
+                        content += `<option value="${orderTime}">${time}</option>`;
+                    });
+                    $("#OrderTime").html(content);
+                },
+
+                error: function (xhr, status, error) {
+                    console.error('The request failed!', status, error);
+                    alert('Error: ' + xhr.responseText);
+                }
+            });
+        }
+
+        function changeService() {
+            var orderServiceId = $("#OrderServiceId").val();
+            var serviceSelected = $("#ServiceName").find(":selected");
+            var serviceId = serviceSelected.attr("data-serviceid");
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetServiceOptionByChangeService", "Account")',
+                data: { serviceId: serviceId, orderServiceId: orderServiceId },
+
+                success: function (response) {
+                    let listPetType = '';
+                    response.petTypes.forEach(function (petType) {
+                        let isSelected = (response.petType === petType);
+                        listPetType += '<option value="' + petType + '"';
+                        listPetType += isSelected ? ' selected>' : '>';
+                        listPetType += petType + '</option>';
+                    });
+
+                    let listWeight = '';
+                    response.weights.forEach(function (weight) {
+                        let isSelected = (response.weight === weight);
+                        listWeight += '<option value="' + weight + '"';
+                        listWeight += isSelected ? ' selected>' : '>';
+                        listWeight += weight + '</option>';
+                    });
+
+                    $("#PetType").html(listPetType);
+                    $("#Weight").html(listWeight);
+                    $("#Price").val(response.price.toLocaleString('en-US') + ' VND');
+                    $("#ServiceId").val(response.serviceId);
+                    $("#ServiceOptionId").val(response.serviceOptionId);
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function changePetType() {
+            var orderServiceId = $("#OrderServiceId").val();
+            var serviceSelected = $("#ServiceName").find(":selected");
+            var serviceId = serviceSelected.attr("data-serviceid");
+            var petTypeSelected = $("#PetType").find(":selected");
+            var petType = petTypeSelected.val();
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetServiceOptionByChangePetType", "Account")',
+                data: { serviceId: serviceId, petType: petType, orderServiceId: orderServiceId },
+
+                success: function (response) {
+                    let listWeight = '';
+                    response.weights.forEach(function (weight) {
+                        let isSelected = (response.weight === weight);
+                        listWeight += '<option value="' + weight + '"';
+                        listWeight += isSelected ? ' selected>' : '>';
+                        listWeight += weight + '</option>';
+                    });
+
+                    $("#Weight").html(listWeight);
+                    $("#Price").val(response.price.toLocaleString('en-US') + ' VND');
+                    $("#ServiceOptionId").val(response.serviceOptionId);
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function changeWeight() {
+            var serviceSelected = $("#ServiceName").find(":selected");
+            var serviceId = serviceSelected.attr("data-serviceid");
+            var petTypeSelected = $("#PetType").find(":selected");
+            var petType = petTypeSelected.val();
+            var weightSelected = $("#Weight").find(":selected");
+            var weight = weightSelected.val();
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetServiceOptionByChangeWeight", "Account")',
+                data: { serviceId: serviceId, petType: petType, weight: weight },
+
+                success: function (response) {
+                    $("#Price").val(response.price.toLocaleString('en-US') + ' VND');
+                    $("#ServiceOptionId").val(response.serviceOptionId);
+                }
+            });
+        }
+
+        function updateOrderedService() {
+            let orderSeviceId = $("#booking-form").find("#OrderServiceId").val();
+            let orderForm = $("#booking-form").serialize();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("OrderServiceDetail", "Account")',
+                data: orderForm,
+
+                success: function (response) {
+                    $("#booking-modal-content").empty();
+                    $("#booking-modal-content").html(response);
+
+                    //Thay đổi giá trị ngày hẹn trên bảng order service history nếu update thành công
+                    if ($(response).find(".update-sucsess").length > 0) {
+                        let orderDate = $(response).find("#OrderDate").val();
+                        console.log(orderDate);
+                        let row = $("#main-content").find("#order-item-" + orderSeviceId);
+                        row.find(".orderdate-cell").text(orderDate);
+                    }
+
+                    //Gắn lại sự kiện submit cho nút submit lịch hẹn đã cập nhật
+                    $("#booking-form").on("submit", function (event) {
+                        event.preventDefault();
+                        updateOrderedService();
+                    });
+
+                    //Gắn lại sự kiện click cho nút hủy lịch hẹn
+                    $("#booking-form").on("click", ".cancel-btn", function () {
+                        var orderServiceId = $(this).data("orderserviceid");
+                        cancelOrderService(orderServiceId);
+                    });
+
+                    //Gắn lại sự kiện chọn ngày tháng cho thẻ input chọn ngày hẹn
+                    orderDatepicker();
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function cancelOrderService(orderServiceId) {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("CancelOrderService", "Account")',
+                data: { orderServiceId: orderServiceId },
+
+                success: function () {
+                    let row = $("#main-content").find("#order-item-" + orderServiceId);
+                    let status = row.find(".status-cell span");
+                    status.text("Đã hủy");
+                    status.css("background-color", "#FFF2ED");
+                    status.css("color", "#FF5200");
+                    $("#booking-modal").modal("hide");
+                },
+
+                error(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function dobDatepicker() {
+            $('#dob-datepicker').datepicker({
+                format: "dd/mm/yyyy",
+                weekStart: 1,
+                startDate: "1/1/1910",
+                startView: 2,
+                maxViewMode: 2,
+                language: "vi",
+                autoclose: true,
+                orientation: "bottom auto",
+            });
+        };
+
+        function orderDatepicker() {
+            let tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            $('#order-datepicker').datepicker({
+                format: "dd/mm/yyyy",
+                weekStart: 1,
+                startView: 0,
+                startDate: tomorrow,
+                maxViewMode: 1,
+                language: "vi",
+                autoclose: true,
+                orientation: "bottom auto",
+            });
+        };
+
+        function showOldPassword() {
+            var pass = document.getElementById("OldPassword");
+            var icon = document.getElementById("eye-icon-old");
+            if (pass.type === "password") {
+                pass.type = "text";
+                icon.classList.replace("fa-eye-slash", "fa-eye");
+            } else {
+                pass.type = "password";
+                icon.classList.replace("fa-eye", "fa-eye-slash");
+            }
+        }
+
+        function showNewPassword() {
+            var pass = document.getElementById("NewPassword");
+            var icon = document.getElementById("eye-icon-new");
+            if (pass.type === "password") {
+                pass.type = "text";
+                icon.classList.replace("fa-eye-slash", "fa-eye");
+            } else {
+                pass.type = "password";
+                icon.classList.replace("fa-eye", "fa-eye-slash");
+            }
+        }
+
+        function showConfirmPassword() {
+            var pass = document.getElementById("ConfirmPassword");
+            var icon = document.getElementById("eye-icon-confirm");
+            if (pass.type === "password") {
+                pass.type = "text";
+                icon.classList.replace("fa-eye-slash", "fa-eye");
+            } else {
+                pass.type = "password";
+                icon.classList.replace("fa-eye", "fa-eye-slash");
+            }
+        }
+
+
+
+    </script>
+
+    <script src="~/js/order-history-customer.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.vi.min.js"></script>
+}

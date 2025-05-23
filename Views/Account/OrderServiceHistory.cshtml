@@ -1,0 +1,50 @@
+﻿@using PetStoreProject.ViewModels
+@model List<BookServiceViewModel>;
+
+@{
+    Layout = null;
+}
+
+<div class="card">
+    <div class="card-header">Đơn Đặt Lịch Dịch Vụ</div>
+    <div class="card-body position-relative overflow-auto p-0">
+        @if (Model != null && Model.Count > 0)
+        {
+            <div class="table-order-history">
+                <table class="table align-middle">
+                    <thead >
+                    <th class="ps-4">Tên Dịch Vụ</th>
+                    <th>Ngày Tạo Đơn</th>
+                    <th>Ngày Hẹn</th>
+                    <th>Trạng Thái</th>
+                    <th>Thao Tác</th>
+                    </thead>
+                    <tbody>
+                        @foreach (var orderedService in Model)
+                        {
+                            <tr id="order-item-@orderedService.OrderServiceId">
+                                <td class="ps-4">@orderedService.ServiceName</td>
+                                <td>@orderedService.DateCreated</td>
+                                <td class="orderdate-cell">@orderedService.OrderDate</td>
+                                <td class="status-cell">
+                                    <span >@orderedService.Status</span>
+                                </td>
+                                <td>
+                                    <a class="btn btn-primary order-service-detail-btn"
+                                       data-orderserviceid="@orderedService.OrderServiceId">Chi Tiết</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="order-empty text-center align-self-center">
+                <img src="~/img/order-service-empty.png" alt="Order service empty"/>
+                <h3>Lịch Sử Đặt Lịch Trống</h3>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,122 @@
+﻿@{
+    ViewData["Title"] = "List employee";
+}
+@using PetStoreProject.Areas.Admin.ViewModels;
+
+@model List<EmployeeDetailViewModel>
+
+<link href="~/areas/css/list-user-style.css" rel="stylesheet" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+    .title_hover:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    .input_add_style label {
+        font-size:18px;
+    }
+</style>
+
+<div class="modal fade" id="deleteAccount" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content popup_delete">
+            <div class="modal-header header_delete_style">
+                <h3 class="modal-title" id="deleteUserModalLabel">Xóa tài khoản nhân viên</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding:20px 50px 40px 50px!important">
+                <p style="font-size:17px;">Bạn có chắc muốn xóa tài khoản nhân viên <strong id="nameAccountDelete"></strong>?</p>
+                <br />
+                <input type="hidden" id="accountId" />
+                <div id="error-mess"></div>
+                <div class="input-group">
+                    <input type="password" class="flex-grow" id="passwordAdmin" placeholder="Vui lòng nhập mật khẩu để xác nhận" required />
+                    <div class="btn show-btn" onclick="showPassword()">
+                        <i class="bi bi-eye eye_style" id="eye-icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-bottom:10px">
+                <button type="button" class="btn btn-danger" id="confirmDelete" style="font-size:15px; border-radius:5px;">Có, xóa tài khoản</button>
+                <button type="button" class="btn btn-secondary" aria-label="Close" style="font-size:15px;border-radius:5px;" data-bs-dismiss="modal">Không, giữ tài khoản</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Tất cả nhân viên</h3>
+        </div>
+        <!-- all-user -->
+        <div class="wg-box">
+            <div class="flex items-center justify-between gap10 flex-wrap">
+                <div class="wg-filter flex-grow">
+                    <form class="form-search" onsubmit="return false;">
+                        <fieldset>
+                            <input id="search-input" type="text" placeholder="Tìm kiếm theo tên người dùng" class="" name="name" tabindex="2" value="" aria-required="true" required="">
+                        </fieldset>
+                        <div class="button-submit">
+                            <button onclick="search()"><i class="icon-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+
+                <a class="tf-button style-1 w208 cursor_style" onclick="addAccount()"><i class="icon-plus"></i>Tạo tài khoản</a>
+            </div>
+            <div class="wg-table table-all-user" id="table-content">
+                <ul class="header-menu-list table-title flex gap20 mb-14 header_menu_style" id="title-table" style="min-width:1420px!important;">
+                    <li class="user">
+                        <div id="user-hover" onclick="sortByName()" class=" body-title no-select title_hover">Nhân viên <i class="bi bi-chevron-expand"></i></div>
+                    </li>
+                    <li class="phone">
+                        <div class="body-title">Số điện thoại</div>
+                    </li>
+                    <li class="email">
+                        <div class="body-title">Email</div>
+                    </li>
+                    <li class="total_fb" style="width:  175px !important;">
+                        <div class="body-title no-select title_hover" onclick="sortByTotalFeedback()">Phản hổi khách hàng <i class="bi bi-chevron-expand"></i></div>
+                    </li>
+                    <li class="totalOrderService" style="width: 148px !important;">
+                        <div class="body-title no-select title_hover" onclick="sortByTotalOrderServiceEmployee()">Tổng đơn dịch vụ <i class="bi bi-chevron-expand"></i></div>
+                    </li>
+                    <li class="status" >
+                        <div class="body-title">
+                            <a class="drop-icon " href="#">Trạng thái</a>
+                            <ul class="common_ddown dropdown_style" id="status_list_customer" style="width: 190px!important">
+                                <li><a href="#" onclick="changeStatus(-1)">- Tất cả</a></li>
+                                <li><a href="#" onclick="changeStatus(0)">- Kích hoạt</a></li>
+                                <li><a href="#" onclick="changeStatus(1)">- Không Kích hoạt</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="body-title">Thao tác</div>
+                    </li>
+                </ul>
+                <ul id="list-users" class="flex flex-column" style="min-width:1420px!important">
+                    <!-- data user -->
+                </ul>
+            </div>
+            <div class="divider"></div>
+            <div class="flex items-center justify-between flex-wrap gap40" style="font-size:16px;">
+                <div id="total-user"></div>
+                <div class="text-tiny" id="no_data"></div>
+                <div id="pagination"></div>
+            </div>
+        </div>
+        <!-- /all-user -->
+    </div>
+    <!-- /main-content-wrap -->
+</div>
+@Html.Partial("_QuickViewAccount")
+@Html.Partial("_AddViewAccount")
+
+<script src="~/js/list-product.js"></script>
+<script src="~/areas/js/list-user.js"></script>

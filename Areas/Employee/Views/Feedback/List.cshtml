@@ -1,0 +1,284 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList
+@model IPagedList<PetStoreProject.Areas.Employee.ViewModels.FeedBackViewModels>
+<style>
+
+    .wg-filter {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .form-search {
+        display: flex;
+        align-items: center;
+        gap: 10px; 
+    }
+
+        .form-search .show {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .form-search .date-range {
+            display: flex;
+            align-items: center;
+            gap: 5px; 
+        }
+
+    .text-tiny {
+        margin-right: 5px; 
+    }
+
+    .select select {
+        width: 150px;
+    }
+
+    .pagination-blog {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        .pagination
+
+    {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        justify-content: center;
+    }
+
+    .pagination li {
+        margin: 0 5px;
+    }
+
+    .pagination a, .pagination span {
+        color: #007bff;
+        text-decoration: none;
+        border: 1px solid #dee2e6;
+        padding: 8px 12px;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+
+        .pagination a:hover {
+            background-color: #e9ecef;
+        }
+
+    .pagination .active span {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+</style>
+    <!-- main-content-wrap -->
+    <div class="main-content-inner">
+        <!-- main-content-wrap -->
+        <div class="main-content-wrap">
+            <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+                <h3>Tất cả phản hồi</h3>
+            </div>
+        @if(Model != null)
+        {
+            <!-- all-attribute -->
+            <div class="wg-box">
+                <div class="flex items-center justify-between gap10 flex-wrap">
+
+                    <div class="wg-filter flex-grow">
+                        <form id="feedbackForm" class="form-search" asp-action="list" asp-controller="feedback" method="get">
+                            <div class="show">
+                                <div class="text-tiny" style="width:75px; font-size:13px;">Trạng thái</div>
+                                <div class="select">
+                                    <select id="statusSelect" style="width:100px; text-align: center" name="status">
+                                        @if (ViewBag.Status == 1)
+                                        {
+                                            <option value="0">Tất cả</option>
+                                            <option value="1" selected>Chờ xử lý</option>
+                                            <option value="2">Đã xử lý</option>
+                                        }
+                                        else if (ViewBag.Status == 2)
+                                        {
+                                            <option value="0">Tất cả</option>
+                                            <option value="1">Chờ xử lý</option>
+                                            <option value="2" selected>Đã xử lý</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="0">Tất cả</option>
+                                            <option value="1">Chờ xử lý</option>
+                                            <option value="2">Đã xử lý</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="date-range">
+                                <label for="from">Từ:</label>
+                                <input type="date" id="fromDate" name="from" value="@ViewBag.FirstDayOfWeek" />
+                                <label for="to">Đến:</label>
+                                <input type="date" id="toDate" name="to" value="@ViewBag.LastDayOfWeek" />
+                            </div>
+                            <button type="submit"><i class="icon-search"></i></button>
+                        </form>
+                    </div>
+
+                    <a class="tf-button style-1 w208" href=""><i class="icon-refresh-cw"></i>Làm mới trang</a>
+                </div>
+
+                <div class="wg-table table-all-attribute" id="feedbackContainer">
+                    <ul class="table-title flex gap20 mb-14">
+                        <li style="width: 20%;">
+                            <div class="body-title">Sản phẩm</div>
+                        </li>
+                        <li style="width: 16%;">
+                            <div class="body-title">Người đánh giá</div>
+                        </li>
+                        <li style="width: 32%;">
+                            <div class="body-title">Đánh giá</div>
+                        </li>
+                        <li style="width: 12%;">
+                            <div class="body-title">Ngày</div>
+                        </li>
+                        <li style="width: 12%;">
+                            <div class="body-title">Trạng thái</div>
+                        </li>
+                        <li style="width: 8%;">
+                            <div class="body-title">Phản hồi</div>
+                        </li>
+                    </ul>
+
+                    @foreach(var fb in Model)
+                    {
+                        <ul class="flex flex-column">
+                            <li class="attribute-item flex items-center justify-between gap20">
+                                <div class="name" style="width: 20%;">
+									<a href="" class="body-title-2"> <p>@fb.ProductName</p></a>
+                                </div>
+                                <div class="body-text" style="width: 16%;">@fb.CustomerName</div>
+                                <div class="body-text" style="width: 32%; word-wrap: break-word;">
+                                    <p>Rating: @fb.Rating/5</p>
+                                    <p>@fb.Content</p>
+                                </div>
+                                <div class="body-text" style="width: 12%;">@fb.CreatedDate.ToString("HH:mm:ss dd/MM/yyyy")</div>
+                                @if (fb.Status)
+                                {
+                                    <div class="body-text" style="width: 12%; color:green">Đã phản hồi</div>
+                                } else
+                                {
+                                    <div class="body-text" style="width: 12%; color: orange">Chưa phản hồi</div>
+                                }
+
+
+                                <div class="list-icon-function" style="width:8%;">
+                                    <div class="item edit" id="edit-icon" data-id="@fb.FeedBackId">
+                                        <i class="icon-edit-3"></i>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="form-container hidden" id="edit-form-@fb.FeedBackId" style="margin:20px">
+                            <form asp-area="Employee" asp-action="Submit" asp-controller="Feedback" method="post">
+                                <input type="hidden" name="FeedBackId" value="@fb.FeedBackId" />
+                                <div>
+                                    <label for="response-@fb.FeedBackId">Câu trả lời:</label>
+                                    <textarea id="response-@fb.FeedBackId" name="response" rows="2" cols="50">@fb.ContentResponse</textarea>
+                                    <span id="ContentError-@fb.FeedBackId" class="text-danger"></span>
+                                </div>
+                                <div>
+                                    <button type="submit" style="color:deepskyblue" onclick="checkFormAndSubmit(event, @fb.FeedBackId)">Lưu</button>
+                                    <button type="button" class="cancel-button" data-id="@fb.FeedBackId" style="color:tomato">Đóng</button>
+                                </div>
+                            </form>
+
+                        </div>
+                    }
+                    <div class="pagination-blog">
+                        @Html.PagedListPager(Model, page => Url.Action("List", new { status = ViewBag.Status, from = ViewBag.FirstDayOfWeek, to = ViewBag.LastDayOfWeek, page, pagesize = 12 }))
+                    </div>
+                </div>
+            </div>
+        }
+            
+        </div>
+        <!-- /main-content-wrap -->
+    </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function checkFormAndSubmit(event, feedbackId) {
+        event.preventDefault();
+
+        const responseElement = document.getElementById(`response-${feedbackId}`);
+        const responseValue = responseElement.value.trim();
+        const contentErrorElement = document.getElementById(`ContentError-${feedbackId}`);
+
+        let isValid = true;
+
+        if (!responseValue) {
+            contentErrorElement.textContent = 'Nội dung không được để trống.';
+            isValid = false;
+        }
+        else if (responseValue.length > 500) {
+            contentErrorElement.textContent = 'Nội dung không được vượt quá 500 ký tự.';
+            isValid = false;
+        } else {
+            contentErrorElement.textContent = '';
+        }
+
+        // Nếu form hợp lệ, gửi form đi
+        if (isValid) {
+            const form = event.target.form;
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error('Có lỗi xảy ra khi gửi phản hồi.');
+                    }
+                })
+                .then(data => {
+                    alert('Phản hồi đã được gửi thành công!');
+                    window.location.reload();
+                })
+                .catch(error => {
+                    contentErrorElement.textContent = error.message;
+                });
+        }
+    }
+
+
+    document.querySelectorAll('.item.edit').forEach(editIcon => {
+        editIcon.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            console.log(`Edit icon clicked, ID: ${id}`);
+            const formElement = document.getElementById(`edit-form-${id}`);
+            if (formElement) {
+                formElement.classList.remove('hidden');
+            } else {
+                console.error(`Element with ID edit-form-${id} not found`);
+            }
+        });
+    });
+
+    document.querySelectorAll('.cancel-button').forEach(cancelButton => {
+        cancelButton.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            console.log(`Cancel button clicked, ID: ${id}`);
+            const formElement = document.getElementById(`edit-form-${id}`);
+            if (formElement) {
+                formElement.classList.add('hidden');
+            } else {
+                console.error(`Element with ID edit-form-${id} not found`);
+            }
+        });
+    });
+
+</script>
+
+

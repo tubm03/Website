@@ -1,0 +1,215 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList
+
+@model IPagedList<PetStoreProject.ViewModels.NewsViewModel>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .toggle-container {
+            margin-bottom: 20px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: 0.4s;
+                border-radius: 34px;
+            }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+            input:checked + .slider:before {
+                transform: translateX(26px);
+            }
+
+        .slider.round {
+            border-radius: 34px;
+        }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
+
+        .pagination-blog {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            .pagination
+
+        {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            justify-content: center;
+        }
+
+        .pagination li {
+            margin: 0 5px;
+        }
+
+        .pagination a, .pagination span {
+            color: #007bff;
+            text-decoration: none;
+            border: 1px solid #dee2e6;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+            .pagination a:hover {
+                background-color: #e9ecef;
+            }
+
+        .pagination .active span {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+    </style>
+	
+    
+</head>
+<body>
+    <div class="main-content-inner">
+        <!-- main-content-wrap -->
+        <div class="main-content-wrap">
+            <div class="wg-box">
+                <div class="flex items-center justify-between gap10 flex-wrap">
+                    <div class="wg-filter flex-grow">
+                        <h3>Danh sách bài viết</h3>
+                    </div>
+                    <a class="tf-button style-1 w208" asp-action="createNews" asp-controller="news"><i class="icon-plus"></i>Tạo bài viết mới</a>
+                </div>
+                <div class="wg-table table-all-attribute">
+                    <ul class="table-title flex gap20 mb-14">
+                        <li style="width: 40%;">
+                            <div class="body-title">Bài viết</div>
+                        </li>
+
+                        <li style="width: 16%;">
+                            <div class="body-title">Người tạo</div>
+                        </li>
+                        <li style="width: 12%;">
+                            <div class="body-title">Thẻ</div>
+                        </li>
+                        <li style="width: 12%;">
+                            <div class="body-title">Ngày tạo</div>
+                        </li>
+                        <li style="width: 12%;">
+                            <div class="body-title">Trạng thái</div>
+                        </li>
+                        <li style="width: 8%;">
+                            <div class="body-title">Chỉnh sửa</div>
+                        </li>
+                    </ul>
+                    <ul class="flex flex-column">
+                        @foreach (var n in Model)
+                        {
+                            <li class="attribute-item flex items-center justify-between gap20">
+                                <div class="name" style="width: 40%; text-align: center;">
+                                    <a href="/News/Detail?newsId=@n.NewsId" class="body-title-2" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+                                        <img src="@n.url_thumnail" style="width: 200px; height: 200px; margin-right: 10px;" />
+                                        <div style="display: flex; flex-direction: column; justify-content: center;">
+                                            <b>@n.Title</b>
+                                            <p style="margin: 0;">@n.Description</p>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="body-text" style="width: 16%;">@n.employeeName</div>
+                                <div class="body-text" style="width: 12%;">@n.tagName</div>
+                                <div class="body-text" style="width: 12%;">@n.DateOnly</div>
+                                <div class="body-text" style="width: 12%;">
+                                    <div class="toggle-container">
+                                        <label class="switch">
+                                            <input type="checkbox" id="toggle-switch-@n.NewsId" @(n.status ? "" : "checked") onclick="ChangeStatus(@n.NewsId)">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="list-icon-function" style="width: 8%;">
+                                    <div class="item edit">
+                                        <a href="editnews?id=@n.NewsId">
+                                            <i class="icon-edit-3"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+
+                    </ul>
+
+                    <div class="pagination-blog">
+                        @Html.PagedListPager(Model, page => Url.Action("ListNews", new { page, pagesize = 12 }))
+                    </div>
+                </div>
+            </div>
+            <!-- /all-attribute -->
+        </div>
+        <!-- /main-content-wrap -->
+    </div>
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function ChangeStatus(newsId) {
+
+        $.ajax({
+            url: '@Url.Action("UpdateStatusNews", "News")',
+            type: "POST",
+            data: {
+                newsId: newsId
+            },
+            success: function (response) {
+                    if(response.success) {
+                        console.log("Server response:", response.message);
+                    } else {
+                        console.error("Server error:", response.message);
+                        alert("Cập nhật không thành công");
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Error: " + textStatus, errorThrown);
+                    alert("Đã sảy ra lỗi trong quá trình cập nhật");
+                }
+        });
+    }
+</script>

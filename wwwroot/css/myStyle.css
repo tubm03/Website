@@ -1,0 +1,110 @@
+﻿.select {
+    font-weight: bold;
+    border-color: #198754 !important;
+}
+
+.choose{
+    font-weight: bold !important;
+}
+
+.out-of-stock {
+    opacity: 0.3; /* Làm nhạt màu */
+    cursor: not-allowed; /* Con trỏ hiển thị không được phép */
+    pointer-events: none; /* Ngăn chặn sự kiện click */
+}
+
+.scroll {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px 5px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.page-link {
+    cursor: pointer;
+}
+
+.hide{
+    display: none !important;
+}
+
+#booking-modal .modal-title {
+    padding-top: 10px;
+    font-size: 1.625rem;
+    color: #1b1b1ced;
+}
+
+#booking-modal .modal-body{
+    padding: 0 50px 30px;
+}
+
+#booking-modal-content label {
+    font-size: 16px;
+}
+
+#booking-modal-content .form-control,
+#booking-modal-content .form-select {
+    line-height: 1.7;
+    padding: .375rem .75rem;
+    border-radius: .25rem;
+}
+
+#booking-modal-content .input-group-text {
+    font-size: 1.5rem;
+    padding: .5rem;
+}
+
+#booking-modal-content .form-control[readonly],
+#booking-modal-content .form-control[disabled],
+#booking-modal-content .form-select[disabled] {
+    background-color: #e9ecef7a;
+}
+
+#booking-modal-content .row {
+    margin-bottom: 10px;
+}
+
+#booking-modal-content .submit-btn {
+    padding: 8px 40px;
+    font-size: 17px;
+    color: white;
+    background-color: #2b2828;
+    border: 1px solid black;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+    #booking-modal-content .submit-btn:hover {
+        background-color: #198754;
+        border: 1px solid #198754;
+        color: #fff;
+    }
+
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    width: 4px;
+    border-radius: 20px;
+}

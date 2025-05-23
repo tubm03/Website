@@ -1,0 +1,701 @@
+﻿@{
+    // ViewData["Title"] = "Thông tín khách hàng";
+}
+
+@model PetStoreProject.ViewModels.AccountDetailViewModel;
+
+
+<link href="~/areas/css/list-user-style.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+    .img-account-profile {
+        margin-top: 20px;
+        width: 120px;
+        height: 120px;
+    }
+
+    .rounded-circle {
+        border-radius: 50% !important;
+    }
+
+    .card {
+        box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
+    }
+
+        .card .card-header {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+    .card-header:first-child {
+        border-top-left-radius: 9px;
+        border-top-right-radius: 9px;
+    }
+
+    .card-header {
+        padding: 1rem 1.35rem;
+        margin-bottom: 0;
+        /*         background-color: rgba(33, 40, 50, 0.03); */
+        border-bottom: 1px solid rgba(33, 40, 50, 0.125);
+    }
+
+    .card-body .label-input {
+        font-size: 15px;
+    }
+
+    .form-control, .dataTable-input {
+        display: block;
+        width: 100%;
+        padding: 0.875rem 1.125rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1;
+        color: black;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #c5ccd6;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border-radius: 0.35rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .input-group-text:hover {
+        cursor: pointer;
+    }
+
+    .profile_wrapper .profile-name {
+        padding-top: 10px;
+        font-size: 19px;
+        color: black;
+        font-weight: 500;
+    }
+
+    .profile_wrapper .show-btn {
+        top: 37px;
+    }
+
+    .profile_wrapper .gender-title {
+        padding: 1.15rem 1.15rem 1.15rem 2.15rem;
+        display: inline-block;
+        width: 35%;
+        font-size: 19px;
+    }
+
+    .profile_wrapper .gender-radio {
+        display: inline-block;
+        width: 20%;
+        font-size: 19px;
+        color: black;
+    }
+
+        .profile_wrapper .gender-radio input {
+            cursor: pointer;
+        }
+
+    .profile_wrapper .login-btn:hover {
+        background-color: #00adf6;
+        transition: all 0.3s ease-in-out 0s;
+    }
+
+    .profile-option-btn {
+        font-size: 16px;
+        display: block;
+        width: 100%;
+        background-color: #0000;
+        color: #000;
+        border: none;
+        padding: 20px;
+    }
+
+        .profile-option-btn:hover {
+            cursor: pointer;
+            background-color: #00adf6;
+            border: none;
+        }
+
+    .option-btn-active {
+        color: #fff;
+        background-color: #00adf6;
+        border: none;
+    }
+
+    .single-account-select {
+        display: block;
+        width: 100%;
+        margin: 5px 0; /* Optional: add some margin between buttons */
+    }
+
+    .cart-select {
+        padding: 0px !important;
+    }
+
+    .card-body-style {
+        min-height: 210px;
+    }
+
+    .card-style {
+        border-radius: 10px;
+    }
+
+    .main-content-style {
+        min-height: 700px;
+    }
+
+    .content-profile {
+        font-size: 16px;
+        padding: 19px 30px;
+    }
+
+    .input-style {
+        border: none !important;
+    }
+
+        .input-style:disabled {
+            background: none;
+        }
+
+    .padding_none {
+        padding: 0px !important;
+    }
+
+    .card_header_style {
+        display: flex;
+    }
+
+    .title_style_header {
+        width: 50%;
+    }
+
+    .btn_style_export {
+        width: 50%;
+        text-align: right;
+    }
+
+    .export_button {
+        font-size:14px;
+    }
+
+    .card-style-table {
+        border-radius: 10px !important;
+    }
+
+    .scroll-hozirotal::-webkit-scrollbar {
+        display:block;
+    }
+
+    .display_inline {
+        display: inline;
+    }
+
+    .card_body_style {
+        padding: 13px;
+    }
+
+    .min_height {
+        min-height:330px;
+    }
+
+    .card_footer, #btn_service {
+        border-bottom-left-radius: 10px !important;
+        border-bottom-right-radius: 10px !important;
+    }
+
+        .empty-order-history {
+            text-align: center;
+            margin-top: 32px!important;
+            color: #555;
+        }
+
+            .empty-order-history i {
+                font-size: 48px;
+                margin-bottom: 20px;
+                color: #aaa;
+            }
+</style>
+<div class="main-content-inner main-content-style">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3></h3>
+        </div>
+        <div class="profile_wrapper adp_top adp_bottom padding_none">
+                <!-- Account page navigation-->
+                <div class="row">
+                    <div class="col-xl-4">
+                        <!-- Profile picture card-->
+                        <div class="card mb-4 mb-xl-0 card-style">
+                            @* <div class="card-header">Ảnh Đại Diện</div> *@
+                            <div class="card-body text-center card-body-style">
+                                <!-- Profile picture image-->
+                                <img class="img-account-profile rounded-circle mb-2" src="~/areas/images/logo_user/user-avatar.svg.png" />
+                                @* <img class="img-account-profile rounded-circle mb-2" src="~/img/profile-user-2.png" alt=""> *@
+                                <!-- Profile picture help block-->
+                                <div id="profile-full-name" class="profile-name">@Model.FullName</div>
+                                <!-- Profile picture upload button-->
+                                @* <button class="btn btn-primary" type="button">Upload new image</button> *@
+                            </div>
+                            <div class="card-footer cart-select card_footer">
+                                <button type="button" id="btn_info" class="btn btn-primary btn-lg btn-block profile-option-btn option-btn-active" onclick="customerInfo()">Thông Tin Tài Khoản</button>
+                                <button type="button" id="btn_order" class="btn btn-primary btn-lg btn-block profile-option-btn" onclick="orderHistory(@Model.UserId)">Lịch Sử Đơn Hàng</button>
+                                <button type="button" id="btn_service" class="btn btn-primary btn-lg btn-block profile-option-btn" onclick="serviceHistory(@Model.UserId)">Lịch Sử Dịch Vụ</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="main-content" class="col-xl-8">
+                        <div class="card mb-4 card-style">
+                            <div class="card-header ">
+                                <h3>Thông tin tài khoản</h3>
+                            </div>
+                        <div class="card-body card_body_style">
+                                <div class="row">
+                                    <div class="col-md-12 content-profile">
+                                        <form>
+                                            <div class="form-group row">
+                                                <label for="fullName" class="col-sm-4 col-form-label"><strong>FullName</strong></label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control input-style" id="fullName" value="@Model.FullName" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="gender" class="col-sm-4 col-form-label"><strong>Gender</strong></label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control input-style" id="gender"
+                                                           value="@(Model.Gender == null ? "-" : (Model.Gender == true ? "Nam" : "Nữ"))" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="dob" class="col-sm-4 col-form-label input-style"><strong>Ngày sinh</strong></label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control input-style" id="dob"
+                                                       value="@(Model.DoB == null? "-Trống-" : Model.DoB)" placeholder="Ngày sinh" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="phone" class="col-sm-4 col-form-label input-style"><strong>Số điện thoại</strong></label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control input-style" id="phone"
+                                                           value="@Model.Phone" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="email" class="col-sm-4 col-form-label"><strong>Email</strong></label>
+                                                <div class="col-sm-8">
+                                                    <input type="email" class="form-control input-style" id="email"
+                                                       value="@Model.Email" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="address" class="col-sm-4 col-form-label input-style"><strong>Địa chỉ</strong></label>
+                                                <div class="col-sm-8">
+                                                <input type="text" class="form-control input-style" id="address" value='@(Model.Address.Equals("")?"-Trống-":Model.Address)' placeholder="Địa chỉ" disabled>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.vi.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script src="~/js/export-excel.js"></script>
+<script>
+    var url = new URL(window.location.href);
+
+    var param = new URLSearchParams(url.search);
+
+    var userId = param.get('userId');
+
+    var mainContentInfo = $('#main-content').html();
+
+    /* Order history*/
+    var sortOrderId = localStorage.getItem('sortOrderId') || "";
+    var sortName = localStorage.getItem('sortName') || "";
+    var sortDate = localStorage.getItem('sortDate') || "zxy";
+    var sortTotalItems = localStorage.getItem('sortTotalItems') || "";
+    var sortPrice = localStorage.getItem('sortPrice') || "";
+    var searchName = "";
+    var searchDateOrder = "";
+    var searchOrderId = "";
+    var pageIndexOrder = 1;
+    var pageSizeOrder = 8;
+
+    const sortingOrder = ["", "abc", "zxy"];
+
+    function customerInfo() {
+        $('#btn_info').addClass('option-btn-active');
+        $('#btn_service').removeClass('option-btn-active');
+        $('#btn_order').removeClass('option-btn-active');
+        $('#main-content').html(mainContentInfo);
+        domLoaded();
+    }
+
+    /* Order history */
+    function orderHistory(userId) {
+        $('#btn_info').removeClass('option-btn-active');
+        $('#btn_service').removeClass('option-btn-active');
+        $('#btn_order').addClass('option-btn-active');
+        $('#main-content').empty();
+        resetOptionOrder();
+        LoadOrderHistory(optionOrders);
+        domLoaded();
+    }
+
+    var optionOrders = {
+        UserId: userId,
+        PageIndex: pageIndexOrder,
+        PageSize: pageSizeOrder,
+        SortOrderId: sortOrderId,
+        SortName: sortName,
+        SortTotalItems: sortTotalItems,
+        SortPrice: sortPrice,
+        SortDate: sortDate,
+        SearchName: searchName,
+        SearchDate: searchDateOrder,
+        SearchOrderId: searchOrderId
+    }
+
+    function resetOptionOrder() {
+        optionOrders.SortOrderId = "";
+        optionOrders.SortName = "";
+        optionOrders.SortDate = "";
+        optionOrders.SortPrice = "";
+        optionOrders.SortTotalItems = "";
+    }
+
+    function resetSearchOrder() {
+        pageIndexOrder = 1;
+        pageSizeOrder = 8;
+        optionOrders.SearchDate = "";
+        optionOrders.SearchName = "";
+        optionOrders.SearchOrderId = "";
+        resetOptionOrder();
+    }
+
+    function LoadOrderHistory(optionOrders) {
+        $.ajax({
+            url: '/Admin/Account/OrderHistory',
+            type: 'post',
+            data: optionOrders,
+            success: function (response) {
+                $('#main-content').html(response);
+
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+
+    function nextPageOrder(pageIndex, pageSize) {
+        optionOrders.PageIndex = pageIndex;
+        optionOrders.PageSize = pageSize;
+        LoadOrderHistory(optionOrders);
+    }
+
+    function cycleSortOrder(currentOrder) {
+        const nextIndex = (sortingOrder.indexOf(currentOrder) + 1) % sortingOrder.length;
+        return sortingOrder[nextIndex];
+    }
+
+    function saveSortingParams() {
+        localStorage.setItem('sortOrderId', sortOrderId);
+        localStorage.setItem('sortName', sortName);
+        localStorage.setItem('sortDate', sortDate);
+        localStorage.setItem('sortTotalItems', sortTotalItems);
+        localStorage.setItem('sortPrice', sortPrice);
+    }
+
+    // Sorting functions
+    function sortByOrderId() {
+        sortOrderId = cycleSortOrder(sortOrderId);
+        console.log("OrderId: " + sortOrderId);
+        resetOptionOrder()
+        optionOrders.SortOrderId = sortOrderId;
+        saveSortingParams();
+        LoadOrderHistory(optionOrders);
+    }
+
+    function sortByDate() {
+        sortDate = cycleSortOrder(sortDate);
+        resetOptionOrder()
+        optionOrders.SortDate = sortDate;
+        saveSortingParams();
+        LoadOrderHistory(optionOrders);
+    }
+
+    function sortByTotalOrderItems() {
+        sortTotalItems = cycleSortOrder(sortTotalItems);
+        resetOptionOrder()
+        optionOrders.SortTotalItems = sortTotalItems;
+        saveSortingParams();
+        LoadOrderHistory(optionOrders);
+    }
+
+    function sortByName() {
+        sortName = cycleSortOrder(sortName);
+        resetOptionOrder()
+        optionOrders.SortName = sortName;
+        saveSortingParams();
+        LoadOrderHistory(optionOrders);
+    }
+
+    function sortByPrice() {
+        sortPrice = cycleSortOrder(sortPrice);
+        resetOptionOrder()
+        optionOrders.SortPrice = sortPrice;
+        saveSortingParams();
+        LoadOrderHistory(optionOrders);
+    }
+
+    function search() {
+        searchOrderId = document.getElementById('search-input-orderId').value;
+        console.log('search' + searchOrderId);
+        resetSearchOrder();
+        optionOrders.SearchOrderId = searchOrderId;
+        LoadOrderHistory(optionOrders);
+    }
+
+    function searchNameOrder() {
+        searchName = document.getElementById('search-nameOrder-input').value;
+        resetSearchOrder();
+        optionOrders.SearchName = searchName;
+        LoadOrderHistory(optionOrders);
+    }
+
+    function selectDateOrder() {
+        searchDateOrder = document.getElementById('select-dateOrder-input').value;
+        resetSearchOrder();
+        optionOrders.SearchDate = searchDateOrder;
+        LoadOrderHistory(optionOrders);
+    }
+
+    function domLoaded() {
+        var searchOrderIdInput = document.querySelector('input[name="nameOrderId"]');
+        var searchNameOrder = document.querySelector('input[name="sNameOrder"]');
+        var sOrderServiceId = document.querySelector('input[name="sOrderServiceId"]');
+        var sNameOrderService = document.querySelector('input[name="sNameOrderService"]');
+        var sTimeOrderDate = document.querySelector('input[name="sTimeOrderDate"]');
+
+        searchOrderIdInput.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Ngăn chặn hành động mặc định của form
+                search();
+            }
+        });
+        searchNameOrder.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Ngăn chặn hành động mặc định của form
+                searchNameOrder();
+            }
+        });
+        sOrderServiceId.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Ngăn chặn hành động mặc định của form
+                searchOrderServiceId();
+            }
+        });
+        sNameOrderService.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Ngăn chặn hành động mặc định của form
+                searchNameOrderService();
+            }
+        });
+        sTimeOrderDate.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Ngăn chặn hành động mặc định của form
+                searchTimeOrderService();
+            }
+        });
+    }
+
+
+
+    /* Service histtory */
+
+    var orderServiceId = localStorage.getItem("orderServiceId") || "";
+    var nameOrderService = localStorage.getItem("nameOrderService") || "";
+    var dateOrderService = localStorage.getItem('dateOrderService') || "";
+    var timeOrderService = localStorage.getItem('timeOrderService') || "";
+    var serviceIdOrderService = localStorage.getItem('serviceIdOrderService') || "";
+    var priceOrderService = localStorage.getItem("priceOrderService") || "";
+    var seOrderServiceId = "";
+    var seTime = "";
+    var seDate = "";
+    var status = "";
+    var seName = "";
+    var pageIndexService = 1;
+    var pageSizeService = 8;
+
+    function saveSortingParamOrderService() {
+        localStorage.setItem('orderServiceId', orderServiceId);
+        localStorage.setItem('nameOrderService', nameOrderService);
+        localStorage.setItem('dateOrderService', dateOrderService);
+        localStorage.setItem('timeOrderService', timeOrderService);
+        localStorage.setItem('serviceIdOrderService', serviceIdOrderService);
+        localStorage.setItem('priceOrderService', priceOrderService);
+    }
+
+    function serviceHistory(userId) {
+        $('#btn_info').removeClass('option-btn-active');
+        $('#btn_service').addClass('option-btn-active');
+        $('#btn_order').removeClass('option-btn-active');
+        $('#main-content').empty();
+        serviceHistoryLoad(options);
+        domLoaded();
+    }
+
+    function nextPageService(pageIndex, pageSize) {
+        options.PageIndex = pageIndex;
+        options.PageSize = pageSize;
+        serviceHistoryLoad(options);
+    }
+
+    var options = {
+        UserId: userId,
+        PageIndex: pageIndexService,
+        PageSize: pageSizeService,
+        SortOrderServiceId: orderServiceId,
+        SortName: nameOrderService,
+        SortDate: dateOrderService,
+        SortTime: timeOrderService,
+        SortServiceId: serviceIdOrderService,
+        SortPrice: priceOrderService,
+        SearchOrderServiceId: seOrderServiceId,
+        SearchTime: seTime,
+        SearchName: seName,
+        SearchDate: seDate,
+        Status: status
+    }
+
+    function resetSortOptions() {
+        options.SortOrderServiceId = null;
+        options.SortName = null;
+        options.SortDate = null;
+        options.SortTime = null;
+        options.SortServiceId = null;
+        options.SortPrice = null;
+    }
+    function resetSearchOrderService() {
+        pageIndexService = 1;
+        pageSizeService = 8;
+        options.SearchOrderServiceId = "";
+        options.SearchTime = "";
+        options.SearchName = "";
+        options.SearchDate = "";
+        optionsStatus = "";
+        resetSortOptions();
+    }
+
+    function serviceHistoryLoad(options) {
+        $.ajax({
+            url: '/Admin/Account/OrderServiceHistory',
+            type: 'post',
+            data: options,
+            success: function (response) {
+                $('#main-content').html(response);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+
+    function searchOrderServiceId() {
+        seOrderServiceId = document.getElementById('search-orderService-input').value;
+        console.log("seOrder: " + seOrderServiceId);
+        resetSearchOrderService();
+        options.SearchOrderServiceId = seOrderServiceId;
+        saveSortingParamOrderService()
+        serviceHistoryLoad(options);
+    }
+
+    function searchNameOrderService() {
+        seName = $('#search-name-input').val();
+        resetSearchOrderService();
+        options.SearchName = seName;
+        serviceHistoryLoad(options);
+    }
+
+    function searchTimeOrderService() {
+        seTime = $('#search-time-input').val();
+        resetSearchOrderService();
+        options.SearchTime = seTime;
+        serviceHistoryLoad(options);
+    }
+
+    function selectDateOrderService() {
+        seDate = $('#select-date-input').val();
+        resetSearchOrderService();
+        options.SearchDate = seDate;
+        serviceHistoryLoad(options);
+    }
+
+    function changeStatusServiceHistory(status) {
+        resetSearchOrderService();
+        options.Status = status;
+        serviceHistoryLoad(options);
+    }
+
+    function sortByOrderServiceId() {
+        resetSortOptions();
+        orderServiceId = cycleSortOrder(orderServiceId);
+        saveSortingParamOrderService();
+        options.SortOrderServiceId = orderServiceId;
+        serviceHistoryLoad(options);
+    }
+
+    function sortByNameService() {
+        resetSortOptions();
+        nameOrderService = cycleSortOrder(nameOrderService);
+        saveSortingParamOrderService();
+        options.SortName = nameOrderService;
+        serviceHistoryLoad(options);
+    }
+
+    function sortByDateService() {
+        resetSortOptions();
+        dateOrderService = cycleSortOrder(dateOrderService);
+        saveSortingParamOrderService();
+        options.SortDate = dateOrderService;
+        serviceHistoryLoad(options);
+    }
+
+    function sortByTimeService() {
+        resetSortOptions();
+        timeOrderService = cycleSortOrder(timeOrderService);
+        saveSortingParamOrderService();
+        options.SortTime = timeOrderService;
+        serviceHistoryLoad(options);
+    }
+
+    function sortByServiceId() {
+        resetSortOptions();
+        serviceIdOrderService = cycleSortOrder(serviceIdOrderService);
+        saveSortingParamOrderService();
+        options.SortServiceId = serviceIdOrderService;
+        serviceHistoryLoad(options);
+    }
+
+    function sortByPriceService() {
+        resetSortOptions();
+        priceOrderService = cycleSortOrder(priceOrderService);
+        saveSortingParamOrderService();
+        options.SortPrice = priceOrderService;
+        serviceHistoryLoad(options);
+    }
+
+</script>
+

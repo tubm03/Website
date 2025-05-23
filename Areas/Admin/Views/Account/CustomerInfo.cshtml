@@ -1,0 +1,55 @@
+﻿@model PetStoreProject.ViewModels.AccountDetailViewModel;
+
+<div class="card mb-4 card-style">
+    <div class="card-header card_header_style">
+        <h3>Thông tin tài khoản</h3>
+    </div>
+    <div class="card-body card_body_style">
+        <div class="row">
+            <div class="col-md-12 content-profile">
+                <form>
+                    <div class="form-group row">
+                        <label for="fullName" class="col-sm-4 col-form-label"><strong>FullName</strong></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control input-style" id="fullName" value="@Model.FullName" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="gender" class="col-sm-4 col-form-label"><strong>Gender</strong></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control input-style" id="gender"
+                                   value="@(Model.Gender == null ? "-" : (Model.Gender == true ? "Nam" : "Nữ"))" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="dob" class="col-sm-4 col-form-label input-style"><strong>Ngày sinh</strong></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control input-style" id="dob"
+                                   value="@(Model.DoB == null? "-Trống-" : Model.DoB)" placeholder="Ngày sinh" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="phone" class="col-sm-4 col-form-label input-style"><strong>Số điện thoại</strong></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control input-style" id="phone"
+                                   value="@Model.Phone" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="email" class="col-sm-4 col-form-label"><strong>Email</strong></label>
+                        <div class="col-sm-8">
+                            <input type="email" class="form-control input-style" id="email"
+                                   value="@Model.Email" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="address" class="col-sm-4 col-form-label input-style"><strong>Địa chỉ</strong></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control input-style" id="address" value='@(Model.Address.Equals("")?"-Trống-":Model.Address)' placeholder="Địa chỉ" disabled>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

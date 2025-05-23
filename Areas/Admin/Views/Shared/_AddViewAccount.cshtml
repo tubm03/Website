@@ -1,0 +1,108 @@
+﻿@model PetStoreProject.Areas.Admin.ViewModels.AccountViewModel;
+
+<link href="~/areas/css/list-user-style.css" rel="stylesheet"/>
+
+<style>
+    .title_add_style {
+        padding: 14px 25px 0px 45px !important
+    }
+
+    .popup_add_style {
+        border-radius:10px;
+    }
+    .input_add_style {
+        padding: 12px 0px;
+    }
+    .body_add_style {
+        padding: 20px 50px 50px 50px;
+    }
+
+    .input_add_style label em {
+        color:red;
+    }
+    .w98 {
+        width:98%;
+    }
+    .margin_auto {
+        margin: auto;
+    }
+</style>
+
+
+<div id="addAccount" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content popup_add_style">
+            <div class="modal-header title_add_style">
+                <h3 class="modal-title">Tạo tài khoản nhân viên</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body body_add_style">
+                <div class="container">
+                    <div id="error-mess"></div>
+                    <form id="registrationForm" asp-controller="Account" asp-action="AddAccount" method="post">
+                        <div class="form-group row input_add_style">
+                            <label asp-for="FullName" class="col-sm-3 col-form-label ">Họ và Tên<em>*</em></label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control input-regis" id="name" asp-for="FullName" placeholder="Nhập họ và tên" >
+                                <span asp-validation-for="FullName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row align-items-center input_add_style">
+                            <label asp-for="DoB" class="col-sm-3 col-form-label">Ngày Sinh<em>*</em></label>
+                            <div class="col-sm-9">
+                                <input asp-for="DoB" type="date" class="form-control input-regis" id="dob" >
+                                <span asp-validation-for="DoB" class="text-danger"></span>
+                            </div>
+                            
+                        </div>
+                        <div class="form-group row align-items-center input_add_style">
+                            <label asp-for="Gender" class="col-sm-3 col-form-label text-right">Giới Tính<em>*</em></label>
+                            <div class="col-sm-3">
+                                <div class="form-check form-check-inline">
+                                    <input asp-for="Gender" class="form-check-input" checked type="radio" name="gender" id="male" value="True">
+                                    <label asp-for="Gender" class="form-check-label" for="male">Nam</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input asp-for="Gender" class="form-check-input" type="radio" name="gender" id="female" value="False">
+                                    <label asp-for="Gender" class="form-check-label" for="female">Nữ</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row input_add_style">
+                            <label asp-for="Email" class="col-sm-3 col-form-label">Email<em>*</em></label>
+                            <div class="col-sm-9">
+                                <input asp-for="Email" type="email" class="form-control input-regis" id="email" placeholder="Nhập email" >
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                                <div id="error-email-mess"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row input_add_style">
+                            <label asp-for="Phone" class="col-sm-3 col-form-label">Số Điện Thoại<em>*</em></label>
+                            <div class="col-sm-9">
+                                <input asp-for="Phone" type="text" class="form-control input-regis" id="phone" placeholder="Nhập số điện thoại" >
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                                <div id="error-phone-mess"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row input_add_style">
+                            <label asp-for="Address" class="col-sm-3 col-form-label">Địa Chỉ<em>*</em></label>
+                            <div class="col-sm-9">
+                                <input asp-for="Address" type="text" class="form-control input-regis" id="address" placeholder="Nhập địa chỉ" >
+                                <span asp-validation-for="Address" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <button type="submit" class="tf-button style-1 w98 margin_auto cursor_style btn_add_account">Tạo tài khoản</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

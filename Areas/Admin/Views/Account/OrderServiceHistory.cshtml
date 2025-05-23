@@ -1,0 +1,341 @@
+﻿@{
+    Layout = null;
+}
+
+@using PetStoreProject.Areas.Admin.ViewModels;
+
+@model List<OrderServicesDetailViewModel>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+
+<style>
+    .empty-order-history {
+        text-align: center;
+        margin-top: 50px;
+        color: #555;
+    }
+
+        .empty-order-history i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #aaa;
+        }
+
+    #title-table, #list-body {
+        justify-content: flex-start;
+    }
+
+    #list-body {
+        text-align: left;
+    }
+
+        #title-table li, #list-body div {
+            width: auto;
+        }
+
+    .orderId, .phone, .optionServiceId {
+        width: 120px !important;
+    }
+
+    .name, .totalOrderItems {
+        width: 160px !important;
+    }
+
+    .orderDate, .orderTime {
+        width: 120px !important;
+    }
+
+    .email {
+        width: 200px !important;
+    }
+
+    .paymentMethod {
+        width: 100px !important;
+    }
+
+    .status {
+        width: 150px !important;
+    }
+
+    .btn_hover:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    .table_width_style {
+        min-width: 1315px !important;
+    }
+
+    .scroll_vertical {
+        height: 400px;
+        overflow-y: auto;
+        direction: rtl;
+    }
+
+    .text_center {
+        text-align: center !important;
+    }
+
+    .scroll_vertical * {
+        direction: ltr; /* Đặt lại hướng văn bản bên trong các phần tử */
+    }
+
+    .input_search_style {
+        padding: 14px 25px 14px 5px !important;
+        max-width: 100%;
+    }
+
+/*     .form_search_style {
+        max-width: 130px !important;
+    } */
+
+    .button_submit_style {
+        right: 3px !important;
+    }
+
+    .input_select_style {
+        padding: 14px 10px !important;
+    }
+
+    .filter_service_style {
+        justify-content: space-between !important;
+        gap: 10px 20px !important;
+    }
+
+    .card-style-table {
+        border-radius: 10px !important;
+    }
+
+    .header_menu_style li {
+        padding: 0px !important;
+    }
+
+    .dropdown_style li {
+        width: 250px !important;
+        font-weight: normal;
+        line-height: 2;
+    }
+
+
+</style>
+
+<div class="card mb-4 card-style-table">
+    <div class="card-header card_header_style">
+        <h3 class="title_style_header">Lịch sử đặt dịch vụ</h3>
+        <div class="btn_style_export">
+            <button class="export_button btn btn-success" onclick="buttonExportFile(@ViewBag.json, 'OrderServiceHistory')">
+                <span class="ml-2"><i class="bi bi-filetype-xls"></i></span>
+                <span>Excel</span>
+                <span class="export-icon">⬇</span>
+            </button>
+        </div>
+    </div>
+    <div class="card-body content_body">
+        <div class="wg-box min_height">
+            <div class="flex items-center justify-between gap10 flex-wrap">
+                <div class="wg-filter flex-grow filter_service_style">
+                    <form class="form-search form_search_style" onsubmit="return false;">
+                        <fieldset>
+                            <input id="search-orderService-input" type="text" placeholder="Mã đặt dịch vụ" class="input_search_style" name="sOrderServiceId" tabindex="2" value="@ViewBag.SearchOrderId" aria-required="true" required="">
+                        </fieldset>
+                        <div class="button-submit button_submit_style">
+                            <button onclick="searchOrderServiceId()"><i class="icon-search"></i></button>
+                        </div>
+                    </form>
+                    <form class="form-search form_search_style" onsubmit="return false;">
+                        <fieldset>
+                            <input id="search-name-input" type="text" placeholder="Tên người đặt" class="input_search_style" name="sNameOrderService" tabindex="2" value="@ViewBag.SearchName" aria-required="true" required="">
+                        </fieldset>
+                        <div class="button-submit button_submit_style">
+                            <button onclick="searchNameOrderService()"><i class="icon-search"></i></button>
+                        </div>
+                    </form>
+                    <form class="form-search form_search_style" onsubmit="return false;">
+                        <fieldset>
+                            <input id="select-date-input" onchange="selectDateOrderService()" type="date" placeholder="Ngày đặt" class="input_select_style" tabindex="2" value="@ViewBag.SearchDate" aria-required="true" required="">
+                        </fieldset>
+                    </form>
+                    <form class="form-search form_search_style" onsubmit="return false;">
+                        <fieldset>
+                            <input id="search-time-input" type="number" placeholder="Thời gian đặt" class="input_search_style" name="sTimeOrderDate" tabindex="2" min="0" max="24" value="@ViewBag.SearchTime" aria-required="true" required="">
+                        </fieldset>
+                        <div class="button-submit button_submit_style">
+                            <button onclick="searchTimeOrderService()"><i class="icon-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="wg-table table-all-user" id="table-content">
+
+                <ul class="header-menu-list table-title flex gap20 mb-14 header_menu_style table_width_style" id="title-table">
+                    <li class="orderId no-select" onclick="sortByOrderServiceId()">
+                        <div class="btn_hover body-title">Mã đặt dịch vụ<i class="bi bi-chevron-expand"></i></div>
+                    </li>
+                    <li class="name no-select" onclick="sortByNameService()">
+                        <div class="body-title btn_hover">Tên người đặt <i class="bi bi-chevron-expand"></i></div>
+                    </li>
+                    <li class="orderDate no-select" onclick="sortByDateService()">
+                        <div class="body-title btn_hover">Ngày đặt<i class="bi bi-chevron-expand"></i></div>
+                    </li>
+                    <li class="orderTime no-select" onclick="sortByTimeService()">
+                        <div class="body-title btn_hover text_center">Thời gian đặt<i class="bi bi-chevron-expand"></i></div>
+                    </li>
+                    <li class="optionServiceId no-select" onclick="sortByServiceId()">
+                        <div class="body-title btn_hover text-center">Mã dịch vụ<i class="bi bi-chevron-expand"></i></div>
+                    </li>
+                    <li class="phone no-select">
+                        <div class="body-title">Số điện thoại</div>
+                    </li>
+                    @*                         <li class="email">
+                    <div class="body-title">Email</div>
+                    </li> *@
+                    <li class="status no-select">
+                        <div class="body-title">
+                            <a class="drop-icon " href="#">Trạng thái</a>
+                            <ul class="common_ddown dropdown_style" id="status_service_history" style="width: 190px">
+                                <li><a href="#" onclick="changeStatusServiceHistory('')">- Tất cả</a></li>
+                                <li><a href="#" onclick="changeStatusServiceHistory('Đã thanh toán')">- Đã thanh toán</a></li>
+                                <li><a href="#" onclick="changeStatusServiceHistory('Đã xác nhận')">- Đã xác nhận</a></li>
+                                <li><a href="#" onclick="changeStatusServiceHistory('Đã hủy')">- Đã hủy</a></li>
+                                <li><a href="#" onclick="changeStatusServiceHistory('Chưa xác nhận')">- Chưa xác nhận</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="paymentMethod no-select">
+                        <div class="body-title text-center">Nhân viên</div>
+                    </li>
+
+                    <li class="totalAmount no-select" onclick="sortByPriceService()">
+                        <div class="body-title btn_hover">Tổng số tiền<i class="bi bi-chevron-expand"></i></div>
+                    </li>
+                </ul>
+
+                    <ul id="list-users" class="flex flex-column table_width_style scroll-hozirotal">
+                    @if (Model.Count > 0)
+                    {
+                        <!-- data user -->
+                        @foreach (var service in Model)
+                        {
+                            <li class="user-item gap14">
+                                <div class="flex items-center justify-between gap20 flex-grow" id="list-body">
+                                    <div class="body-text orderId text_center"><a href="">#@service.OrderServiceId</a></div>
+                                    <div class="body-text name">@service.Name</div>
+                                    <div class="body-text orderDate">@service.OrderDate.ToString("dd/MM/yyyy")</div>
+                                    <div class="body-text orderTime text_center">@service.OrderTime</div>
+                                    <div class="body-text optionServiceId text_center">#@service.ServiceId</div>
+                                    <div class="body-text phone">@service.Phone</div>
+                                    @* <div class="body-text email">@service.Email.Trim()</div> *@
+                                    <div class="body-text status ">@service.Status</div>
+                                    <div class="body-text paymentMethod text_center">
+                                        @if (service.employee != null)
+                                        {
+                                            <text>
+                                                @service.employee.FullName
+                                            </text>
+                                        }
+                                        else
+                                        {
+                                            <text><span style="width: 100%" class="block-not-available">Trống</span></text>
+                                        }
+                                    </div>
+                                    <div class="body-text totalAmount">@string.Format("{0:N0} VND", @service.Price)</div>
+
+                                    @* <div class="list-icon-function">
+                            <div class="item eye">
+                            <a href="CustomerDetail?userId=${account.userId}"><i class="icon-eye"></i></a>
+                            </div>
+                            </div> *@
+                                </div>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-order-history text-center">
+                            <i class="fas fa-box-open"></i>
+                            <h6>Lịch sử đặt dịch vụ hiện tại trống.</h6>
+                        </div>
+                    }
+                    </ul>
+
+            </div>
+
+            <div class="divider"></div>
+            @if (Model.Count > 0)
+            {
+                <div class="flex items-center justify-between flex-wrap gap40" style="font-size:16px;">
+                    <div id="total-user">Tổng @ViewBag.totalOrderServices đơn</div>
+                    <div class="text-tiny" id="no_data"></div>
+                    <div id="pagination">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                @if ((int)@ViewBag.numberPage > 1)
+                                {
+                                    @if ((int)ViewBag.pageIndex > 1)
+                                    {
+                                        <li class="page-item"><a class="page-link" onclick="nextPageService(@(ViewBag.pageIndex - 1), @(ViewBag.pageSize))" href="javascript:void(0);">Trang trước</a></li>
+                                    }
+
+                                    var startPage = Math.Max(1, (int)ViewBag.pageIndex - 2);
+                                    var endPage = Math.Min((int)ViewBag.numberPage, (int)ViewBag.pageIndex + 2);
+
+                                    @if (startPage > 1)
+                                    {
+                                        <li class="page-item"><a class="page-link" onclick="nextPageService(1, @(ViewBag.pageSize))" href="javascript:void(0);">1</a></li>
+                                        if (startPage > 2)
+                                        {
+                                            <li class="page-item"><a class="page-link" href="javascript:void(0);">...</a></li>
+                                        }
+                                    }
+                                    @for (var i = startPage; i <= endPage; i++)
+                                    {
+                                        @if ((int)ViewBag.pageIndex == i)
+                                        {
+                                            <li class="page-item active"><a class="page-link" href="javascript:void(0);">@i</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li class="page-item"><a class="page-link" onclick="nextPageService(@i, @(ViewBag.pageSize))" href="javascript:void(0);">@i</a></li>
+                                        }
+                                    }
+                                    @if ((int)ViewBag.numberPage >= endPage + 1)
+                                    {
+                                        @if ((int)ViewBag.numberPage >= endPage + 2)
+                                        {
+
+                                            <li class="page-item"><a class="page-link" href="javascript:void(0);">...</a></li>
+                                        }
+
+                                        <li class="page-item"><a class="page-link" onclick="nextPageService(@(ViewBag.numberPage), @(ViewBag.pageSize))" href="javascript:void(0);">@(ViewBag.numberPage)</a></li>
+                                    }
+                                    @if ((int)ViewBag.pageIndex != (int)ViewBag.numberPage)
+                                    {
+
+                                        <li class="page-item"><a class="page-link" onclick="nextPageService(@(ViewBag.pageIndex + 1), @(ViewBag.pageSize))" href="javascript:void(0);">Trang sau</a></li>
+                                    }
+                                }
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            }
+            else
+            {
+                
+            }
+        </div>
+        <!-- /all-user -->
+
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.vi.min.js"></script>
+
+

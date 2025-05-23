@@ -1,0 +1,103 @@
+﻿@using PetStoreProject.ViewModels
+
+@{
+	ViewData["Title"] = "Danh Sách Yêu Thích";
+}
+
+
+<link href="~/css/search.css" rel="stylesheet" />
+
+<!-- Wish List Start -->
+@if(Model.Count != 0)
+{
+	<div class="cart-main-area wish-list adp_top adp_bottom">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 col-sm-12 col-xs-12">
+					<!-- Table Content Start -->
+					<div class="table-content table-responsive">
+						<table>
+							<thead>
+								<tr>
+									<th class="product-thumbnail">Ảnh</th>
+									<th class="product-name">Tên sản phẩm</th>
+									<th class="product-price">Giá</th>
+									<th class="product-quantity">Thương hiệu</th>
+									<th class="product-subtotal">Thêm vào giỏ hàng</th>
+									<th class="product-remove">Xóa</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (WishListVM wVM in Model)
+								{
+									<tr>
+										<td class="product-thumbnail">
+											<a href="/product/detail/@wVM.ProductId"><img src="@wVM.img_url" alt="cart-image" /></a>
+										</td>
+										<td class="product-name"><a href="/product/detail/@wVM.ProductId">@wVM.ProductName</a></td>
+                                        <td class="product-price"><span class="amount regular-price">@wVM.price.ToString("N0") VND</span></td>
+										<td class="product-stock-status"><span>@wVM.Brand</span></td>
+                                        <td class="product-add-to-cart"><a class="grid_cart details_cart link " href="#" data-bs-toggle="modal" data-bs-target="#myModal" title="Add to Cart" onclick="quickView(@wVM.ProductId)">Thêm Vào Giỏ Hàng</a></td>
+										<td class="product-remove">
+											<a onclick="confirmDelete(@wVM.ProductId)">
+												<i class="icofont-delete-alt" style="cursor:pointer" aria-hidden="true"></i>
+											</a>
+										</td>
+									</tr>
+								}
+
+							</tbody>
+						</table>
+					</div>
+					<!-- Table Content End -->
+					<form id="deleteForm" action="/WishList/Delete" method="post">
+						<input type="hidden" id="productId" name="productId" />
+					</form>
+				</div>
+			</div>
+			<!-- Row End -->
+		</div>
+	</div>
+	@Html.Partial("_QuickView")
+	<script>
+		function confirmDelete(productId) {
+			console.log("Confirm delete for product ID:", productId);
+			var confirmation = confirm("Bạn có chắc chắn muốn xóa khỏi danh sách yêu thích không?");
+			if (confirmation) {
+				deleteProduct(productId);
+			}
+		}
+
+		function deleteProduct(productId) {
+			console.log("Deleting product ID:", productId);
+			document.getElementById("productId").value = productId;
+			document.getElementById("deleteForm").submit();
+		}
+	</script>
+} else
+{
+    <div class="container-wishlist">
+        <img src="~/img/order-service-empty.png" style="margin:-40px; width:377px; height:auto" />
+        <div class="message-box">
+            <h1 class="mt-0 mb-3">Bạn hiện chưa có sản phẩm yêu thích nào</h1>
+            <a asp-action="Index" asp-controller="Home" class="btn">Quay lại trang chủ</a>
+        </div>
+    </div>
+
+    <style>
+        .container-wishlist {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .container-wishlist h1 {
+            margin: 20px;
+        }
+
+        .container-wishlist img {
+            margin: 30px; 
+        }
+    </style>
+}

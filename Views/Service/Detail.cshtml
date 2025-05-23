@@ -1,0 +1,610 @@
+﻿@using PetStoreProject.ViewModels
+
+@{
+    ViewData["Title"] = "Dịch Vụ Thú Cưng";
+    var service = ViewData["ServiceDetail"] as ServiceDetailViewModel;
+    var firstServiceOption = ViewData["FirstServiceOption"] as ServiceOptionViewModel;
+    var otherServices = ViewData["OtherServices"] as List<ServiceViewModel>;
+}
+@section HeadOptional {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+}
+<style>
+    .star-rating {
+        direction: rtl;
+        display: inline-block;
+        font-size: 0;
+    }
+
+        .star-rating input[type="radio"] {
+            display: none;
+        }
+
+        .star-rating label {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+        }
+
+        .star-rating input[type="radio"]:checked ~ label {
+            color: gold;
+        }
+
+            .star-rating label:hover,
+            .star-rating label:hover ~ label,
+            .star-rating input[type="radio"]:checked ~ label:hover,
+            .star-rating input[type="radio"]:checked ~ label:hover ~ label {
+                color: gold;
+            }
+
+    .reviews-container {
+        width: 60%;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    .review {
+        border-bottom: 1px solid #e0e0e0;
+        padding: 20px 0;
+    }
+
+        .review:last-child {
+            border-bottom: none;
+        }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+        .review-header h2 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+    .rating {
+        font-size: 1.6em;
+        color: #ffcc00;
+    }
+
+    .review-content {
+        margin: 0;
+        color: #777;
+    }
+
+    .response {
+        margin-top: 15px;
+        padding-left: 20px;
+        border-left: 4px solid #e0e0e0;
+    }
+
+    .response-header {
+        margin: 0;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .response-content {
+        margin: 5px 0 0;
+        color: #777;
+    }
+</style>
+<!-- Product Thumbnail Start -->
+<div class="main-product-thumbnail product_details_wrap_1 adp_top adp_bottom" style="display:flex; justify-content:center; width:100%">
+    <div class="container" style="margin:0px; width:100%; display:flex; justify-content: space-around; flex-grow:1">
+        <div class="row" style="width:100%">
+            <!-- Thumbnail Image Start -->
+            <div class="col-lg-7 col-md-12 col-12">
+                <div class="product-details-img product-details-tab product_details_2 left_side">
+                    <div id="gallery" class="product-dec-slider-2 thumb_image_small mini_arrow_var">
+                        @foreach (var image in service.Images)
+                        {
+                            <div>
+                                <a data-image="@image.ImageUrl" data-zoom-image="@image.ImageUrl">
+                                    <img src="@image.ImageUrl" alt="">
+                                </a>
+                            </div>
+                        }
+
+                    </div>
+                    <!--Large image-->
+                    <div class="zoompro-wrap zoompro-2 thumb_image_large">
+                        <div class="zoompro-border zoompro-span">
+
+                            <img class="zoompro" style="height:529.6px; width: 592.6px; object-fit:cover" id="large_image" src="@service.Images[0].ImageUrl" data-zoom-image="@service.Images[0].ImageUrl" alt="Service Image" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thumbnail Description Start -->
+            <div class="col-lg-5 col-md-12 col-12">
+                <div class="thubnail-desc ">
+                    <!--name-->
+                    <h3 class="service-header">Dịch Vụ @service.Name</h3>
+                    <!--Rating-->
+@*                     <ul class="rating-summary">
+                        <li class="rating-pro">
+                            <i class="icofont-ui-rating"></i>
+                            <i class="icofont-ui-rating"></i>
+                            <i class="icofont-ui-rate-blank"></i>
+                            <i class="icofont-ui-rate-blank"></i>
+                            <i class="icofont-ui-rate-blank"></i>
+                        </li>
+                        <li class="read-review"><a href="#">Xem đánh giá</a></li>
+                        <li class="write-review"><a href="#">Viết đánh giá</a></li>
+                    </ul> *@
+                    <!--Service Type-->
+                    <div class="type-service">
+                        Loại dịch vụ : @service.Type
+                    </div>
+                    <!--Price-->
+                    <div class="pro-thumb-price mt-2 mb-4">
+                        <span class="regular-price" id="price">@firstServiceOption.Price.ToString("#,###")</span>
+                        <span class="regular-price">VND</span>
+                    </div>
+                    <!--PetType-->
+                    <div class="pet_type_wraper mb-3" id="pet_type">
+                        <div class="color clearfix mb-30">
+                            <label>Loại Thú Cưng :</label>
+                            <ul id="pet_type_list" class="color-list">
+                                @foreach (var petType in firstServiceOption.PetTypes)
+                                {
+                                    <li id="@petType" style="cursor: pointer" onclick="pet_type_selected('@service.ServiceId', '@petType')">@petType</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <!--Weight-->
+                    <div class="pet_type_wraper clearfix" id="weight">
+                        <label>Cân Nặng :</label>
+                        <div class="color-list size_list">
+                            <ul id="weight_list" class="color-list size_list">
+                                @foreach (var weight in firstServiceOption.Weights)
+                                {
+                                    <li id="@weight" style="cursor: pointer" onclick="weight_selected('@service.ServiceId', '@firstServiceOption.PetType', '@weight')">@weight</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="details_action_wraper">
+                        <a class="details_cart link " tabindex="0" id="book_service" data-service-option-id="@firstServiceOption.ServiceOptionId"
+                           onclick="bookService(this.getAttribute('data-service-option-id'))" style="cursor: pointer;">
+                            Đặt Lịch Ngay
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Thumbnail Description End -->
+        </div>
+        <!-- Row End -->
+    </div>
+    <!-- Container End -->
+</div>
+<!-- Product Thumbnail End -->
+<!-- Product Thumbnail Description Start -->
+<div class="thumnail-desc">
+    <div class="container">
+        <div class="thumb-desc-inner">
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class="main-thumb-desc nav tabs-area" role="tablist">
+                        <li><a class="active" data-bs-toggle="tab" href="#detail">Mô tả</a></li>
+                        <li><a data-bs-toggle="tab" href="#review">Đánh giá</a></li>
+                        <li><a data-bs-toggle="tab" href="#new_tab_1">Đánh giá khách hàng</a></li>
+                    </ul>
+                    <!-- Product Thumbnail Tab Content Start -->
+                    <div class="tab-content thumb-content">
+                        <div id="detail" class="tab-pane fade show active">
+                            <p>@Html.Raw(service.Description)</p>
+                        </div>
+                        <div id="review" class="tab-pane fade">
+                            <!-- Reviews Start -->
+                            <div class="review">
+                                <div class="group-title">
+                                    <h2>Đánh giá sản phẩm</h2>
+                                </div>
+                                <form id="feedbackForm" asp-action="submit" asp-controller="feedback" method="post">
+                                    <input type="hidden" name="sid" value="@service.ServiceId" />
+                                    <div class="form-group">
+                                        <label for="FullName">Họ và Tên<em>*</em></label>
+                                        <input type="text" id="FullName" name="FullName" class="form-control" />
+                                        <span id="FullNameError" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="PhoneNumber">Số điện thoại<em>*</em></label>
+                                        <input type="text" id="PhoneNumber" name="PhoneNumber" class="form-control" />
+                                        <span id="PhoneNumberError" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Email">Email</label>
+                                        <input type="email" id="Email" name="Email" class="form-control" />
+                                        <span id="EmailError" class="text-danger"></span>
+                                    </div>
+                                    <div class="rating_wrap">
+                                        <h5>Đánh giá</h5>
+                                        <div class="star-rating">
+                                            <input type="radio" id="5-stars" name="rating" value="5" checked>
+                                            <label for="5-stars" class="star">&#9733;</label>
+                                            <input type="radio" id="4-stars" name="rating" value="4">
+                                            <label for="4-stars" class="star">&#9733;</label>
+                                            <input type="radio" id="3-stars" name="rating" value="3">
+                                            <label for="3-stars" class="star">&#9733;</label>
+                                            <input type="radio" id="2-stars" name="rating" value="2">
+                                            <label for="2-stars" class="star">&#9733;</label>
+                                            <input type="radio" id="1-star" name="rating" value="1">
+                                            <label for="1-star" class="star">&#9733;</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Content">Nhập nội dung</label>
+                                        <textarea id="Content" name="Content" class="form-control" rows="5"></textarea>
+                                        <span id="ContentError" class="text-danger"></span>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mt-3" onclick="checkFormAndSubmit(event, @service.ServiceId)">Gửi đánh giá</button>
+                                </form>
+
+                                <!-- Reviews Field Start -->
+                            </div>
+                            <!-- Reviews End -->
+                        </div>
+                        <div id="new_tab_1" class="tab-pane fade">
+
+                            <div class="review">
+                                @{
+                                    List<FeedbackViewModels> listFeedbacks = (List<FeedbackViewModels>)ViewData["listFeedback"];
+                                    if (listFeedbacks.Count > 0)
+                                    {
+                                        foreach (var list in listFeedbacks)
+                                        {
+                                                <div class="review-header">
+                                                    <h2>@list.CustomerName</h2>
+                                                    @{
+                                                    switch (@list.Rating)
+                                                    {
+                                                        case 1:
+                                                                    <span class="rating">★☆☆☆☆</span>
+                                                            break;
+                                                        case 2:
+                                                                    <span class="rating">★★☆☆☆</span>
+                                                            break;
+                                                        case 3:
+                                                                    <span class="rating">★★★☆☆</span>
+                                                            break;
+                                                        case 4:
+                                                                    <span class="rating">★★★★☆</span>
+                                                            break;
+                                                        case 5:
+                                                                    <span class="rating">★★★★★</span>
+                                                            break;
+                                                        default:
+                                                                    <span class="rating">★★★★★</span>
+                                                            break;
+
+                                                    }
+                                                    }
+                                                </div>
+
+                                                <p class="review-content">@list.Content</p>
+                                                <p>@list.DateCreated</p>
+
+                                            if (@list.EmployeeName != null)
+                                            {
+                                                    <div class="response">
+                                                        <p class="response-header">Nhân viên @list.EmployeeName trả lời:</p>
+                                                        <p class="response-content">@list.ContentResponse </p>
+                                                        <p>@list.DateResp</p>
+                                                    </div>
+                                            }
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                            <h3 style="text-align:center;">Sản phẩm hiện chưa có đánh giá nào!</h3>
+                                    }
+                                }
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Product Thumbnail Tab Content End -->
+                </div>
+            </div>
+            <!-- Row End -->
+        </div>
+    </div>
+    <!-- Container End -->
+</div>
+<!-- Product Thumbnail Description End -->
+<!-- Service related area start -->
+<div class="pricing-table-area adp_top adp_bottom">
+    <div class="container">
+        <!-- Section Title Start Here -->
+        <div class="section-title">
+            <span>#Dịch Vụ</span>
+            <h2>Gói Dịch Vụ Khác</h2>
+        </div>
+        <!-- Section Title End Here -->
+        <!-- main-service Start -->
+        <div class="service-pro-active default_arrow small_arrow row">
+            @foreach (var otherService in otherServices)
+            {
+                <div class="col-lg-4 col-md-6 col-12">
+                    <div class="single-pricing-table text-center">
+                        <div class="price-icon">
+                            <img class="rounded-circle" src="@otherService.ImageUrl" alt="pric icon">
+                        </div>
+                        <h4 class="d-flex align-items-center justify-content-center">@otherService.Name</h4>
+                        <div class="price-tag">
+                            <span>@otherService.Price.ToString("#,###") VND</span>
+                        </div>
+                        <div class="adv-area">
+                            @Html.Raw(otherService.SupDescription)
+                        </div>
+                        <div class="small-btn">
+                            <a href="/service/detail/@otherService.ServiceId" tabindex="0">Xem Chi Tiết</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <!-- main-service End-->
+</div>
+<!-- Service related table area end -->
+<!-- Booking service modal start-->
+<div class="booking-service-area">
+    <div class="container">
+        <!--The Modal-->
+        <div class="modal fade" id="booking-modal">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header d-block text-center position-relative pb-3">
+                        <h5 class="modal-title d-inline-block">Đặt Lịch Hẹn</h5>
+                        <button type="button" class="btn-close position-absolute end-0 mt-1 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!-- Modal Header -->
+                    <!-- Modal body -->
+                    <div class="modal-body" id="booking-modal-content">
+                    </div>
+                    <!-- Modal body -->
+                </div>
+            </div>
+        </div>
+        <!--The Modal-->
+    </div>
+</div>
+<!-- Booking service modal end-->
+@section ScriptOptional {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let petType = "@Html.Raw(firstServiceOption.PetType)";
+            let weight = "@Html.Raw(firstServiceOption.Weight)";
+            document.getElementById(petType).classList.add("select");
+            document.getElementById(weight).classList.add("select");
+        });
+
+        function pet_type_selected(serviceId, petType) {
+            let pet_type_list = document.getElementById("pet_type_list").querySelectorAll("li");
+            pet_type_list.forEach(function (item) {
+                item.classList.remove("select");
+            });
+            console.log(petType);
+            let pet_type_selected = document.getElementById(petType);
+            pet_type_selected.classList.add("select");
+
+            $.ajax({
+                type: "POST",
+                url: "/Service/GetOptionViewModel",
+                data: { serviceId: serviceId, petType: petType },
+                success: function (response) {
+                    $('#price').text(response.price.toLocaleString('en-US'));
+
+                    let weightList = '';
+                    response.weights.forEach(function (weight) {
+                        var isSelected = (response.weight === weight);
+
+                        weightList += '<li id="' + weight + '"';
+                        weightList += (isSelected ? ' class="select"' : '');
+                        weightList += ' style="cursor: pointer" onclick="weight_selected(\'' + response.serviceId + '\',\''
+                            + response.petType + '\',\'' + weight + '\')">' + weight + '</li>';
+                    });
+
+                    $('#weight_list').html(weightList);
+                    $('#book_service').attr('data-service-option-id', response.serviceOptionId);
+                },
+
+                error: function (xhr, status, error) {
+                    console.error('The request failed!', status, error);
+                }
+            });
+        };
+
+        function weight_selected(serviceId, petType, weight) {
+            let weight_list = document.getElementById("weight_list").querySelectorAll("li");
+            weight_list.forEach(function (item) {
+                item.classList.remove("select");
+            });
+            let weight_selected = document.getElementById(weight);
+            weight_selected.classList.add("select");
+
+            $.ajax({
+                type: "POST",
+                url: "/Service/GetServiceOptionPrice",
+                data: { serviceId: serviceId, petType: petType, weight: weight },
+                success: function (response) {
+                    $('#price').text(response.price.toLocaleString('en-US'));
+                    $('#book_service').attr("data-service-option-id", response.serviceOptionId);
+                },
+
+                error: function (xhr, status, error) {
+                    console.error('The request failed!', status, error);
+                }
+            });
+        };
+
+        function bookService(serviceOptionId) {
+            $.ajax({
+                type: 'GET',
+                url: '/Service/BookService',
+                data: { serviceOptionId: serviceOptionId },
+                success: function (response) {
+                    $("#booking-modal-content").html(response);
+                    $("#booking-modal").modal("show");
+
+                    ConfirmBooking();
+                    orderDatepicker();
+                },
+
+                error: function (xhr, status, error) {
+                    if (xhr.status === 403) {
+                        console.error('The request failed!', status, error);
+                        window.location.href = "/Account/AccessDenied?allowedRoles=Customer";
+                    }
+                }
+            });
+        }
+
+        function changeOrderDate() {
+            let date = $("#OrderDate").val();
+            $.ajax({
+                type: 'GET',
+                url: '/Service/GetWorkingTimeByDate',
+                data: { date: date },
+                success: function (response) {
+                    let content = '';
+                    response.forEach(function (orderTime) {
+                        let time = orderTime.substring(0, 5);
+                        content += `<option value="${orderTime}">${time}</option>`;
+                    });
+                    $("#OrderTime").html(content);
+                },
+
+                error: function (xhr, status, error) {
+                    console.error('The request failed!', status, error);
+                    alert('Error: ' + xhr.responseText);
+                }
+            });
+        }
+
+        function ConfirmBooking() {
+            $("#booking-form").on("submit", function (event) {
+                event.preventDefault();
+                let bookedForm = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: '/Service/BookService',
+                    data: bookedForm,
+                    success: function (response) {
+                        $("#booking-modal-content").empty();
+                        $("#booking-modal-content").html(response);
+
+                        ConfirmBooking();
+                        orderDatepicker();
+                    },
+
+                    error: function (xhr, status, error) {
+                        console.error('The request failed!', status, error);
+                        alert('Error: ' + xhr.responseText);
+                    }
+                });
+            });
+        }
+
+        function orderDatepicker() {
+            let tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            $('#order-datepicker').datepicker({
+                format: "dd/mm/yyyy",
+                weekStart: 1,
+                startView: 0,
+                startDate: tomorrow,
+                maxViewMode: 1,
+                language: "vi",
+                autoclose: true,
+                orientation: "bottom auto",
+            });
+        };
+
+        /* Feed Back */
+        function checkFormAndSubmit(event, pid) {
+            event.preventDefault();
+
+            const fullName = document.getElementById('FullName').value.trim();
+            const phoneNumber = document.getElementById('PhoneNumber').value.trim();
+            const content = document.getElementById('Content').value;
+            const fullNameError = document.getElementById('FullNameError');
+            const phoneNumberError = document.getElementById('PhoneNumberError');
+            const contentError = document.getElementById('ContentError');
+
+            fullNameError.textContent = '';
+            phoneNumberError.textContent = '';
+
+            let isValid = true;
+
+            if (!fullName) {
+                fullNameError.textContent = 'Họ và tên không được để trống.';
+                isValid = false;
+            }
+
+            const phonePattern = /^[0-9]{10,11}$/;
+            if (!phonePattern.test(phoneNumber)) {
+                phoneNumberError.textContent = 'Số điện thoại không hợp lệ.';
+                isValid = false;
+            }
+
+            if (content.length > 500) {
+                contentError.textContent = 'Nội dung không được vượt quá 500 ký tự.';
+                isValid = false;
+            }
+
+
+            if (isValid) {
+                checkPhoneNumberAndSubmit(pid);
+            }
+        }
+
+        function checkPhoneNumberAndSubmit(pid) {
+            var phoneNumber = $('#PhoneNumber').val();
+
+            $.ajax({
+                url: '@Url.Action("CheckUsedService", "Feedback")',
+                type: 'POST',
+                data: {
+                    phoneNumber: phoneNumber,
+                    pid: pid
+                },
+                success: function (response) {
+                    if (response.status === "error") {
+                        alert(response.message);
+                    } else {
+                        $('#feedbackForm').submit();
+                    }
+                },
+                error: function () {
+                    alert('Đã xảy ra lỗi trong quá trình kiểm tra số điện thoại.');
+                }
+            });
+        }
+
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.vi.min.js"></script>
+}

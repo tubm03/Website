@@ -1,0 +1,203 @@
+﻿@using PetStoreProject.ViewModels
+
+@{
+    var serviceIds = ViewData["ListServiceId"] as List<int>;
+    var service = ViewData["ServiceDetail"] as ServiceDetailViewModel;
+    var firstServiceOption = ViewData["FirstServiceOption"] as ServiceOptionViewModel;
+    var serviceOptions = ViewData["ListServiceOption"] as List<ServiceOptionViewModel>;
+}
+
+@section HeadOptional {
+    <link rel="stylesheet" href="~/css/slick-slider.css">
+}
+
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Chi tiết dịch vụ</h3>
+        </div>
+        <div class="wg-box">
+            <!-- Header Start -->
+            <div class="flex items-center justify-between gap10 flex-wrap">
+                <div class="wg-filter flex-grow">
+                    <form class="form-search" id="form-search-serviceId" style="max-width: 280px;">
+                        <input id="serviceId-search" type="text" placeholder="Nhập id dịch vụ" tabindex="2" required>
+                        <div class="button-submit">
+                            <button type="submit"><i class="icon-search"></i></button>
+                        </div>
+                        <span id="error-input" class="text-danger"></span>
+                    </form>
+                </div>
+                <a class="tf-button style-1 w208" href="/Admin/Service/Update/@service.ServiceId"><i class="icon-plus"></i>Chỉnh sửa</a>
+            </div>
+            <!-- Header End-->
+            <!-- Product Thumbnail Start -->
+            <div class="main-product-thumbnail product_details_wrap_1 adp_bottom pt-5" style="display:flex; justify-content:center; width:100%">
+                <div class="container" style="margin:0px; width:100%; display:flex; justify-content: space-around; flex-grow:1">
+                    <div class="row" style="width:100%">
+                        <!-- Thumbnail Image Start -->
+                        <div class="col-lg-7 col-md-12 col-12">
+                            <div class="product-details-img product-details-tab product_details_2 left_side">
+                                <div id="gallery" class="product-dec-slider-2 thumb_image_small mini_arrow_var">
+                                    @foreach (var image in service.Images)
+                                    {
+                                        <div>
+                                            <a data-image="@image.ImageUrl" data-zoom-image="@image.ImageUrl">
+                                                <img src="@image.ImageUrl" alt="">
+                                            </a>
+                                        </div>
+                                    }
+
+                                </div>
+                                <!--Large image-->
+                                <div class="zoompro-wrap zoompro-2 thumb_image_large">
+                                    <div class="zoompro-border zoompro-span">
+                                        <img class="zoompro" style="height:529.6px; width: 592.6px; object-fit:cover" id="large_image"
+                                             src="@service.Images[0].ImageUrl" data-zoom-image="@service.Images[0].ImageUrl" alt="Service Image" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thumbnail Description Start -->
+                        <div class="col-lg-5 col-md-12 col-12">
+                            <div class="thubnail-desc ">
+                                <!--name-->
+                                <h3 class="service-header">Dịch Vụ @service.Name</h3>
+                                <!--Service Type-->
+                                <div class="type-service">
+                                    Loại dịch vụ : @service.Type
+                                </div>
+                                <!--Price-->
+                                <div class="pro-thumb-price mt-2 mb-4">
+                                    <span class="regular-price" id="price">@firstServiceOption.Price.ToString("#,###")</span>
+                                    <span class="regular-price">VND</span>
+                                </div>
+                                <!--PetType-->
+                                <div class="pet_type_wraper mb-3" id="pet_type">
+                                    <div class="color clearfix mb-20">
+                                        <label>Loại Thú Cưng :</label>
+                                        <ul id="pet_type_list" class="color-list">
+                                            @foreach (var petType in firstServiceOption.PetTypes)
+                                            {
+                                                <li id="@petType" style="padding: 7px 20px;" onclick="pet_type_selected('@service.ServiceId', '@petType')">@petType</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!--Weight-->
+                                <div class="pet_type_wraper clearfix" id="weight">
+                                    <label>Cân Nặng :</label>
+                                    <div class="color-list size_list">
+                                        <ul id="weight_list" class="color-list size_list">
+                                            @foreach (var weight in firstServiceOption.Weights)
+                                            {
+                                                <li id="@weight" onclick="weight_selected('@service.ServiceId', '@firstServiceOption.PetType', '@weight')">@weight</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!--Warning-->
+                                <div id="error-status">
+                                    @if (firstServiceOption.IsDelete == true)
+                                    {
+                                        <div class="block-warning w-full mt-5">
+                                            <i class="icon-alert-octagon"></i>
+                                            <div class="body-title-2" id="status">Tùy chọn dịch vụ đã ngừng kinh doanh</div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Thumbnail Description End -->
+                    </div>
+                    <!-- Row End -->
+                </div>
+                <!-- Container End -->
+            </div>
+            <!-- Product Thumbnail End -->
+            <!-- Product Thumbnail Description Start -->
+            <div class="thumnail-desc">
+                <div class="container">
+                    <div class="thumb-desc-inner">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="main-thumb-desc nav tabs-area" role="tablist">
+                                    <li><a class="active" data-bs-toggle="tab" href="#detail">Mô tả</a></li>
+                                    <li><a data-bs-toggle="tab" href="#review">Xem chi tiết các tùy chọn</a></li>
+                                </ul>
+                                <!-- Product Thumbnail Tab Content Start -->
+                                <div class="tab-content thumb-content">
+                                    <div id="detail" class="tab-pane fade show active">
+                                        <p>@Html.Raw(service.Description)</p>
+                                    </div>
+                                    <div id="review" class="tab-pane fade">
+                                        <!-- Reviews Start -->
+                                        <div class="wg-box h-full gap15 py-0" style="max-height: 550px; overflow-y: auto">
+                                            <div class="row">
+                                                <div class="col-12 mb-20">
+                                                    <div class="shop-item gap20">
+                                                        <div class="flex-grow flex justify-between gap20" style="">
+                                                            <div style="width: 5%; font-weight: 600;" class="body-text">ID</div>
+                                                            <div style="width: 15%; font-weight: 600;" class="body-text">Loại thú cưng</div>
+                                                            <div style="width: 15%; font-weight: 600;" class="body-text">Cân nặng</div>
+                                                            <div style="width: 15%; font-weight: 600;" class="body-text">Giá</div>
+                                                            <div style="width: 15%; font-weight: 600;" class="body-text">Lượt đặt lịch</div>
+                                                            <div style="width: 15%; font-weight: 600;" class="body-text">Lượt thanh toán</div>
+                                                            <div style="width: 15%; font-weight: 600;" class="body-text">Trạng thái</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @foreach (var so in serviceOptions)
+                                            {
+                                                <div class="row">
+                                                    <div class="col-12 mb-20">
+                                                        <div class="shop-item gap20">
+                                                            <div class="flex-grow flex justify-between gap20">
+                                                                <div style="width: 5%" class="body-text">#@so.ServiceOptionId</div>
+                                                                <div style="width: 15%" class="body-text">@so.PetType</div>
+                                                                <div style="width: 15%" class="body-text">@so.Weight</div>
+                                                                <div style="width: 15%" class="body-text">@so.Price.ToString("#,###") VND</div>
+                                                                <div style="width: 15%" class="body-text">@so.OrderedQuantity đã đặt lịch</div>
+                                                                <div style="width: 15%" class="body-text">@so.UsedQuantity đã thanh toán</div>
+                                                                <div style="width: 15%" class="body-text @((so.IsDelete) ? "block-not-available" : "block-available")">@((so.IsDelete) ? "Ngừng kinh doanh" : "Còn kinh doanh")</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            <!-- Reviews End -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Product Thumbnail Tab Content End -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Product Thumbnail Description End -->
+        </div>
+    </div>
+</div>
+@section ScriptOptional {
+    <script>
+        console.log(@service.Images.Count);
+        document.addEventListener("DOMContentLoaded", function () {
+            let petType = "@Html.Raw(firstServiceOption.PetType)";
+            let weight = "@Html.Raw(firstServiceOption.Weight)";
+            document.getElementById(petType).classList.add("select");
+            document.getElementById(weight).classList.add("select");
+
+            $("#form-search-serviceId").on("submit", function (event) {
+                event.preventDefault();
+                let serviceIds = @Html.Raw(Json.Serialize(serviceIds));
+                confirmServiceId(serviceIds, "/Admin/Service/Detail/");
+            });
+        });
+    </script>
+    <script src="~/areas/js/detail-service.js"></script>
+}

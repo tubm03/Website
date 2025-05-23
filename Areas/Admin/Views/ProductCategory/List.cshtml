@@ -1,0 +1,844 @@
+﻿@using PetStoreProject.Areas.Admin.ViewModels
+@{
+    ViewData["title"] = "Danh sách thể loại";
+    var prouctCategories = ViewData["ProductCategories"] as List<ProductCategoryViewForAdmin>;
+    var brands = ViewData["brands"] as List<BrandViewForAdmin>;
+    var categories = ViewData["categories"] as List<CategoryViewModel>;
+}
+
+@section HeadOptional {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+
+    <style>
+        a {
+            cursor: pointer;
+        }
+
+        div input {
+            outline: 0;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+            width: 100%;
+            padding: 14px 22px;
+            font-size: 14px;
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            line-height: 20px;
+            background-color: transparent;
+            border: 1px solid var(--Input);
+            border-radius: 12px;
+            color: var(--Heading);
+            overflow: hidden;
+        }
+
+        .scrollable-brand-list {
+            max-height: 400px; /* Giới hạn chiều cao của danh sách */
+            overflow-y: auto; /* Thêm thanh cuộn dọc nếu nội dung vượt quá chiều cao tối đa */
+            overflow-x: hidden; /* Ẩn thanh cuộn ngang */
+        }
+
+        .header-menu-list > li, .cart-box > ul > li {
+            padding: 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .empty-order-history {
+            margin-top: 4%;
+            margin-bottom: 4%;
+            text-align: center;
+        }
+
+            .empty-order-history h6 {
+                font-family: "Inter", sans-serif;
+                line-height: 25px;
+            }
+
+        .modal-content{
+            border-radius: 12px;
+        }
+
+        .modal-content .modal-header {
+            padding: 20px 3rem;
+        }
+
+        .modal-content .modal-body {
+            padding-bottom: 15px;
+        }
+
+        .modal-content .modal-footer {
+            padding: 10px 30px 15px;
+            border: none;
+        }
+
+            .modal-content .modal-footer button {
+                padding: 5px 15px;
+                font-size: 14px;
+            }
+
+    </style>
+}
+<!--List Category-->
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Tất cả các danh mục</h3>
+        </div>
+        <!-- all-category -->
+        <div class="wg-box">
+            <div class="flex items-center justify-between gap10 flex-wrap">
+                <a class="btn btn-primary tf-button style-1 w208" href="new-category.html" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class=" icon-plus"></i>Thêm mới</a>
+            </div>
+            <div class="wg-table table-all-category">
+                <ul class="table-title flex gap20 mb-14 header-menu-list">
+                    <li style="width: 280px">
+                        <a class="body-title" onclick="sortProductCateName()">Tên danh mục sản phẩm<i class="bi bi-chevron-expand"></i></a>
+                    </li>
+                    <li>
+                        <a class="body-title" onclick="sortCateName()">Tên danh mục<i class="bi bi-chevron-expand"></i></a>
+                    </li>
+                    <li>
+                        <a class="body-title" onclick="sortQuantity()">Số lượng sản phẩm<i class="bi bi-chevron-expand"></i></a>
+                    </li>
+                    <li>
+                        <a class="body-title" onclick="sortQuantitySold()">Số lượng đã bán<i class="bi bi-chevron-expand"></i></a>
+                    </li>
+                    @* <li>
+                        <a class="drop-icon " href="#">Trạng thái</a>
+                        <ul class="common_ddown dropdown_style" id="status_list_customer">
+                            <li><a href="#" onclick="orderStatus('isDelete')">- Tất cả</a></li>
+                            <li><a href="#" onclick="orderStatus('block-available')">- Còn bán</a></li>
+                            <li><a href="#" onclick="orderStatus('block-not-available')">- Ngừng bán</a></li>
+                        </ul>
+                    </li> *@
+                    <li>
+                        <div class="body-title">Tùy chỉnh</div>
+                    </li>
+                </ul>
+                <ul class="flex flex-column scrollable-brand-list" id="list-category">
+                    @foreach (var category in prouctCategories)
+                    {
+                        <li class="product-item gap14 product-category-@category.Id">
+                            <input type="hidden" value="@category.Id" class="productCategoryId">
+                            <input type="hidden" value="@category.CategoryId" class="categoryId">
+                            <div class="flex items-center justify-between gap20 flex-grow">
+                                <div class="productCateName" id="productCateName_@category.Id" style="width: 280px">
+                                    @category.ProductCateName
+                                </div>
+                                <div class="body-text cateName">@category.CategoryName</div>
+                                <div class="body-text totalProduct totalProduct_@category.Id">@category.TotalProducts</div>
+                                <div class="body-text quantitySold quantitySold_@category.Id">@category.QuantitySoldProduct</div>
+                                @* <div class="body-text isDelete @(category.IsDelete == true ? "block-not-available" : "block-available") isDelete" value="@(category.IsDelete == true ? 1 : 0)">@(category.IsDelete == true ? "Ngừng bán" : "Còn bán")</div> *@
+                                <div class="list-icon-function">
+                                    <div class="item edit" onclick="updateProductCategory(this, @category.Id)">
+                                        <i class="icon-edit-3"></i>
+                                    </div>
+                                    <div class="item tras" onclick="deleteProductCategory(this, @category.Id)">
+                                        <i class="icon-trash-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                    <div class="empty-order-history hidden">
+                        <i class="fas fa-box-open"></i>
+                        <h6>Trống</h6>
+                    </div>
+                </ul>
+            </div>
+        </div>
+        <!-- /all-category -->
+
+    </div>
+    <!-- /main-content-wrap -->
+</div>
+
+<!--List Brand-->
+<div class="main-content-inner">
+    <!-- main-content-wrap -->
+    <div class="main-content-wrap">
+        <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+            <h3>Tất cả các nhãn hàng</h3>
+        </div>
+        <!-- all-category -->
+        <div class="wg-box">
+            <div class="flex items-center justify-between gap10 flex-wrap">
+                <a class="btn btn-primary tf-button style-1 w208" onclick="addBrand()"><i class=" icon-plus"></i>Thêm mới</a>
+            </div>
+            <div class="wg-table table-all-category">
+                <ul class="table-title flex gap20 mb-14">
+                    <li style="width: 300px">
+                        <a class="body-title" onclick="sortBrandName()">Tên Nhãn Hàng<i class="bi bi-chevron-expand"></i></a>
+                    </li>
+                    <li style="width: 150px">
+                        <a style="width: 150px" class="body-title" onclick="sortQuantityOfBrand()">Số lượng sản phẩm<i class="bi bi-chevron-expand"></i></a>
+                    </li>
+                    <li style="width: 150px">
+                        <a class="body-title" onclick="sortQuantitySoldOfBrand()">Số lượng đã bán<i class="bi bi-chevron-expand"></i></a>
+                    </li>
+                    <li>
+                        <div class="body-title">Tùy chỉnh</div>
+                    </li>
+                </ul>
+                <!-- Update the class here -->
+                <ul class="flex flex-column scrollable-brand-list" id="list-brand">
+                    @foreach (var brand in brands)
+                    {
+                        <li class="product-item gap14 brand-id-@(brand.Id)">
+                            <input type="hidden" value="@brand.Id" class="brandId">
+                            <div class="flex items-center justify-between gap20 flex-grow">
+                                <div class="name" style="width: 300px">
+                                    @brand.Name
+                                </div>
+                                <div class="body-text quantityx totalBrand_@brand.Id" style="width: 150px">@brand.Quantity</div>
+                                <div class="body-text quantitySold quantityBrandSold_@brand.Id" style="width: 150px">@brand.QuantityOfSold</div>
+                                <div class="list-icon-function">
+                                    <div class="item edit" onclick="updateBrand(@brand.Id)">
+                                        <i class="icon-edit-3"></i>
+                                    </div>
+                                    <div class="item tras" onclick="deleteBrand(this, @brand.Id)">
+                                        <i class="icon-trash-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <!-- /all-category -->
+
+    </div>
+    <!-- /main-content-wrap -->
+</div>
+
+<!-- Add product category -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-add-product">
+                    <div class="wg-box">
+                        <fieldset class="name">
+                            <label class="body-title mb-10">Tên danh mục sản phẩm<span class="tf-color-1">*</span></label>
+                            <input type="text" class="mb-10 addProductCateName" placeholder="Nhập tên danh mục sản phẩm" id="name">
+                            <span id="error-name" class="text-danger"></span>
+                        </fieldset>
+                        <fieldset>
+                            <label class="body-title mb-10">Tên danh mục<span class="tf-color-1">*</span></label>
+                            <select id="categoryId">
+                                @foreach (var category in categories)
+                                {
+                                    <option value="@category.Id">@category.Name</option>
+                                }
+                            </select>
+                        </fieldset>
+                    </div>
+                </div>
+
+                @* <div class="form-add-product">
+                <div class="wg-box gap-0">
+
+                </div>
+                </div> *@
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="createProductCategory()">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Product Category -->
+<div class="modal fade" id="updateProductCategory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-add-product">
+                    <div class="wg-box">
+                        <fieldset class="name">
+                            <label class="body-title mb-10">Tên danh mục sản phẩm mới<span class="tf-color-1">*</span></label>
+                            <input type="text" class="mb-10" placeholder="" id="productCategoryName">
+                            <input type="hidden" id="productCateId">
+                        </fieldset>
+                        <fieldset>
+                            <label class="body-title mb-10">Tên danh mục<span class="tf-color-1">*</span></label>
+                            <select class="categoryId">
+                                @foreach (var category in categories)
+                                {
+                                    <option value="@category.Id">@category.Name</option>
+                                }
+                            </select>
+                            <input type="hidden" id="cateId">
+                        </fieldset>
+                        @* <fieldset>
+                            <label class="body-title mb-10">Tình trạng</label>
+                            <div class="select mb-10 flex gap22 radio-buttons justify-content-around" id="list-size">
+                                <div class="item">
+                                    <input class="" type="radio" name="isDelete" id="isDelete_false" value="0">
+                                    <label class="" for="isDelete_false"><span class="body-title-2">Còn bán</span></label>
+                                </div>
+                                <div class="item">
+                                    <input class="" type="radio" name="isDelete" id="isDelete_true" value="1">
+                                    <label class="" for="isDelete_true"><span class="body-title-2">Ngừng bán</span></label>
+                                </div>
+                            </div>
+                        </fieldset> *@
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="saveProductCateGory()">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add brand -->
+<div class="modal fade" id="addbrand" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-add-product">
+                    <div class="wg-box">
+                        <fieldset class="name">
+                            <label class="body-title mb-10 title">Tên nhãn hàng mới<span class="tf-color-1">*</span></label>
+                            <input type="text" class="mb-10" placeholder="Nhập tên nhãn hàng" id="brandName">
+                            <span id="error-brand" class="text-danger"></span>
+                            <input type="hidden" id="brandId">
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="saveBrand()">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section ScriptOptional {
+    <script>
+        let productCateName = true;
+        let cateName = true;
+        let quantity = true;
+        let quantitySold = true;
+        let isDelete = true;
+        let brandName = true;
+        let quantityOfBrand = true;
+        let quantitySoldOfBrand = true;
+
+        function sortBrandName() {
+
+            var list = $('#list-brand').find('li')
+            list.sort(function (a, b) {
+                var nameA = $(a).find('.name').text().trim();
+                var nameB = $(b).find('.name').text().trim();
+                if (brandName) {
+                    return nameA.localeCompare(nameB, 'vi');
+                }
+                else {
+                    return nameB.localeCompare(nameA, 'vi');
+                }
+
+            })
+            brandName = !(brandName);
+            $('#list-brand').empty().append(list);
+
+        }
+
+        function sortQuantityOfBrand() {
+
+            var list = $('#list-brand').find('li')
+            list.sort(function (a, b) {
+                var nameA = $(a).find('.quantityx').text().trim();
+                var nameB = $(b).find('.quantityx').text().trim();
+                if (quantityOfBrand) {
+                    return nameA - nameB;
+                }
+                else {
+                    return nameB - nameA;
+                }
+
+            })
+            quantityOfBrand = !(quantityOfBrand);
+            $('#list-brand').empty().append(list);
+
+        }
+
+
+        function sortQuantitySoldOfBrand() {
+
+            var list = $('#list-brand').find('li')
+            list.sort(function (a, b) {
+                var nameA = $(a).find('.quantitySold').text().trim();
+                var nameB = $(b).find('.quantitySold').text().trim();
+                if (quantitySoldOfBrand) {
+                    return nameA - nameB;
+                }
+                else {
+                    return nameB - nameA;
+                }
+
+            })
+            quantitySoldOfBrand = !(quantitySoldOfBrand);
+            $('#list-brand').empty().append(list);
+
+        }
+
+        function sortProductCateName() {
+            var list = $('#list-category').find('li')
+            console.log(productCateName)
+            list.sort(function (a, b) {
+                var nameA = $(a).find('.productCateName').text().trim();
+                var nameB = $(b).find('.productCateName').text().trim();
+                if (productCateName) {
+                    return nameA.localeCompare(nameB, 'vi');
+                }
+                else {
+                    return nameB.localeCompare(nameA, 'vi');
+                }
+
+            })
+            productCateName = !(productCateName);
+            $('#list-category').empty().append(list);
+        }
+
+        function sortCateName() {
+            var list = $('#list-category').find('li')
+            console.log(cateName)
+            list.sort(function (a, b) {
+                var nameA = $(a).find('.cateName').text().trim();
+                var nameB = $(b).find('.cateName').text().trim();
+                if (cateName) {
+                    return nameA.localeCompare(nameB, 'vi');
+                }
+                else {
+                    return nameB.localeCompare(nameA, 'vi');
+                }
+
+            })
+            cateName = !(cateName);
+            $('#list-category').empty().append(list);
+        }
+
+        function sortQuantity() {
+            var list = $('#list-category').find('li')
+            console.log(quantity)
+            list.sort(function (a, b) {
+                var nameA = $(a).find('.totalProduct').text().trim();
+                var nameB = $(b).find('.totalProduct').text().trim();
+                if (quantity) {
+                    return nameA - nameB;
+                }
+                else {
+                    return nameB - nameA;
+                }
+
+            })
+            quantity = !(quantity);
+            $('#list-category').empty().append(list);
+        }
+
+        function sortQuantitySold() {
+            var list = $('#list-category').find('li')
+            console.log(quantitySold)
+            list.sort(function (a, b) {
+                var nameA = $(a).find('.quantitySold').text().trim();
+                var nameB = $(b).find('.quantitySold').text().trim();
+                if (quantitySold) {
+                    return nameA - nameB;
+                }
+                else {
+                    return nameB - nameA;
+                }
+
+            })
+            quantitySold = !quantitySold
+            $('#list-category').empty().append(list);
+        }
+
+        function orderStatus(str) {
+            var list = $('#list-category').find('li');
+            var flag = false;
+
+            list.each(function () {
+                if ($(this).find('.isDelete').hasClass(str)) {
+                    flag = true;
+                    $(this).removeClass('hidden');
+                } else {
+                    $(this).addClass('hidden');
+                }
+            });
+
+            if (!flag) {
+                $('.empty-order-history').removeClass('hidden');
+            } else {
+                $('.empty-order-history').addClass('hidden');
+            }
+        }
+
+
+        var regex = /^[0-9\W]+$/;
+        var error = ""
+        function isValidString(name) {
+            var isValid = true
+            if (name == '') {
+                isValid = false
+                error = 'Tên không được để trống';
+            }
+            else if (name.length > 200) {
+                isValid = false
+                error = 'Không được nhập quá 200 ký tự';
+            }
+            else if (regex.test(name)) {
+                isValid = false
+                error = 'Không được nhập toàn kí tự số và kí tự đặc biệt';
+            }
+            else {
+                error = ""
+            }
+
+            return error;
+        }
+
+        function isExistsProductCategory(name, id) {
+            var isExist = false;
+            var categories = $('#list-category li');
+
+            categories.each(function () {
+                var categoryName = $(this).find('.productCateName').text().toLowerCase().trim();
+                var categoryId = $(this).find('.categoryId').val();
+
+                // if (categoryName.toLowerCase().trim() == name.toLowerCase().trim() && id != categoryId) {
+                //     isExist = true;
+                //     return false;
+                // }
+                if (categoryName.toLowerCase().trim() == name.toLowerCase().trim() && id == categoryId) {
+                    console.log("categoryName: " + categoryName + " - id: " + categoryId);
+                    console.log("name: " + name + " - id: " + id);
+                    isExist = true;
+                    return false;
+                }
+            });
+
+            return isExist;
+        }
+
+        function createProductCategory() {
+            $('.addProductCateName').val();
+            var ProductCategoryName = $('#name').val().trim()
+            var categoryId = $('#categoryId').val()
+            var categoryName = $('#categoryId option:selected').text()
+            if (isValidString(ProductCategoryName) == "") {
+                if (isExistsProductCategory(ProductCategoryName, categoryId)) {
+                    alert('Trong cùng một danh mục, không thể tồn tại hai danh mục sản phẩm cùng tên!');
+                }
+                else {
+                    $('#staticBackdrop').modal('hide')
+                    $.ajax({
+                        url: "/Admin/ProductCategory/Create",
+                        method: "POST",
+                        data: { ProductCategoryName: ProductCategoryName, CategoryId: categoryId },
+                        success: function (res) {
+                            var li = `<li class="product-item gap14 product-category-${res.productCateId}">
+                                        <div class="flex items-center justify-between gap20 flex-grow ">
+                                            <div class="name" style="width: 280px">
+                                                        ${ProductCategoryName}
+                                            </div>
+                                            <div class="body-text cateName">${categoryName}</div>
+
+                                            <div class="body-text">0</div>
+                                            <div class="body-text">0</div>
+                                            <div class="list-icon-function">
+                                                <div class="item edit" onclick="updateProductCategory(this)">
+                                                    <i class="icon-edit-3"></i>
+                                                </div>
+                                                    <div class="item tras" onclick="deleteProductCategory(this, ${res.productCateId})">
+                                                    <i class="icon-trash-2"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>`
+
+                            $('#list-category').append(li)
+                            alert('Thêm danh mục thành công')
+                        },
+                        error: function (res) {
+                            alert(res)
+                        }
+
+                    }
+                    )
+
+                }
+
+            }
+            else {
+                $('#error-name').text(error)
+            }
+        }
+
+        function deleteProductCategory(ProductCateTag, ProductCateId) {
+            document.getElementsByClassName('.item .trash').removeLis
+
+            var totalProduct = $('.totalProduct_' + ProductCateId).text().trim();
+            var quantitySold = $('.quantitySold_' + ProductCateId).text().trim();
+            console.log("Total: " + totalProduct);
+            console.log("sold: " + quantitySold);
+
+            if (totalProduct != 0 || quantitySold != 0) {
+                alert("Bạn không thể xóa danh mục sản phẩm này vì có những sản phẩm đang liên kết với danh mục này!");
+                return;
+            }
+
+            var isDelete = confirm('Bạn có chắc chắn muốn xóa danh mục này không?')
+            if (isDelete) {
+                $.ajax({
+                    url: "/Admin/ProductCategory/Delete",
+                    method: "DELETE",
+                    data: { ProductCategoryId: ProductCateId },
+                    success: function (res) {
+                        $('.product-category-' + ProductCateId).hide();
+                        // $(ProductCateTag).parent().parent().find('.isDelete').text('Ngừng bán')
+                        // $(ProductCateTag).parent().parent().find('.isDelete').addClass('block-not-available');
+                        // $(ProductCateTag).parent().parent().find('.isDelete').removeClass('block-available');
+                        $(ProductCateTag).remove();
+                        console.log(res.result)
+                    },
+                    error: function (res) {
+                    }
+                })
+                alert('Xóa danh mục thành công')
+
+            }
+        }
+
+        function deleteBrand(brandTag, brandId) {
+            document.getElementsByClassName('.item .trash').removeLis
+
+            var totalProduct = $('.totalBrand_' + brandId).text().trim();
+            var quantitySold = $('.quantityBrandSold_' + brandId).text().trim();
+            console.log("Total: " + totalProduct);
+            console.log("sold: " + quantitySold);
+
+            if (totalProduct != 0 || quantitySold != 0) {
+                alert("Bạn không thể xóa thương hiệu sản phẩm này vì có những sản phẩm đang liên kết với sản phẩm này!");
+                return;
+            }
+
+            var isDelete = confirm('Bạn có chắc chắn muốn xóa thương hiệu này không?')
+            if (isDelete) {
+                $.ajax({
+                    url: "/Admin/Brand/Delete",
+                    method: "DELETE",
+                    data: { brandId: brandId },
+                    success: function (res) {
+                        $('.brand-id-' + brandId).hide();
+                        console.log(res.result)
+                    },
+                    error: function (res) {
+                    }
+                })
+                alert('Xóa thương hiệu thành công')
+
+            }
+        }
+
+        function updateProductCategory(cateTag, productCateId) {
+            var pCateName = $('#productCateName_' + productCateId).text().trim();
+
+            $('#updateProductCategory').modal('show')
+            $('#productCategoryName').val($(cateTag).parent().parent().find('.name').text().trim())
+            $('#productCateId').val(productCateId)
+
+            $('#productCategoryName').val(pCateName);
+            $('#productCategoryName').attr('placeholder',pCateName);
+            var cateId = $('.product-category-' + productCateId).find('.categoryId').val()
+            $('#updateProductCategory .categoryId option').each(function () {
+                if ($(this).val() == cateId) {
+                    $(this).prop('selected', true);
+                }
+            })
+
+            let isDelete = $(cateTag).parent().parent().find('.isDelete').attr('value')
+            if (isDelete == 1) {
+                $('#isDelete_true').prop('checked', true)
+            }
+            else {
+                $('#isDelete_false').prop('checked', true)
+            }
+        }
+
+        function saveProductCateGory() {
+            let name = $('#productCategoryName').val().trim()
+            if(name == "") {
+                alert("Tên danh mục sản phẩm không được để trống!");
+            }
+            let id = $('#productCateId').val()
+            let isDelete = $('input[name="isDelete"]:checked').val() == '1' ? true : false
+            let cateId = $('#updateProductCategory .categoryId').val()
+            let cateName = $('#updateProductCategory .categoryId option:selected').text()
+
+            if (isValidString(name) == "") {
+                if (isExistsProductCategory(name, cateId)) {
+                    alert('Trong cùng một danh mục, không thể tồn tại hai danh mục sản phẩm cùng tên!')
+                }
+                else {
+                    $.ajax({
+                        url: "/Admin/ProductCategory/Update",
+                        method: "PUT",
+                        data: { ProductCategoryName: name, ProductCategoryId: id, IsDelete: isDelete, CategoryId: cateId },
+                        success: function (res) {
+                            $('#updateProductCategory').modal('hide')
+                            alert('Cập nhật danh mục thành công')
+                            var tag = $(`.product-category-${id}`)
+                            tag.find('.name').text(name)
+                            tag.find('.categoryId').val(cateId)
+                            tag.find('.isDelete').attr('value', isDelete ? 1 : 0)
+                            if (isDelete == 1) {
+                                tag.find('.isDelete').text('Ngừng bán')
+                                tag.find('.isDelete').addClass('block-not-available')
+                                tag.find('.isDelete').removeClass('block-available')
+                                tag.find('.trash').addClass('hide')
+                            }
+                            else {
+                                tag.find('.isDelete').text('Còn bán')
+                                tag.find('.isDelete').addClass('block-available')
+                                tag.find('.isDelete').removeClass('block-not-available')
+                                tag.find('.trash').removeClass('hide')
+                            }
+
+                            tag.find('.cateName').text(cateName)
+                            console.log("id: + Name: " + id + name);
+                            $('#productCateName_' + id).text(name);
+                        },
+                        error: function (res) {
+                            console.log(res)
+                        }
+                    })
+                }
+            }
+            else {
+                $('#error-name').text(error)
+            }
+        }
+
+        function isExistsBrand(name, id) {
+            var isExists = false;
+            var brands = $('#list-brand li')
+            brands.each(function () {
+                console.log($(this).text().toLowerCase().trim())
+                if ($(this).find('.name').text().toLowerCase().trim() == name.toLowerCase().trim()
+                    && id != $(this).find('.brandId')) {
+                    isExists = true;
+                    return false
+                }
+            })
+
+            return isExists;
+        }
+
+        function addBrand() {
+            var modal = $('#addbrand')
+            modal.find('.title').html('Thêm mới nhãn hàng<span class="tf-color-1">*</span>')
+            modal.find('#brandName').val('')
+            modal.find('#brandId').val('')
+            modal.modal('show')
+        }
+
+        function updateBrand(brandId) {
+            var modal = $('#addbrand')
+            var brandTag = $(`.brand-id-${brandId}`)
+            modal.find('.title').html('Nhập tên nhãn hàng<span class="tf-color-1">*</span>')
+            modal.find('#brandName').val(brandTag.find('.name').text().trim())
+            modal.find('#brandId').val(brandTag.find('.brandId').val())
+            modal.modal('show')
+        }
+
+        function saveBrand() {
+            var modal = $('#addbrand')
+            var BrandName = $('#brandName').val().trim()
+            var brandId = $('#brandId').val()
+            console.log("brandId: " + brandId);
+            if (isValidString(BrandName) == "") {
+                if (isExistsBrand(BrandName)) {
+                    alert('Tên thương hiệu đã tồn tại.')
+                }
+                else if (brandId == '') {
+                    $('#staticBackdrop').modal('hide')
+                    $.ajax({
+                        url: "/Admin/Brand/Create",
+                        method: "POST",
+                        data: { brandName: BrandName },
+                        success: function (res) {
+                            var li = `
+                                    <li class="product-item gap14 brand-id-${res.brandId}">
+                                    <input type="hidden" value="${res.brandId}" class="brandId">
+                                    <div class="flex items-center justify-between gap20 flex-grow">
+                                        <div class="name" style="width: 300px">${BrandName}
+                                        </div>
+                                        <div class="body-text quantityx totalBrand_${brandId}" style="width: 150px">0</div>
+                                        <div class="body-text quantitySold quantityBrandSold_${brandId}" style="width: 150px">0</div>
+                                        <div class="list-icon-function">
+                                        <div class="item edit" onclick="updateBrand(${res.brandId})">
+                                                <i class="icon-edit-3"></i>
+                                            </div>
+                                        <div class="item tras" onclick="deleteBrand(this, ${res.brandId})">
+                                                <i class="icon-trash-2"></i>
+                                        </div>
+                                        </div>
+                                        </div>
+                                    </li>
+                                            `
+                            $('#list-brand').append(li)
+                            alert('Thêm thương hiệu thành công')
+                            modal.modal('hide')
+                        },
+                        error: function (res) {
+                            alert(res)
+                        }
+                    })
+                }
+                else {
+                    $.ajax({
+                        url: "/Admin/Brand/Update",
+                        method: "PUT",
+                        data: { brandName: BrandName, brandId: brandId },
+                        success: function (res) {
+                            modal.modal('hide')
+                            alert('Cập nhật tên thương hiệu thành công.')
+                            var tag = $(`.brand-id-${brandId}`)
+                            tag.find('.name').text(BrandName)
+                        },
+                        error: function (res) {
+                            console.log(res)
+                        }
+                    })
+                }
+            }
+            else {
+                $('#error-brand').text(error)
+            }
+        }
+    </script>
+}
