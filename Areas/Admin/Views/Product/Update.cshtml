@@ -235,8 +235,27 @@
         </div>
     </div>
 </div>
+
 @section ScriptOptional {
 <script>
+        var description = `@Html.Raw(product.Description)`
+        tinymce.init({
+            selector: '#description',
+            plugins: 'lists checklist',
+            toolbar: 'bold italic underline | align | checklist numlist bullist | removeformat',
+            menubar: false,
+            height: 550,
+            setup: function (editor) {
+                editor.on('init', function () {
+                    editor.setContent(description);
+                });
+                editor.on('input', function () {
+                    description = editor.getContent();
+                    document.getElementById('description').value = description;
+                });
+            }
+        });
+
         $('.icon-search').click(function () {
             var icon = $(this);
             var parent = icon.parent().parent().parent();
@@ -254,12 +273,9 @@
                 });
             }
         });
-    var regex = /^\d+$/;
-    var numberRegex = /^-?\d+(\.\d+)?$/;
-    var description = `@Html.Raw(product.Description)`
-    var isUploadFile = true
-
-        
+        var regex = /^\d+$/;
+        var numberRegex = /^-?\d+(\.\d+)?$/;
+        var isUploadFile = true
 
         function isExistsBrand(brand) {
             var isExists = false;
@@ -430,23 +446,6 @@
             } else {
                 option.style.display = "none";
             }
-        }
-    });
-
-    tinymce.init({
-        selector: '#description',
-        plugins: 'lists checklist',
-        toolbar: 'bold italic underline | align | checklist numlist bullist | removeformat',
-        menubar: false,
-        height: 550,
-        setup: function (editor) {
-            editor.on('init', function () {
-                editor.setContent(description);
-            });
-            editor.on('input', function () {
-                description = editor.getContent();
-                document.getElementById('description').value = description;
-            });
         }
     });
 
