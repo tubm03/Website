@@ -4,11 +4,34 @@
 <html class="no-js" lang="vi">
 
 <!-- Mirrored from html.themewin.com/animart-tm-preview/animart/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 15 May 2024 14:33:43 GMT -->
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>@ViewData["Title"]</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="google-site-verification" content="npWxynXcVnbYc57sTzWZjyOFDIkQYtZVPyIkEJtHSVw" />
+
+    <!-- Mô tả trang -->
+    <meta name="description"
+        content="EcoCau chuyên cung cấp chén, đĩa, hộp làm từ mo cau - phân hủy sinh học, thân thiện môi trường. Giao hàng toàn quốc, xuất khẩu sang Hàn Quốc, Mỹ, Canada.">
+
+    <!-- Từ khóa (optional) -->
+    <meta name="keywords"
+        content="mo cau, sản phẩm sinh học, bát đĩa thân thiện môi trường, chén đĩa nhà hàng, chén đĩa khách sạn, chén đĩa phân hủy sinh học">
+
+    <!-- Social Meta (Open Graph) cho Facebook/Zalo, etc -->
+    <meta property="og:title" content="EcoCau - Chén đĩa sinh học từ mo cau">
+    <meta property="og:description"
+        content="Giải pháp thay thế nhựa dùng một lần cho nhà hàng và khách sạn. Sản phẩm thân thiện với môi trường từ mo cau.">
+    <meta property="og:image" content="https://ecocau.azurewebsites.com/img/logo/logo2.jpg">
+    <meta property="og:url" content="https://ecocau.azurewebsites.com">
+    <meta property="og:type" content="website">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="canonical" href="https://ecocau.azurewebsites.net" />
+
 
     <!-- Favicons -->
     <link rel="shortcut icon" href="~/img/favicon.png">
@@ -40,20 +63,42 @@
     <link rel="stylesheet" href="~/css/responsive.css">
     <!-- Modernizer js -->
     <script src="~/js/vendor/modernizr-3.5.0.min.js"></script>
-    <script src="https://cdn.tiny.cloud/1/t59ustcb51mtosn5m5bi7mmy0mjphbhnlni3kylpd0b4buzm/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
-    @RenderSection("HeadOptional", required: false)
-    
-    <!-- Hotjar Tracking Code for https://ecocau.azurewebsites.net/ -->
-<script>
-    (function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:6414114,hjsv:6};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    <script src="https://cdn.tiny.cloud/1/t59ustcb51mtosn5m5bi7mmy0mjphbhnlni3kylpd0b4buzm/tinymce/7/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P4E6S336XY"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-P4E6S336XY');
+    </script>
+    <!-- Hotjar Tracking Code for https://ecocau.azurewebsites.net -->
+    <script>
+        (function (h, o, t, j, a, r) {
+            h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) };
+            h._hjSettings = { hjid: 6414385, hjsv: 6 };
+            a = o.getElementsByTagName('head')[0];
+            r = o.createElement('script'); r.async = 1;
+            r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+    </script>
+    <script type="application/ld+json">
+    @Html.Raw(@"{
+                ""@context"": ""https://schema.org"",
+        ""@type"": ""Organization"",
+                ""name"": ""EcoCau"",
+                ""description"": ""Chuyên cung cấp chén, đĩa, hộp làm từ mo cau - phân hủy sinh học, thân thiện môi trường."",
+                ""url"": ""https://ecocau.azurewebsites.net"",
+        ""logo"": ""https://ecocau.azurewebsites.net/img/logo/logo2.jpg""
+                }")
+
 </script>
+
+
+    @RenderSection("HeadOptional", required: false)
 </head>
 
 <body>
@@ -69,7 +114,8 @@
                     <div class="col-xl-2 col-lg-2 col-6">
                         <div class="logo">
                             <a asp-controller="Home" asp-action="Index">
-                                <img style="width: 75px" src="~/img/logo/logo2.jpg" alt="logo-image">
+                                <img style="width: 75px" src="~/img/logo/logo2.jpg"
+                                    alt="EcoCau -- Chuyên cung cấp các sản phẩm từ mo cau">
                             </a>
                         </div>
                     </div>
@@ -118,12 +164,14 @@
                                     </script>
                                 }
                                 <li>
-                                    <a asp-controller="WishList" asp-action="Detail"><span class="icofont-heart"></span></a>
+                                    <a asp-controller="WishList" asp-action="Detail"><span
+                                            class="icofont-heart"></span></a>
                                 </li>
                                 <!--Wish List End-->
                                 <!--Cart Box Start -->
                                 <li class="drodown-show">
-                                    <a href="#"><span class="icofont-shopping-cart"></span><span class="total-pro" id="total_item"></span></a>
+                                    <a href="#"><span class="icofont-shopping-cart"></span><span class="total-pro"
+                                            id="total_item"></span></a>
                                     <ul class="dropdown cart-box-width">
                                         <li>
                                             <div id="list_item" style="max-height: 300px; overflow-y: auto">
@@ -320,9 +368,12 @@
                                     <div class="footer-content">
                                         <p>Cửa hàng ECOCAU hân hạnh được phục vụ bạn!</p>
                                         <ul class="footer_contact">
-                                            <li><i class="icofont-home"></i><span>Địa chỉ:</span>Khu CNC Hòa Lạc, Thạch Thất, Hà Nội</li>
-                                            <li><i class="icofont-ui-dial-phone"></i><span>Phone:</span> 039 848 6547</li>
-                                            <li><i class="icofont-email"></i><span>Email :</span> ecocaushop@gmail.com</li>
+                                            <li><i class="icofont-home"></i><span>Địa chỉ:</span>Khu CNC Hòa Lạc, Thạch
+                                                Thất, Hà Nội</li>
+                                            <li><i class="icofont-ui-dial-phone"></i><span>Phone:</span> 039 848 6547
+                                            </li>
+                                            <li><i class="icofont-email"></i><span>Email :</span> ecocaushop@gmail.com
+                                            </li>
                                             @* <li><i class="icofont-facebook"></i><span>Facebook:</span> animartpetshop</li> *@
                                         </ul>
                                     </div>
@@ -352,8 +403,10 @@
                                     <p>Nhận tin tức mới nhất qua email</p>
                                     <div class="subscribtion_form">
                                         <form action="#" method="post">
-                                            <input type="email" name="mail" class="form-control mail" placeholder="Email của bạn">
-                                            <button type="submit" class="submit"><i class="icofont-long-arrow-right"></i></button>
+                                            <input type="email" name="mail" class="form-control mail"
+                                                placeholder="Email của bạn">
+                                            <button type="submit" class="submit"><i
+                                                    class="icofont-long-arrow-right"></i></button>
                                         </form>
                                     </div>
                                 </div>
@@ -394,4 +447,5 @@
     @RenderSection("ScriptOptional", required: false)
 
 </body>
+
 </html>

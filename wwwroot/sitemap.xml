@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://ecocau.azurewebsites.net/</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://ecocau.azurewebsites.net/Product/List</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ecocau.azurewebsites.net/news/list</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ecocau.azurewebsites.net/AboutUs</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ecocau.azurewebsites.net/Consultation/Create</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ecocau.azurewebsites.net/Account/Login</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ecocau.azurewebsites.net/cart/detail</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ecocau.azurewebsites.net/Account/Register</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ecocau.azurewebsites.net/product/list</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ecocau.azurewebsites.net/product/detail/2</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ecocau.azurewebsites.net/product/detail/4</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ecocau.azurewebsites.net/product/detail/5</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ecocau.azurewebsites.net/product/detail/6</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ecocau.azurewebsites.net/product/detail/7</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ecocau.azurewebsites.net/News/Detail?newsId=12</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ecocau.azurewebsites.net/News/Detail?newsId=13</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ecocau.azurewebsites.net/Account/ForgotPassword</loc>
+  <lastmod>2025-05-25T00:04:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+
+
+</urlset>

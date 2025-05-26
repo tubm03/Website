@@ -1,0 +1,23 @@
+{
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "EcoCau",
+    "url": "https://ecocau.azurewebsites.net",
+    "logo": "https://ecocau.azurewebsites.net/img/logo/logo2.jpg",
+    "description": "Chuyên cung cấp chén, đĩa, hộp làm từ mo cau - sản phẩm sinh học, thân thiện môi trường.",
+    "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+84-987-654-321",
+        "contactType": "customer service",
+        "areaServed": "VN",
+        "availableLanguage": [
+            "Vietnamese",
+            "English"
+        ]
+    },
+    "sameAs": [
+        "https://www.facebook.com/ecocau",
+        "https://www.instagram.com/ecocau",
+        "https://www.youtube.com/@ecocau"
+    ]
+}
