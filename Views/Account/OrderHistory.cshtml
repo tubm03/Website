@@ -33,7 +33,16 @@
                                 <td class="orderdate-cell">@orderHistory.OrderDate</td>
                                 @* <td>@orderHistory.ShipAddress</td> *@
                                 <td>@orderHistory.totalOrderItems</td>
-                                <td class="status-cell"><span id="status_@orderHistory.OrderId">@orderHistory.Status</span></td>
+                                <td class="status-cell">
+                                    @if(orderHistory.Status == "Chờ giao hàng")
+                                    {
+                                        <span id="status_@orderHistory.OrderId">Chờ nhận hàng</span>
+                                    }
+                                    else
+                                    {
+                                        <span id="status_@orderHistory.OrderId">@orderHistory.Status</span>
+                                    }
+                                </td>
                                 <td>@orderHistory.TotalAmount.ToString("#,###") VND</td>
                                 <td><a class="btn btn-primary" onclick="OrderHistoryDetail('@orderHistory.OrderId')">Chi Tiết</a></td>
                             </tr>

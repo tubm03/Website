@@ -251,7 +251,21 @@
             <div class="row">
                 <div class="flex items-center gap10 flex-wrap">
                     <div class="radio-buttons" style="align-items: center;">
-                        @if (Model.UserId == null)
+                        <div class="item">
+                            @if(Model.Status == "Chờ xác nhận")
+                            {
+                                <input type="radio" name="admin-language" value="Chờ giao hàng" id="admin-language3"
+                                @(Model.Status == "Chờ giao hàng" ? "checked" : "")
+                                @(Model.Status == "Đã hoàn thành" || Model.Status == "Trả hàng" || Model.Status == "Đã hủy" || Model.Status == "Đã giao hàng" ? "disabled" : "")>
+                                <label for="admin-language3"><span class="body-title-2">Giao hàng</span></label>
+                            }
+                            else
+                            {
+                                @Model.Status
+                            }
+
+                        </div>
+                        @* @if (Model.UserId == null)
                         {
                             if (province.Contains("Hà Nội") && district.Contains("Quận") && Model.PaymentMethod == "COD")
                             {
@@ -259,7 +273,7 @@
                                     <input type="radio" name="admin-language" value="Chờ lấy hàng" id="admin-language2"
                                     @(Model.Status == "Chờ lấy hàng" ? "checked" : "")
                                     @(Model.Status == "Đã hoàn thành" || Model.Status == "Trả hàng" || Model.Status == "Đã hủy" || Model.Status == "Đã giao hàng" ? "disabled" : "")>
-                                    <label for="admin-language2"><span class="body-title-2">Chờ lấy hàng</span></label>
+                                    <label for="admin-language2"><span class="body-title-2">Giao hàng</span></label>
                                 </div>
                                 <div class="item">
                                     <input type="radio" name="admin-language" value="Chờ giao hàng" id="admin-language3"
@@ -283,7 +297,7 @@
                             else
                             {
 
-@*                                 <div class="item">
+                                <div class="item">
                                     <input type="radio" name="admin-language" value="Chờ giao hàng" id="admin-language3"
                                     @(Model.Status == "Chờ giao hàng" ? "checked" : "")
                                     @(Model.Status == "Đã hoàn thành" || Model.Status == "Trả hàng" || Model.Status == "Đã hủy" || Model.Status == "Đã giao hàng" ? "disabled" : "")>
@@ -294,7 +308,7 @@
                                     @(Model.Status == "Đã giao hàng" ? "checked" : "")
                                     @(Model.Status == "Chờ giao hàng" || Model.Status == "Chờ lấy hàng" || Model.Status == "Chờ xác nhận" || Model.Status == "Đã hoàn thành" || Model.Status == "Trả hàng" || Model.Status == "Đã hủy" || Model.Status == "Đã giao hàng" ? "disabled" : "")>
                                     <label for="admin-language4"><span class="body-title-2">Đã giao hàng</span></label>
-                                </div> *@
+                                </div>
                                 <div class="item">
                                     <input type="radio" name="admin-language" value="Đã hoàn thành" id="admin-language6"
                                     @(Model.Status == "Đã hoàn thành" ? "checked" : "")
@@ -414,7 +428,7 @@
                         @if (Model.Status == "Trả hàng" && Model.ReturnId != 0)
                         {
                             <button type="button" class="tf-button style-1" style="padding: 0px 5px" onclick="ReturnRefundDetail(@Model.ReturnId)">Chi tiết trả hàng</button>
-                        }
+                        } *@
                     </div>
                 </div>
             </div>
@@ -567,7 +581,7 @@
                         let district = addressDetail.split(',')[1].trim();
                         console.log("address: " + province);
                         console.log("district: " + district);
-                        if (province.includes('Hà Nội') && district.includes('Quận')) {
+                        if (true) {
                             $('#updateStatusOrder').modal('show');
                             $('#updateStatusOrder').on('hidden.bs.modal', function (e) {
                                 if ($('#selectShipper').val() == "") {

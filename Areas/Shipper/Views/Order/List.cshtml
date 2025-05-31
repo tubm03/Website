@@ -100,7 +100,7 @@
                         <a class="body-title">Trạng thái <i class="bi bi-funnel"></i></a>
                         <ul class="common_ddown" id="order-status-search" style="width: 180px">
                             <li><a data-status="" onclick="searchOrderStatus(this)">- Tất cả trạng thái</a></li>
-                            <li><a data-status="Chờ giao hàng" onclick="searchOrderStatus(this)">- Chờ giao hàng</a></li>
+                            <li><a data-status="Chờ giao hàng" onclick="searchOrderStatus(this)">- Đang giao</a></li>
                             <li><a data-status="Đã giao hàng" onclick="searchOrderStatus(this)">- Đã giao hàng</a></li>
                             <li><a data-status="Đã hoàn thành" onclick="searchOrderStatus(this)">- Đã hoàn thành</a></li>
                         </ul>
@@ -124,7 +124,7 @@
                                 <div class="body-text">@order.TotalAmount.ToString("#,###") VND</div>
                                 @if (order.Status == "Chờ giao hàng")
                                 {
-                                    <div class="body-text block-orage">Chờ giao hàng</div>
+                                    <div class="body-text block-orage">Đang giao</div>
                                 }
                                 else if (order.Status == "Đã giao hàng")
                                 {

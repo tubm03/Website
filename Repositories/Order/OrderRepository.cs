@@ -5,7 +5,6 @@ using PetStoreProject.Areas.Shipper.ViewModels;
 using PetStoreProject.Models;
 using PetStoreProject.Repositories.ProductOption;
 using System.Globalization;
-using System.Net;
 
 namespace PetStoreProject.Repositories.Order
 {
