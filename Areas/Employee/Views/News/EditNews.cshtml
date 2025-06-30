@@ -1,42 +1,7 @@
 ﻿@model PetStoreProject.ViewModels.NewsViewModel
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TinyMCE Example</title>
-    <script src="https://cdn.tiny.cloud/1/t59ustcb51mtosn5m5bi7mmy0mjphbhnlni3kylpd0b4buzm/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+@section HeadOptional{
     <script>
-        tinymce.init({
-            selector: 'textarea',
-            branding: false,
-            language: 'vi',
-            language_url: 'https://cdn.tiny.cloud/1/t59ustcb51mtosn5m5bi7mmy0mjphbhnlni3kylpd0b4buzm/tinymce/tinymce/7/langs/vi.js',
-            height: 1000,
-            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss markdown',
-            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-            tinycomments_mode: 'embedded',
-            tinycomments_author: 'Author name',
-            mergetags_list: [
-                { value: 'First.Name', title: 'First Name' },
-                { value: 'Email', title: 'Email' },
-            ],
-            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
-            images_upload_url: '/Employee/News/UploadImage',
-            automatic_uploads: true
-        });
-
-        tinymce.addI18n('vi', {
-            "File": "Tệp",
-            "View": "Xem",
-            "Tools": "Công cụ",
-            "Format": "Định dạng",
-            "Format": "Định dạng",
-            "Paragraph": "Đoạn văn",
-            "System Font": "Kiểu chữ",
-        });
-
         function previewThumbnail(event) {
             const fileInput = event.target;
             const file = fileInput.files[0];
@@ -150,8 +115,8 @@
             }
 
     </style>
-</head>
-<body>
+}
+
     <div class="main-content-inner">
         <!-- main-content-wrap -->
         <div class="main-content-wrap">
@@ -207,6 +172,3 @@
         <!-- /main-content-wrap -->
     </div>
     <!-- /main-content-wrap -->
-
-</body>
-</html>

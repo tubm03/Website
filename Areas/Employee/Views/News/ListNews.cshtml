@@ -3,11 +3,7 @@
 
 @model IPagedList<PetStoreProject.ViewModels.NewsViewModel>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@section HeadOptional{
     <style>
         .toggle-container {
             margin-bottom: 20px;
@@ -103,10 +99,7 @@
             border-color: #007bff;
         }
     </style>
-	
-    
-</head>
-<body>
+}}
     <div class="main-content-inner">
         <!-- main-content-wrap -->
         <div class="main-content-wrap">
@@ -186,8 +179,8 @@
         </div>
         <!-- /main-content-wrap -->
     </div>
-</body>
-</html>
+
+@section ScriptOptional {
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     function ChangeStatus(newsId) {
@@ -213,3 +206,4 @@
         });
     }
 </script>
+}

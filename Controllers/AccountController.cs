@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PetStoreProject.Areas.Admin.Service.Cloudinary;
 using PetStoreProject.Filters;
 using PetStoreProject.Helpers;
@@ -73,7 +72,7 @@ namespace PetStoreProject.Controllers
                 {
                     var userName = _account.GetUserName(acc.Email, "Employee");
                     HttpContext.Session.SetString("userName", userName);
-                    return RedirectToAction("ListOrderService", "Service", new { area = "Employee" });
+                    return RedirectToAction("ListOrderHistory", "Order", new { area = "Employee" });
                 }
                 else if (role == "Shipper")
                 {

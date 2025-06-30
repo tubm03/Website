@@ -37,7 +37,8 @@ using Quartz;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<PetStoreDBContext>(option =>
-    option.UseSqlServer(builder.Configuration.GetConnectionString("PetStoreDBContext"))
+    option.UseSqlServer(builder.Configuration.GetConnectionString("PetStoreDBContext"),
+    sqlOptions => sqlOptions.EnableRetryOnFailure())
 );
 
 builder.Services.AddSession(option =>
